@@ -7,7 +7,7 @@
 dest="$1"
 self="wg_tool"
 
-info="README.md CHANGELOG.md scripts"
+info="README.md CHANGELOG.md scripts archlinux"
 infodir="/usr/share/${self}"
 
 license="LICENSE"
