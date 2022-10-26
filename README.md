@@ -18,6 +18,14 @@ Available on
   - tomli\_w (python-tomli\_w on arch)
   - netaddr (python-netaddr on arch)
 
+## New or Coming Soon
+
+Coming next:
+
+ - A *connected* option which parses the output of 'wg show' from the running 
+wireguard server and make a human readable report showing users and profiles by
+names.
+
 ## Overview
 
 Tool to manage wireguard configs for server and users.
@@ -336,6 +344,7 @@ Continue to use existing methods - encyrpted email, in person display of QR code
 
 `wg_tool` was created by Gene C. It is licensed under the terms of the MIT license.
 
-## Credits
+
+
     
 
