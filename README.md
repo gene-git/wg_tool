@@ -6,7 +6,7 @@ Tool to manage wireguard configs for server and users.
 
 Available on 
  - [Github source ](https://github.com/gene-git/wg_tool)
- - [Archlinux AUR](https://aur.archlinux.org/packages/wg_tool) (TBD)
+ - [Archlinux AUR](https://aur.archlinux.org/packages/wg_tool)
    PKGBUILD also in source tree under archlinux
 
 ### dependenceis
