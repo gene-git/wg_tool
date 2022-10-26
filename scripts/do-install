@@ -1,0 +1,43 @@
+#!/bin/bash
+#
+# installer script for wg_tool
+# e.g. Call from PKGBUILD:  
+#   ./do-install ${pkgdir}
+#
+dest="$1"
+self="wg_tool"
+
+info="README.md CHANGELOG.md scripts"
+infodir="/usr/share/${self}"
+
+license="LICENSE"
+licensedir="/usr/share/licenses"
+
+# list apps without the ".py" or leave empty string
+apps="wg-tool"
+
+sysdir=$(python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
+tdir="${dest}/${sysdir}"
+
+if [ ! -d "$dest" ] ; then
+    echo 'Missing destination directory'
+    exit 1
+else
+    # shared
+    /usr/bin/rsync --mkpath -a ${info} ${dest}${infodir}
+    /usr/bin/rsync --mkpath -a ${license} ${dest}/${licensedir}/${self}
+
+    # application
+    /usr/bin/pip install --upgrade --compile dist/${self}-*.whl  -t ${tdir}
+
+    # link(s) in /usr/bin/
+    if [ ! -z "${apps}" ] ; then
+        /usr/bin/mkdir -p "${dest}/usr/bin"
+        for app in "${apps}"
+        do
+            /usr/bin/ln -sf ${sysdir}/${self}/${app}.py "${dest}/usr/bin/${app}"
+        done
+    fi
+    exit 0
+fi
+

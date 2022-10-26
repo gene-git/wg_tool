@@ -1,0 +1,38 @@
+#!/bin/bash
+#
+# Sample script to import all existing wg users
+# Only run this after you have correct server config
+#   configs/server/server.conf
+#
+# - Copy all wireguard user configs into directory "old" (or whatever you want) 
+#   if you change "old" change the conf_dir variable at top
+# - Make one line for each conf file calling import_users as shown below
+#
+#   import_user "xxx.conf" "jane:desktop"
+#   import_user "bob-phone.conf" "bob:phone"
+# etc
+#    Run script 
+#    Check configs/server/server.conf has active_users listed, otherwise the same
+#    Check configs/users/
+#        All configgs should be correct and all configs should be listed in active_configs
+#    Check wg-configs/server/wg0.conf  - should match existing
+#    Check wg-configs/users/ - all users .conf files should match 
+#           
+
+#
+# conf_dir is directory with all existing wireguard user.conf files
+#
+conf_dir="./old"
+wgt="/usr/bin/wg-tool"
+
+function import_user() {
+    conf_file="${conf_dir}/$1"
+    userconf="$2"
+    echo "$wgt --import_user" "${conf_file}" "$userconf" 
+    $wgt --import_user "${fname}" "$userconf" 
+}
+
+import_user 'bob-phone.conf' "bob:phone"
+import_user 'bob-laptop.conf' "bob:laptop"
+
+# "etc ... for all configs"

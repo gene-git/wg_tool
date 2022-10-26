@@ -1,0 +1,50 @@
+#!/usr/bin/nft -f
+#
+# Wireguard postup
+#
+#  nat from wireguard iface (e.g. wg0) -> local network
+#  similar to nat from internal to internet - internal here is wg0 and internet is local network
+#
+#  Packets for internal will be routed to internal host otherwise to default route and internet as usual
+#
+# So, here we use: internal as VPN tunnel, and external as local netork  
+# This way it looks same as regular firewall rules
+#
+define vpn_net = 10.99.99.0/24  # must match server config
+define lan_ip = 10.0.0.1        # real lan ip of wg server
+define lan_iface = eno1         # lan interface
+
+define wg = wg0
+
+flush ruleset
+table inet t_filter {
+    chain input {
+        type filter hook input priority -50 
+        policy accept
+    }
+
+    chain output {
+        type filter hook output priority 0 
+        policy accept
+    }
+
+    chain forward {
+        type filter hook forward priority -50; policy drop;
+
+        iifname $wg accept
+        #iifname $lan_iface ct state related,established accept
+        iifname $lan_iface accept
+    }
+}
+
+table inet t_nat {
+    chain preroute {
+        type nat hook prerouting priority -100; policy accept;
+    }
+
+    chain postroute {
+        type nat hook postrouting priority 100; policy accept;
+        oifname $lan_iface ip saddr $vpn_net snat to $lan_ip
+    }
+}
+
