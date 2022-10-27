@@ -13,7 +13,7 @@ Available on
 
   - python (3.9 or later)
   - wireguard-tools
-  - nftables
+  - nftables (for wireguard server postup.nft)
   - tomli (aka python-tomli)
   - tomli\_w (aka python-tomli\_w )
   - netaddr (aka python-netaddr )
@@ -25,15 +25,20 @@ New:
 
  - *--show_rpt*   
 The output of *wg show* can be passed to wg-tool, either as a filename, or 
-the string *stdin* then it parses that to make a report of connected user profiles by name.
-Obviously, this has to be run in same directory as wg-tool configuration files.
+use *stdin* (for it read from stdin). It parses it to make a report of 
+connected user profiles by name.  Obviously, this has to be run in 
+same directory as wg-tool and its configuration files.
 
-The raw output of *wg show* is not terribly user friendly, as it doesn't have
-any idea about user names or profile names. wg-tool remedies that for you.
+The raw output of *wg show* is not terribly user friendly, as wireguard has
+no idea about user names or profile names. wg-tool remedies that for you.
+
+Example:
+
+        wg show | wg-tool -rpt stdin
 
 Coming next:
 
- - Currently wg-tool must be run in the directory where all the config data is. 
+ - At present,  wg-tool must be run in the directory where all the config data is. 
 Soon there'll be an option to specify that conf directory to something other 
 than "./" as it is now.
 
