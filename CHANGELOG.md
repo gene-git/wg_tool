@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.3] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-10-27
+ - Add mising packages to PKGBUILD depends (thank you @figue on aur)  
+ - upd changelog  
+
 ## [1.2.2] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-10-27
  - duh - turn off debugger .. sorry  
  - markdown newline fix  
