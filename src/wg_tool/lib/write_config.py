@@ -44,6 +44,7 @@ def write_user_configs(wgtool):
     """
     write out user configs
     """
+    # pylint: disable=R0914
     okay = True
     msg = wgtool.msg
     vmsg = wgtool.vmsg

@@ -43,7 +43,7 @@ def file_symlink(target, linkname):
         os.symlink (target, linkname)
 
 def make_dir_path(path_dir):
-    """ 
+    """
     makes directory and any missing path components
       - set reasonable permissions
     """
@@ -121,8 +121,8 @@ def dir_list (indir, which='name'):
     [flist, dlist, llist]
         flist = list of files
         dlist = list of dirds
-        llist = list of links 
-    NB order care needed - symlinks are also files or dirs - 
+        llist = list of links
+    NB order care needed - symlinks are also files or dirs -
     so always check link before file or dir as we want links separated
     whether or not they point to a dir or file.
     """

@@ -137,7 +137,6 @@ def list_users(wgtool):
     make a simple informational list of users/profiles
     """
     msg = wgtool.msg
-    hmsg = wgtool.msg
 
     users_profiles = cli_user_prof_names(wgtool)
     if not users_profiles or wgtool.opts.all_users:

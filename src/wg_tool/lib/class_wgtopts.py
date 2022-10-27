@@ -73,6 +73,9 @@ class WgtOpts:
                  {'action'      : 'store_true',
                   'help'        : 'Save defaults for keep_hist/keep_hist_wg '}
                 ],
+                [('-rpt',   '--show_rpt'),
+                 {'help'        : 'Output of "wg show" (file, "stdin") -> connected users report'}
+                ],
                 [('-v',   '--verb'),
                  {'action'      : 'store_true',
                   'help'        : 'Be more verbose'}

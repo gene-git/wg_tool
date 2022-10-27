@@ -20,11 +20,21 @@ Available on
 
 ## New or Coming Soon
 
+New:
+
+ - *--show_rpt* 
+The output of *wg show* can be passed to wg-tool, either as a filename, or 
+the string *stdin* then it parses that to make a report of connected user profiles by name.
+Obviously, this has to be run in same directory as wg-tool configuration files.
+
+The raw output of *wg show* is not terribly user friendly, as it doesn't have
+any idea about user names or profile names. wg-tool remedies that for you.
+
 Coming next:
 
- - A *connected* option which parses the output of 'wg show' from the running 
-wireguard server and make a human readable report showing users and profiles by
-names.
+ - Currently wg-tool must be run in the directory where all the config data is. 
+Soon there'll be an option to specify that conf directory to something other 
+than "./" as it is now.
 
 ## Overview
 
@@ -301,6 +311,10 @@ Thatis a summary of available options.
 
         -keep_wg <num>
         --keep_hist_wg <num> Keep wg-config history (default 3)
+
+        -rpt <file> 
+        --show_rpt <file>    Output of "wg show" -> connected users report
+                             Reads file (or stdin if name is stdin")
 
         -l
         --list_users         List users/profiles

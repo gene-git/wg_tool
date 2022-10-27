@@ -25,6 +25,7 @@ from .users import remove_active_users_profiles
 from .users import list_users
 
 from .import_user import import_user
+from .show_rpt import show_rpt
 
 from .msg import hdr_msg, warn_msg, err_msg
 
@@ -499,6 +500,12 @@ class WgTool:
 
         if self.opts.inactive:
             remove_active_users_profiles(self)
+
+        #
+        # list users and show rpt
+        #
+        if self.opts.show_rpt:
+            show_rpt(self, self.opts.show_rpt)
 
         if self.opts.list_users:
             list_users(self)
