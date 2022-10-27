@@ -14,9 +14,10 @@ Available on
   - python (3.9 or later)
   - wireguard-tools
   - nftables
-  - tomli (python-tomli on arch)
-  - tomli\_w (python-tomli\_w on arch)
-  - netaddr (python-netaddr on arch)
+  - tomli (aka python-tomli)
+  - tomli\_w (aka python-tomli\_w )
+  - netaddr (aka python-netaddr )
+  - python-qrcode
 
 ## New or Coming Soon
 
@@ -232,6 +233,8 @@ and the corresponding wireguard QR codes and .conf files under wg-configs/users
 You can get list of all users and their profiles :
 
         wg-tool --list_users
+
+The (+) or (-) after a user or profile name indicates active or inactive.
 
 ### Importing existing users and profiles
 
