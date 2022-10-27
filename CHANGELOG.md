@@ -1,6 +1,12 @@
 # Changelog
 
-## [1.2.1, origin/master] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-10-26
+## [1.2.2] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-10-27
+ - duh - turn off debugger .. sorry  
+ - markdown newline fix  
+ - word smith readme  
+ - update changelog  
+
+## [1.2.1] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-10-26
  - update project vers  
  - actually add the code to make wg_show report :)  
 
