@@ -50,7 +50,7 @@ Key features:
  - handles key creation when needed
  - users can have multiple profiles (bob:laptop bob:phone etc)
  - users and/or profiles can be marked active/inactive 
- - takes output of 'wg show' and shows connections by user/profile name.
+ - takes output of 'wg show' and shows connections by user/profile name.  
    (This one solves a minor annoyance for me)
  - can import existing user/profiles
 
