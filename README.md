@@ -43,6 +43,17 @@ It also guarantees that server and user configs are kept properly synchronized.
 Handles key creation whenever needed, such as adding user/profile or doing key 
 rollover.
 
+Key features:
+
+ - simplifies wireguard administration. ( server and users )
+ - guarantees server and user configs remain synchronized.
+ - handles key creation when needed
+ - users can have multiple profiles (bob:laptop bob:phone etc)
+ - users and/or profiles can be marked active/inactive 
+ - takes output of 'wg show' and shows connections by user/profile name.
+   (This one solves a minor annoyance for me)
+ - can import existing user/profiles
+
 Wireguard server and user configs share several common variables, such as public keys, 
 hostname and listening ports, and therefore it's crucial they are consistent.
 
