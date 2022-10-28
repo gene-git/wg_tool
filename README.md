@@ -27,7 +27,7 @@ New:
 The output of *wg show* can be passed to wg-tool, either as a filename, or 
 use *stdin* (for it read from stdin). It parses it to make a report of 
 connected user profiles by name.  Obviously, this has to be run in 
-same directory as wg-tool and its configuration files.
+same directory as its configuration files.
 
 The raw output of *wg show* is not terribly user friendly, as wireguard has
 no idea about user names or profile names. wg-tool remedies that for you.
@@ -70,17 +70,17 @@ handled by the tool in a convenient way. For example, It is very
 straightforward to add users or user profiles, roll keys or make users or profiles
 active or inactive.
 
-When check the result of *wg show* on the server, any connected users
-are only identified by their ip address and their public key. You can use the
-*--wg_how* option to parse that output report and provide the associated
+Using *wg show* on the wireguard server shows any (known) connected users
+identified by their ip address and their public key. You can use the
+*-rpt* option to parse that output and provide the associated
 user and profile names.  It also indicates whether the user and the profile
-are marked active. If an inactive user is connected, it may be time ensure
-the server is running the latest wg0.config.
+are marked active (by showing (+) or (-) beside the name. If an inactive user 
+is connected, it may be time ensure the server is running the latest wg0.config.
 
 By convention the config files for wireguard itself will be referred to as wg-configs. These
-are outputs of *wg-tool*. Whiel we refer to the configuration 
-files for wg-tool itself simply as *configs*. Directory names for configuration files
-follow this simple rule.  
+are the outputs of *wg-tool*. We refer to the configuration 
+files for wg-tool itself simply as *configs*. Directory structure for 
+all the configuration files follow this simple rule.  
 
 Specifically, the wireguard server config file, wg0.conf, will be located 
 in *wg-configs/server/wg0.conf*. All the user QR codes and '.conf' files will be 
@@ -355,7 +355,7 @@ Thatis a summary of available options.
 
 ## Key Rollover
 
-wg-tool makes key rolloever particularly simple - at least as far as updating keys
+wg-tool makes key rollover particularly simple - at least as far as updating keys
 and regenerating user and/or server configs with the new keys. Its equally 
 simple to update keys on a per user basis as well - just specify them on
 command line. 
