@@ -1,5 +1,10 @@
 # Changelog
 
+## [HEAD] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-10-28
+ - tweak readme  
+ - tweak readme and sync PKGBUILD  
+ - upd changelog  
+
 ## [1.2.3] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-10-27
  - Add mising packages to PKGBUILD depends (thank you @figue on aur)  
  - upd changelog  
