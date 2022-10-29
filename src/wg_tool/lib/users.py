@@ -84,7 +84,10 @@ def remove_active_users_profiles(wgtool):
     For every user:profile
       - remove user from active_users
       - remove profile from that users active_profiles
-    not working yet
+    
+      - if user and no profiles, mark user inactive
+      - if user and profiles - mark only profiles inactive
+
     """
     msg = wgtool.msg
     wmsg = wgtool.wmsg
@@ -96,13 +99,17 @@ def remove_active_users_profiles(wgtool):
         return okay
 
     for (user_name, prof_names) in users_profiles.items():
-        msg(f'Removing active user : {user_name}')
         # in case no profiles
-        wgtool.remove_active_user(user_name)
-        for prof_name in prof_names:
-            msg(f'  {prof_name}')
-            wgtool.remove_active_user_profile(user_name, prof_name)
-            wgtool.user_changed(user_name)
+        if not prof_names:
+            msg('  Removing active user')
+            msg(f'    {user_name}')
+            wgtool.remove_active_user(user_name)
+        else:
+            msg(f'  Removing active profile for {user_name}')
+            for prof_name in prof_names:
+                msg(f'    {prof_name}')
+                wgtool.remove_active_user_profile(user_name, prof_name)
+                wgtool.user_changed(user_name)
 
     return okay
 

@@ -238,7 +238,7 @@ class WgTool:
 
     def remove_active_user_profile(self, user_name, prof_name):
         """ remove prof_name from users active_profile list """
-        self.remove_active_user(user_name)
+        #self.remove_active_user(user_name)
         changed = self.users[user_name].remove_active_profile(prof_name)
         if changed:
             self.user_changed(user_name)
