@@ -58,11 +58,16 @@ def make_dir_path(path_dir):
 
 def setup_save_path(wgtool, topdir, name, mkdirs=False):
     """
-    topdir/
-            name -> data/<date>/name
-    Make any needed dirs - we dont create link as caller should do that after its ready
-    returns actual_file, and link name so user can call
-    file_symlink(actual_file, link)
+    make the database path and link names
+    create dirs if mkdirs is True.
+    Dir structure:
+      topdir/
+            name   ->  db/<date>/name
+            (link)      actual file, link target
+    NB We dont create link as caller should do that after
+    its ready calling:
+       file_symlink(actual_file, link_name)
+       actual, link_name, link_targ)
     """
     dirmode = stat.S_IRWXU | stat.S_IRGRP | stat.S_IXGRP
 

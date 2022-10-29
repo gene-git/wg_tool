@@ -59,7 +59,7 @@ def write_wg_users(wgtool):
       - config_name.conf, config_name.qr.png
       - see README for directory / file structure
     """
-    # pylint: disable=R0914
+    # pylint: disable=R0914,C0301
     msg = wgtool.msg
     vmsg = wgtool.vmsg
     emsg = wgtool.emsg

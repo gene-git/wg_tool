@@ -3,23 +3,30 @@ WgOpts  - command line options for WgTool
 """
 # pylint disable=R0902
 import argparse
-from .save_options import read_cli_opts, write_cli_opts
+from .save_options import read_merge_saved_opts, write_saved_opts
 
 class WgtOpts:
     """
     Manage command line options
     """
     # pylint: disable=R0903
-    def __init__(self, save_dir):
+    def __init__(self, work_dir, save_dir):
         desc = 'WgTool : Manage wireguard Server & User/Profiles '
+        self.work_dir = work_dir
         self.save_dir = save_dir
         self.save_file = 'saved_options'
-        self.keep_hist = 5
-        self.keep_hist_wg = 3
 
-        read_cli_opts(self)
+        #
+        # These can be overriden from cli or from saved options
+        #
+        self.default_keep_hist = 5
+        self.default_keep_hist_wg = 3
 
         opts = [
+                [('-wkd', '--work_dir'),
+                 {'default'     : self.work_dir,
+                  'help'        : f'Set working dir (default {self.work_dir})'}
+                ],
                 [('-i',   '--init'),
                  {'action'      : 'store_true',
                   'help'        : 'Initialize - make server config template - please edit'}
@@ -57,13 +64,13 @@ class WgtOpts:
                 ],
                 [('-keep', '--keep_hist'),
                  {'type'        : int,
-                  'default'     : self.keep_hist,
-                  'help'        : f'Keep config history (default {self.keep_hist})'}
+                  #'default'     : self.keep_hist,
+                  'help'        : 'Keep config history'}
                 ],
                 [('-keep_wg', '--keep_hist_wg'),
                  {'type'        : int,
-                  'default'     : self.keep_hist_wg,
-                  'help'        : f'Keep wg-config history (default {self.keep_hist_wg})'}
+                  #'default'     : self.keep_hist_wg,
+                  'help'        : 'Keep wg-config history'}
                 ],
                 [('-l',   '--list_users'),
                  {'action'      : 'store_true',
@@ -97,12 +104,19 @@ class WgtOpts:
 
         parsed = par.parse_args()
         if parsed:
-            # set each option to be an attribute
+            #
+            # make each option an attribute
+            #
             for (opt, val) in vars(parsed).items() :
                 setattr(self, opt, val)
 
+        #
+        # for saved, prio is:  command line, saved file, default
+        #
+        read_merge_saved_opts(self)
+
         if self.save_opts:
-            write_cli_opts(self)
+            write_saved_opts(self)
 
     def __getattr__(self, name):
         """ non-set items simply return None makes it easy to check existence"""

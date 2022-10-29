@@ -7,6 +7,8 @@
 # pylint: disable=R0902,C0301
 import os
 from .class_wgtopts import WgtOpts
+from .class_wgtserv import WgtServer
+from .class_wgtuser import WgtUser
 
 from .config_init import initial_server_config
 from .utils import current_date_time_str
@@ -31,211 +33,6 @@ from .msg import hdr_msg, warn_msg, err_msg
 
 from .cleanup import cleanup
 
-class WgtServer:
-    """
-    Our server info
-    """
-    # pylint: disable=R0903
-    def __init__(self, serv_dict):
-        self.active_users = None
-        self.Address = None
-        self.Hostname = None
-        self.Hostname_Int = None
-        self.ListenPort = None
-        self.ListenPort_Int = None
-        self.PrivateKey = None
-        self.PublicKey = None
-        self.PostUp = None
-        self.PostDown = None
-        self.DNS = None
-
-        for key, val in serv_dict.items():
-            setattr(self, key, val)
-
-    def __getattr__(self,name) :
-        return None
-
-    def to_dict(self):
-        """" return dict of self """
-        serv_dict = vars(self)
-        return serv_dict
-
-    def endpoint(self):
-        """ return endpoint for user config """
-        Endpoint = f'{self.Hostname}:{self.ListenPort}'
-        return Endpoint
-
-    def endpoint_int(self):
-        """ return internal endpoint for user config """
-        if self.ListenPort_Int:
-            Endpoint = f'{self.Hostname}:{self.ListenPort_Int}'
-        else:
-            Endpoint = f'{self.Hostname}:{self.ListenPort}'
-        return Endpoint
-
-    def user_allowedips(self):
-        """ return default AllowedIPs for user config """
-        return '0.0.0.0/0'
-
-    def add_active_user(self, user_name):
-        """ add user to active_users list (user exists check in wgtool """
-        if self.active_users:
-            if user_name not in self.active_users:
-                self.active_users.append(user_name)
-        else :
-            self.active_users = [user_name]
-
-    def remove_active_user(self, user_name):
-        """ remove user from active_users list """
-        changed = False
-        if self.active_users:
-            if user_name in self.active_users:
-                self.active_users.remove(user_name)
-                changed = True
-        return changed
-
-    def is_user_active(self, user_name):
-        """ check if user_name is active """
-        if self.active_users:
-            return bool(user_name in self.active_users)
-        return False
-
-class WgtUserProfile:
-    """
-    Users can have 1 or more Items - each has separate access (phone, laptop etc)
-    """
-    # pylint: disable=R0902,R0903
-    def __init__(self, _prof_name, prof_dict):
-        self.Address = None
-        self.PrivateKey = None
-        self.PublicKey = None
-        self.PresharedKey = None
-        self.AllowedIPs = None
-        self.Endpoint = None
-
-        for key,val in prof_dict.items():
-            setattr(self, key, val)
-
-    def __getattr__(self,name) :
-        return None
-
-    def to_dict(self):
-        """ return dict of self """
-        prof_dict = vars(self)
-        return prof_dict
-
-class WgtUser:
-    """
-    one user -
-      - active_configs : list
-      - config : dictionary of each config (instance of WgtUserItem)
-    """
-    # pylint: disable=R0902,R0903
-    def __init__(self, user_name, user_dict):
-        self.active_profiles = []
-        self.profile = {}
-        self.changed = False
-
-        self.name = user_name
-        for key,val in user_dict.items():
-            if isinstance(val, dict):
-                prof_name = key
-                prof_dict = val
-                self.profile[prof_name] = WgtUserProfile(prof_name, prof_dict)
-            else:
-                setattr(self, key, val)
-
-    def __getattr__(self,name) :
-        return None
-
-    def refresh_active_profiles(self):
-        """ refresh active_profiles - remove any if profile missing """
-
-        if not self.active_profiles:
-            return
-
-        if not self.profile:
-            self.changed = True
-            self.active_profiles = None
-            return
-
-        active_profiles = []
-        for prof_name in self.active_profiles:
-            if self.profile_exists(prof_name):
-                if prof_name not in active_profiles:
-                    active_profiles.append(prof_name)
-            else:
-                self.changed = True
-        self.active_profiles = active_profiles
-
-    def profile_names(self):
-        """ return list of elem names """
-        prof_names = []
-        if self.profile:
-            for prof_name, _prof_class in self.profile.items():
-                prof_names.append(prof_name)
-        return prof_names
-
-    def to_dict(self):
-        """ return dict of self """
-        user_dict = {'name' : self.name,
-                     'active_profiles' : self.active_profiles,
-                     }
-        if self.profile:
-            for prof_name, prof_class in self.profile.items():
-                prof_dict = prof_class.to_dict()
-                user_dict[prof_name] = prof_dict
-        return user_dict
-
-    def profile_exists(self, prof_name):
-        """ check if profile exists """
-        if self.profile:
-            return bool(prof_name in self.profile)
-        return False
-
-    def is_profile_active(self, prof_name):
-        """ check if profile is active """
-        if self.active_profiles :
-            return bool(prof_name in self.active_profiles)
-        return False
-
-    def add_profile(self, prof_name, prof_dict):
-        """
-        add new profig
-          - add to active_profiles as well
-        """
-        if self.profile_exists(prof_name):
-            warn_msg(f'{self.name} : profile {prof_name} already exists')
-        else:
-            self.profile[prof_name] = WgtUserProfile(prof_name, prof_dict)
-            self.add_active_profile(prof_name)
-            self.changed = True
-
-    def add_active_profile(self, prof_name):
-        """ add profile to users active_profile list """
-        changed = False
-        if self.profile_exists(prof_name):
-            if self.active_profiles:
-                if prof_name not in self.active_profiles:
-                    self.active_profiles.append(prof_name)
-                    changed = True
-            else :
-                self.active_profiles = [prof_name]
-                changed = True
-        else:
-            warn_msg(f'Config {prof_name} not found - not added to active_profiles')
-        return changed
-
-    def remove_active_profile(self, prof_name):
-        """ remove profile from users active_profile list """
-        changed = False
-        if self.profile_exists(prof_name):
-            if self.active_profiles:
-                if prof_name in self.active_profiles:
-                    self.active_profiles.remove(prof_name)
-                    changed = True
-        return changed
-
 class WgTool:
     """
     Class WgTool
@@ -248,23 +45,32 @@ class WgTool:
         #
         # Input Configs
         #
-        self.conf_dir = 'configs'
+        work_dir = './'
+        conf_dir_name = 'configs'
 
-        self.conf_serv_dir = f'{self.conf_dir}/server'
+        # saved options are kept in work_dir/conf_dir/
+        self.opts = WgtOpts(work_dir, conf_dir_name)
+
+        if not self.opts.check():
+            self.okay = False
+
+        self.work_dir = self.opts.work_dir
+        self.conf_dir = os.path.join(self.work_dir, 'configs')
+        self.conf_serv_dir = os.path.join(self.conf_dir,'server')
         self.conf_serv_file = 'server.conf'
 
-        # do want to add "org" above users?
-        self.conf_user_dir = f'{self.conf_dir}/users'
+        # do we want to insert "org" above users?
+        self.conf_user_dir = os.path.join(self.conf_dir, 'users')
         self.conf_user_confs = None                     # list of file names
 
         #
         # Output wg configs
         #
-        self.wg_dir = 'wg-configs'
+        self.wg_dir = os.path.join(self.work_dir, 'wg-configs')
 
-        self.wg_serv_dir = f'{self.wg_dir}/server'
+        self.wg_serv_dir = os.path.join(self.wg_dir, 'server')
         self.wg_serv_conf_file = 'wg0.conf'
-        self.wg_users_dir = f'{self.wg_dir}/users'
+        self.wg_users_dir = os.path.join(self.wg_dir, 'users')
 
         self.wg_server = None
         self.wg_users = None
@@ -273,10 +79,7 @@ class WgTool:
         self.okay = True
         self.server = None
         self.users = None
-        self.opts = WgtOpts(self.conf_dir) # saved options direcory
 
-        if not self.opts.check():
-            self.okay = False
 
         # where & when
         self.now = current_date_time_str()

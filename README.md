@@ -6,7 +6,7 @@ Tool to manage wireguard configs for server and users.
 
 Available on 
  - [Github source ](https://github.com/gene-git/wg_tool)
- - [Archlinux AUR](https://aur.archlinux.org/packages/wg_tool)
+ - [Archlinux AUR](https://aur.archlinux.org/packages/wg_tool)   
    PKGBUILD also in source tree under archlinux
 
 ### dependenceis
@@ -36,11 +36,10 @@ Example:
 
         wg show | wg-tool -rpt stdin
 
-Coming next:
+New:
 
- - At present,  wg-tool must be run in the directory where all the config data is. 
-Soon there'll be an option to specify that conf directory to something other 
-than "./" as it is now.
+ - *--work_dir*   
+Specify the working directory, by default this is current dir, './'.
 
 ## Overview
 

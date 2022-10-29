@@ -90,12 +90,11 @@ def write_wg_server(wgtool):
     """
     generate wg server config wg0.con :
     """
+    # pylint: disable=C0301
     errors = 0
     msg = wgtool.msg
     vmsg = wgtool.vmsg
     emsg = wgtool.emsg
-
-    #wgtool.refresh_active_users()
 
     serv_dir = wgtool.wg_serv_dir
     conf_file = wgtool.wg_serv_conf_file

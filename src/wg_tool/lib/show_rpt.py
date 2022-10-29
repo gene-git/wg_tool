@@ -86,7 +86,6 @@ def _parse_wg_show(wgtool, report_in):
         if not row:
             continue
 
-    
         key_val = row.split(':',1)
         if not key_val:
             continue

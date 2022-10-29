@@ -1,6 +1,7 @@
 """
  wg-tool : save configs
 """
+# pylint: disable=C0301
 import os
 
 from .file_tools import file_symlink
