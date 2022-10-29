@@ -28,6 +28,7 @@ from .users import list_users
 
 from .import_user import import_user
 from .show_rpt import show_rpt
+from .show_rpt import run_show_rpt
 
 from .msg import hdr_msg, warn_msg, err_msg
 
@@ -309,6 +310,9 @@ class WgTool:
         #
         if self.opts.show_rpt:
             show_rpt(self, self.opts.show_rpt)
+
+        if self.opts.run_show_rpt:
+            run_show_rpt(self)
 
         if self.opts.list_users:
             list_users(self)

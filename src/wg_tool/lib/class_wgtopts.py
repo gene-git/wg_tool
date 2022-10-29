@@ -83,6 +83,10 @@ class WgtOpts:
                 [('-rpt',   '--show_rpt'),
                  {'help'        : 'Output of "wg show" (file, "stdin") -> connected users report'}
                 ],
+                [('-rrpt',  '--run_show_rpt'),
+                 {'action'      : 'store_true',
+                  'help'        : 'Run "wg show" -> connected users report (see also -rpt)'}
+                ],
                 [('-v',   '--verb'),
                  {'action'      : 'store_true',
                   'help'        : 'Be more verbose'}

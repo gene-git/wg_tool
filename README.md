@@ -38,6 +38,15 @@ Example:
 
 New:
 
+ - *--run_show_rpt*   
+Same as --show_rpt, but runs *wg show* for you. This obviously only works 
+when run on the vpn server.  
+
+        wg-tool -rrpt
+
+
+New:
+
  - *--work_dir*   
 Specify the working directory, by default this is current dir, './'.
 

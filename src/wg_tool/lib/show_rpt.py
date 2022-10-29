@@ -4,6 +4,7 @@ to any current connections.
 """
 import sys
 from .file_tools import open_file
+from .run_prog import run_prog
 
 def _user_by_pubkey(wgtool):
     """
@@ -146,7 +147,6 @@ def show_rpt(wgtool, file_in):
     Identify connected user profiles
     """
     # pylint: disable=R0914
-    msg = wgtool.msg
     emsg = wgtool.emsg
 
     if file_in == 'stdin':
@@ -160,7 +160,17 @@ def show_rpt(wgtool, file_in):
             emsg('Error in show_rpt:  failed to read file : {file_in}')
             return
 
-    (serv, users) = _parse_wg_show(wgtool, wg_show_output)
+    show_rpt_from_output(wgtool, wg_show_output)
+
+def show_rpt_from_output(wgtool, output):
+    """
+    Takes output from 'wg show' as string
+     - make report
+    """
+    # pylint: disable=R0914
+    msg = wgtool.msg
+
+    (serv, users) = _parse_wg_show(wgtool, output)
 
     msg('wg server:')
     iface = serv['interface']
@@ -195,3 +205,19 @@ def show_rpt(wgtool, file_in):
         msg(f'  {"handshake":>14s} : {handshake}')
         msg(f'  {"transfer":>14s} : {transfer}')
         msg('')
+
+def run_show_rpt(wgtool):
+    """
+    runs wg show and then generate report
+    """
+    msg = wgtool.msg
+    emsg = wgtool.emsg
+
+    pargs = ['/usr/bin/wg', 'show']
+    [retc, output, errors] = run_prog(pargs)
+
+    if retc != 0:
+        emsg('Failed running "wg show"')
+        msg(errors)
+    else:
+        show_rpt_from_output(wgtool, output)

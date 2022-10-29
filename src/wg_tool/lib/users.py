@@ -84,7 +84,7 @@ def remove_active_users_profiles(wgtool):
     For every user:profile
       - remove user from active_users
       - remove profile from that users active_profiles
-    
+
       - if user and no profiles, mark user inactive
       - if user and profiles - mark only profiles inactive
 
