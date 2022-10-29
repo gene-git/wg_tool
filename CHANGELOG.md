@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.3.1] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-10-29
+ - bug fix: -inact user:prof made user inactive not just prof  
+ - update CHANGELOG.md  
+
 ## [1.3.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-10-29
  - Add new option --work_dir  
    Refactor and tidy code up some  
