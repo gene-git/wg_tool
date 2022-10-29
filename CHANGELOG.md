@@ -1,6 +1,9 @@
 # Changelog
 
-## [HEAD] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-10-28
+## [1.3.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-10-29
+ - Add new option --work_dir  
+   Refactor and tidy code up some  
+ - upd changelog  
  - tweak readme  
  - tweak readme and sync PKGBUILD  
  - upd changelog  
