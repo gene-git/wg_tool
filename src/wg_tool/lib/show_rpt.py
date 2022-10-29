@@ -6,11 +6,14 @@ import sys
 from .file_tools import open_file
 from .run_prog import run_prog
 
-def _user_by_pubkey(wgtool):
+def _user_by_pubkey_address(wgtool):
     """
-    make look up table by pub key of all users.
+    make look up tables for all known users
+     - user by pub key
+     - user by address
     """
     user_by_key = {}
+    user_by_add = {}
     for user_name in wgtool.users_all:
         user = wgtool.users[user_name]
         user_act = wgtool.is_user_active(user_name)
@@ -18,6 +21,7 @@ def _user_by_pubkey(wgtool):
         for prof_name in user.profile_names():
             prof = user.profile[prof_name]
             pub_key = prof.PublicKey
+            address = prof.Address
             prof_act = user.is_profile_active(prof_name)
 
             user_by_key[pub_key] = {
@@ -27,7 +31,14 @@ def _user_by_pubkey(wgtool):
                     'prof_active' : prof_act,
                     }
 
-    return user_by_key
+            user_by_add[address] = {
+                    'user_name' : user_name,
+                    'prof_name' : prof_name,
+                    'user_active' : user_act,
+                    'prof_active' : prof_act,
+                    }
+
+    return (user_by_add, user_by_key)
 
 def _parse_wg_show(wgtool, report_in):
     """
@@ -56,6 +67,8 @@ def _parse_wg_show(wgtool, report_in):
        allowed ips: 10.42.42.22/32
 
     """
+    # pylint: disable=R0914,R0915
+
     rpt_lines = report_in.splitlines()
 
     serv_rpt = {
@@ -125,21 +138,61 @@ def _parse_wg_show(wgtool, report_in):
                 user_rpt["transfer"] = val
 
     #
-    # make it more useful
-    # Lets check connections belong to active users - if not likely wg server needs restarting
-    # with updated config
+    # Match address / pub_key against known current users.
+    # Always possible server has not been updated, and pub_key
+    # may not match. address likely to remain same. But even there
+    # it could change (delete re-create, manual edit etc.)
+    # Make sure we handle such edge cases
     #
-    user_by_key = _user_by_pubkey(wgtool)
+    (user_by_add, user_by_key) = _user_by_pubkey_address(wgtool)
+
+    all_okay = True
     for user_rpt in user_rpts:
         pub_key = user_rpt['pub_key']
-        info = user_by_key[pub_key]
+        address = user_rpt['address']
+        comment = ''
 
-        user_rpt['user_name'] = info['user_name']
-        user_rpt['prof_name'] = info['prof_name']
-        user_rpt['user_active'] = info['user_active']
-        user_rpt['prof_active'] = info['prof_active']
+        info_key = user_by_key.get(pub_key)
+        info_add = user_by_add.get(address)
 
-    return (serv_rpt, user_rpts)
+        user_name = None
+        prof_name = None
+        user_act = False
+        prof_act = False
+        comment = None
+
+        if info_key:
+            user_name = info_key['user_name']
+            prof_name = info_key['prof_name']
+            user_act = info_key['user_active']
+            prof_act = info_key['prof_active']
+            if not info_add:
+                all_okay = False
+                comment = 'Mismatched address'
+
+        elif info_add:
+            all_okay = False
+            comment = 'Mismatched Public key'
+            user_name = info_add['user_name']
+            prof_name = info_add['prof_name']
+            user_act = info_add['user_active']
+            prof_act = info_add['prof_active']
+
+        else:
+            all_okay = False
+            comment = 'Unknown address and unknown public key'
+            user_name = 'unknown'
+            prof_name = 'unkown'
+
+        user_rpt['user_name'] = user_name
+        user_rpt['prof_name'] = prof_name
+        user_rpt['user_active'] = user_act
+        user_rpt['prof_active'] = prof_act
+        user_rpt['comment'] = comment
+        user_rpt['pub_key'] = pub_key
+        user_rpt['address'] = address
+
+    return (all_okay, serv_rpt, user_rpts)
 
 def show_rpt(wgtool, file_in):
     """
@@ -169,17 +222,25 @@ def show_rpt_from_output(wgtool, output):
     """
     # pylint: disable=R0914
     msg = wgtool.msg
+    wmsg = wgtool.wmsg
 
-    (serv, users) = _parse_wg_show(wgtool, output)
+    (all_okay, serv, users) = _parse_wg_show(wgtool, output)
 
+    #
+    # Server
+    #
     msg('wg server:')
     iface = serv['interface']
     pub_key = serv['pub_key']
     port = serv['port']
+
     msg(f'  {"interface":>14s} : {iface}')
     msg(f'  {"port":>14s} : {port}')
     msg(f'  {"pub_key":>14s} : {pub_key}')
 
+    #
+    # users
+    #
     msg('\nwg users:')
     for user in users:
         pub_key = user['pub_key']
@@ -192,19 +253,35 @@ def show_rpt_from_output(wgtool, output):
         user_active = user['user_active']
         prof_active = user['prof_active']
 
-        actu = '- '
+        comment = user['comment']
+
+        actu = '-'
         if user_active :
             actu = '+'
         actp = '-'
         if prof_active :
             actp = '+'
 
-        msg(f'{user_name:>12s} ({actu}) : {prof_name} ({actp})')
-        msg(f'  {"endpoint":>14s} : {endpoint}')
-        msg(f'  {"address":>14s} : {address}')
-        msg(f'  {"handshake":>14s} : {handshake}')
-        msg(f'  {"transfer":>14s} : {transfer}')
+        if user_name:
+            msg(f'{user_name:>12s} ({actu}) : {prof_name} ({actp})')
+            msg(f'  {"endpoint":>14s} : {endpoint}')
+            msg(f'  {"address":>14s} : {address}')
+            msg(f'  {"pub_key":>14s} : {pub_key}')
+            msg(f'  {"handshake":>14s} : {handshake}')
+            msg(f'  {"transfer":>14s} : {transfer}')
+        else:
+            msg('user:prof not found')
+            msg(f'  {"address":>14s} : {address}')
+            msg(f'  {"pub_key":>14s} : {pub_key}')
+
+        if comment:
+            msg(f'  {"warn":>14s} : {comment}')
+
         msg('')
+    if not all_okay:
+        wmsg('  Warning: not all user:prof found or perfectly matched.')
+        wmsg('  Check server has current wg0.conf and/or restart')
+
 
 def run_show_rpt(wgtool):
     """
