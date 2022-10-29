@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.4.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-10-29
+ - report: handle cases where running server has old user key and other edge cases  
+ - update CHANGELOG.md  
+
 ## [1.3.2] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-10-29
  - add --run_show_rpt. Similar to --show_rpt, but runs wg-tool  
  - update CHANGELOG.md  
