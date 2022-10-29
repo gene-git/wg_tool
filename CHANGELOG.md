@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.3.2] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-10-29
+ - add --run_show_rpt. Similar to --show_rpt, but runs wg-tool  
+ - update CHANGELOG.md  
+
 ## [1.3.1] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-10-29
  - bug fix: -inact user:prof made user inactive not just prof  
  - update CHANGELOG.md  
