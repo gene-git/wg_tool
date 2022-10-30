@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.6.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-10-30
+ - -rpt now lists missing users/profiles from running server  
+ - update CHANGELOG.md  
+
 ## [1.5.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-10-30
  - Add --details  
    Modifes -l, -rpt and -rrpt to provide detailed information in addition to the summary.  
