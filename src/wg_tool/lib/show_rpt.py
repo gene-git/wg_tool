@@ -5,6 +5,7 @@ to any current connections.
 import sys
 from .file_tools import open_file
 from .run_prog import run_prog
+from .cli_users import all_users_prof_names
 
 def _user_by_pubkey_address(wgtool):
     """
@@ -254,6 +255,64 @@ def _rpt_user(wgtool, user):
 
     msg('')
 
+
+def _serv_user_profile_names(users_on_serv):
+    """
+    Make a list of users and profiles from server report
+      Return dictionary of user_names,
+    """
+    user_profs = {}
+    for user in users_on_serv:
+        user_name = user.get("user_name")
+        if user_name:
+            prof_name = user.get('prof_name')
+            if prof_name:
+                if user_profs.get(user_name):
+                    user_profs[user_name].append(prof_name)
+                else:
+                    user_profs[user_name] = [prof_name]
+    return user_profs
+
+def _any_missing_users(wgtool, users_on_serv):
+    """
+    Checks that every user/profile is actually in the running server config
+    """
+    msg = wgtool.msg
+    wmsg = wgtool.wmsg
+
+    users_profiles = all_users_prof_names(wgtool)
+    if not users_profiles:
+        return
+
+    user_profs_serv = _serv_user_profile_names(users_on_serv)
+
+    #
+    # simple count check
+    #
+    warning_done = False
+    num_users = len(users_profiles)
+    num_on_serv = len(user_profs_serv)
+    if num_users != num_on_serv:
+        wmsg(' Missing current users\n')
+        warning_done = True
+        msg(f'  Expect {num_users}, got {num_on_serv}')
+
+    #
+    # check names
+    #
+    for (user_name, prof_names) in users_profiles.items():
+        if user_name not in user_profs_serv:
+            if not warning_done:
+                wmsg(' Missing current users\n')
+            msg(f'  {"Missing":>15s} : {user_name}')
+            continue
+
+        for prof_name in prof_names :
+            if prof_name not in user_profs_serv[user_name]:
+                if not warning_done:
+                    wmsg(' Missing current users\n')
+                msg(f'  {"Missing":>15s} : {user_name}:{prof_name}')
+
 def _show_rpt_from_output(wgtool, output):
     """
     Takes output from 'wg show' as string
@@ -303,6 +362,11 @@ def _show_rpt_from_output(wgtool, output):
         wmsg('  Warning: not all user:prof found or perfectly matched.')
         wmsg('  Check server has current wg0.conf and/or restart')
 
+    #
+    # check for any missing users
+    #
+    _any_missing_users(wgtool, users)
+
 def show_rpt(wgtool, file_in):
     """
     Read output of "wg show" from file or on stdin.
@@ -323,7 +387,6 @@ def show_rpt(wgtool, file_in):
             return
 
     _show_rpt_from_output(wgtool, wg_show_output)
-
 
 def run_show_rpt(wgtool):
     """

@@ -24,7 +24,7 @@ Available on
 New:
 
  - *--details*   
-Modifes -l, -rpt and -rrpt to provide detailed information in addition to the summary.
+Modifies -l, -rpt and -rrpt to provide detailed information in addition to the summary.
 
 New:
 
