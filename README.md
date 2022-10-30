@@ -50,13 +50,6 @@ when run on the vpn server.
         wg-tool -rrpt
 
 
-New:
-
- - *--work_dir*   
-Specify the working directory, by default this is current dir, './'.
-
-
-
 ## Overview
 
 Tool to manage wireguard configs for server and users.
@@ -311,61 +304,80 @@ or
 oe
     user_1:prof_1,prof_2 user2 user_3:laptop,tablet
 
-Thatis a summary of available options.
+Summary of available options.
 
         positional arguments:
         users                user_1[:prof1,prof2,...] user_2[:prof_1,prof_2]
 
         options:
-        -h 
-        --help               Show this help message and exit
 
-        -i 
-        --init               Initialize - make server config template - please edit
+ - *-h, --help*   
+   Show this help message and exit
 
-        -add
-        --add_users          Add user(s) and/or user profiles user:prof1,prof2,...
+ - *-i, --init*   
+   Initialize and creat server config template. 
+   Please edit to match your server settings.
 
-        -int
-        --int_serv           With --add_users uses internal wireguard server
+ - *wkd, --work_dir <dirname>*   
+   Set working directory. Default is *./*
+   This is is the directory holding all configs.
 
-        -uuk
-        --upd_user_keys      Update existing user(s) keys.
+ - *-add, --add_users*   
+   Add user(s) and/or user profiles user:prof1,prof2,...
 
-        -usk
-        --upd_serv_keys      Update server keys - affects all users
+ - *-int, --int_serv*   
+   With --add_users uses internal wireguard server
 
-        -all 
-        --all_users          Some opts (e.g. upd_user_keys) may apply to all users/profiles
+ - *-uuk, --upd_user_keys*   
+   Generate new set of keys for existing user(s).
+   This is public and private key pair along with new pre-shared key.
 
-        -act 
-        --active             Mark users/profiles user[:profile,...] active
+ - *-usk, --upd_serv_keys*   
+   Generate new pair of server keys.
+   NB This affects all users as they all use the server public key.
 
-        -inact 
-        --inactive           Mark users/profiles user[:profile,...] inactive
+ - *-all, --all_users*  
+   Some opts (e.g. upd_user_keys) may apply to all users/profiles when this is turned on.
 
-        -imp <file> 
-        --import_user <file> Import a wg user conf into user_name:profile_name
+ - *-act, --active*   
+   Mark one or more users or user[:profile, profile...] active
 
-        -keep <num>
-        --keep_hist <num>    Keep config history (default 5)
+ - *-inact, --inactive*    
+   Mark one or more users or user[:profile, profile...] inactive
 
-        -keep_wg <num>
-        --keep_hist_wg <num> Keep wg-config history (default 3)
+ - *-imp, --import_user <file>*    
+   Import a standard wg user conf file into the spcified user_name:profile_name
+   This is for one single user:profile
 
-        -rpt <file> 
-        --show_rpt <file>    Output of "wg show" -> connected users report
-                             Reads file (or stdin if name is stdin")
+ - *-keep, --keep_hist <num>*   
+   How much config history to keep (default 5)
 
-        -l
-        --list_users         List users/profiles
+ - *-keep_wg, --keep_hist_wg <num>*   
+   How much wg-config history to keep (default 3)
 
-        -sop
-        --save_opts          Set default values of keep_hist/keep_hist_wg
-                             Use together with --keep_hist, --keep_hist_wg
+ - *-sop, --save_opts*   
+   Together with --keep_hist and/or --keep_hist_wg
+   to save these values as new defaults.
 
-        -v
-        --verb               Be more verbose
+ - *-rrpt, --run_show_rpt*   
+   Run "wg show" and generate report of users, profiles.
+   Also checks for consistency with current settings.
+
+ - *-rpt, --show_rpt <file>*   
+   Same as *-rrpt* only reads file containing the output of *wg show*
+   If file is name *stdin*, then it reads from stdin.
+
+ - *-l, --list_users*   
+   Summary of users/profiles 
+
+ - *-det, **details*    
+   Adds more detail to *-l* and *-rrpt*.
+   For *-l* report will also include details about each profile.
+   For *-rrpt* report will show all user:profiles known to running server, not just
+   those for which it has a recent connection. 
+
+ - *-v, --verb*   
+   Adds more verbose output.
 
 
 ## Key Rollover
