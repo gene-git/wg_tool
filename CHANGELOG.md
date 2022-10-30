@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.5.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-10-30
+ - Add --details  
+   Modifes -l, -rpt and -rrpt to provide detailed information in addition to the summary.  
+ - update CHANGELOG.md  
+
 ## [1.4.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-10-29
  - report: handle cases where running server has old user key and other edge cases  
  - update CHANGELOG.md  
