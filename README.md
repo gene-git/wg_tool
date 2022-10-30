@@ -19,7 +19,12 @@ Available on
   - netaddr (aka python-netaddr )
   - python-qrcode
 
-## New or Coming Soon
+## Interesting, New or Coming Soon
+
+New:
+
+ - *--details*   
+Modifes -l, -rpt and -rrpt to provide detailed information in addition to the summary.
 
 New:
 
@@ -49,6 +54,8 @@ New:
 
  - *--work_dir*   
 Specify the working directory, by default this is current dir, './'.
+
+
 
 ## Overview
 

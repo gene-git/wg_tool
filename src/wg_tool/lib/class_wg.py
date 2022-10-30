@@ -24,7 +24,7 @@ from .key_change import upd_user_keys
 from .key_change import upd_serv_keys
 from .users import add_active_users_profiles
 from .users import remove_active_users_profiles
-from .users import list_users
+from .list_users import list_users
 
 from .import_user import import_user
 from .show_rpt import show_rpt

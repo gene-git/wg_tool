@@ -3,7 +3,6 @@
 """
 from .keys import gen_keys
 from .cli_users import cli_user_prof_names
-from .cli_users import all_users_prof_names
 
 def _make_new_user(wgtool, user_name, prof_name, prof_dict):
     """
@@ -138,39 +137,3 @@ def add_active_users_profiles(wgtool):
             wgtool.add_active_user_profile(user_name, prof_name)
 
     return okay
-
-def list_users(wgtool):
-    """
-    make a simple informational list of users/profiles
-    """
-    msg = wgtool.msg
-
-    users_profiles = cli_user_prof_names(wgtool)
-    if not users_profiles or wgtool.opts.all_users:
-        users_profiles = all_users_prof_names(wgtool)
-
-    msg('Users and profiles:')
-    if not users_profiles:
-        msg('  No users found')
-    else:
-        for (user_name, prof_names) in users_profiles.items():
-            user = wgtool.users[user_name]
-            user_act = wgtool.is_user_active(user_name)
-
-            act_mark = '-'
-            if user_act:
-                act_mark = '+'
-
-            user_str = f'{user_name:>20s} ({act_mark}) :'
-            msg(user_str, end='')
-
-            prof_str = ''
-            for prof_name in prof_names :
-                prof_act = user.is_profile_active(prof_name)
-                act_mark = '-'
-                if prof_act:
-                    act_mark = '+'
-                this_prof = f'{prof_name} ({act_mark})'
-                prof_str += f'{this_prof:>12s} '
-
-            msg(f'{"":1s} {prof_str}')

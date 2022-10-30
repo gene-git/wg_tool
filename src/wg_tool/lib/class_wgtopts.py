@@ -76,16 +76,20 @@ class WgtOpts:
                  {'action'      : 'store_true',
                   'help'        : 'List users/profiles'}
                 ],
-                [('-sop',   '--save_opts'),
-                 {'action'      : 'store_true',
-                  'help'        : 'Save defaults for keep_hist/keep_hist_wg '}
-                ],
                 [('-rpt',   '--show_rpt'),
                  {'help'        : 'Output of "wg show" (file, "stdin") -> connected users report'}
                 ],
                 [('-rrpt',  '--run_show_rpt'),
                  {'action'      : 'store_true',
                   'help'        : 'Run "wg show" -> connected users report (see also -rpt)'}
+                ],
+                [('-det',   '--details'),
+                 {'action'      : 'store_true',
+                  'help'        : 'Adds details to rpt and list output'}
+                ],
+                [('-sop',   '--save_opts'),
+                 {'action'      : 'store_true',
+                  'help'        : 'Save defaults for keep_hist/keep_hist_wg '}
                 ],
                 [('-v',   '--verb'),
                  {'action'      : 'store_true',

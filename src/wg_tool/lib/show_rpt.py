@@ -40,35 +40,36 @@ def _user_by_pubkey_address(wgtool):
 
     return (user_by_add, user_by_key)
 
-def _parse_wg_show(wgtool, report_in):
+def _parse_serv_users(_wgtool, report_in):
     """
-    Take wg show report - filter out connected users
-    Identify user:profile and return new report
+    Parse the wg show output into serv and list of users
+    A user is 'seen' if 'endpoint' is present - otherwise not.
+     - 1 x serv_dict
+     - List of user_dict
+       1 item per 'peer'
+    returns (serv_dict, user_dicts_list)
 
     wg_show output :
+      interface: wg0
+         public key: XXXXXXX
+         private key: (hidden)
+         listening port: <port>
 
-    interface: wg0
-       public key: XXXXXXX
-       private key: (hidden)
-       listening port: <port>
+       peer: <pub_key>
+         preshared key: (hidden)
+         endpoint: <source:ip>
+         allowed ips: [user:profile Address]
+         latest handshake: 11 seconds ago
+         transfer: 21.57 KiB received, 120.62 KiB sent
 
-     peer: <pub_key>
-       preshared key: (hidden)
-       endpoint: <source:ip>
-       allowed ips: [user:profile Address]
-       latest handshake: 11 seconds ago
-       transfer: 21.57 KiB received, 120.62 KiB sent
+       peer: <pub_key>
+         allowed ips: 10.42.42.11/32
 
-     peer: <pub_key>
-       allowed ips: 10.42.42.11/32
-
-     peer: <pub_key>
-       preshared key: (hidden)
-       allowed ips: 10.42.42.22/32
+       peer: <pub_key>
+         preshared key: (hidden)
+         allowed ips: 10.42.42.22/32
 
     """
-    # pylint: disable=R0914,R0915
-
     rpt_lines = report_in.splitlines()
 
     serv_rpt = {
@@ -80,7 +81,7 @@ def _parse_wg_show(wgtool, report_in):
     user_rpt_template = {
             'pub_key' : None,
             'address' : None,
-            'endpoint' : None,
+            'endpoint' : None,      # <= means wg seen connection from here
             'handshake' : None,
             'transfer' : None,
 
@@ -91,10 +92,6 @@ def _parse_wg_show(wgtool, report_in):
             }
 
     user_rpts = []
-
-    #
-    # parse the data
-    #
     for row in rpt_lines:
         row = row.strip()
         if not row:
@@ -116,6 +113,7 @@ def _parse_wg_show(wgtool, report_in):
 
             case  'peer':
                 user_rpt = user_rpt_template.copy()
+                user_rpts.append(user_rpt)
                 user_rpt["pub_key"] = val
 
             case  'public key':
@@ -126,7 +124,6 @@ def _parse_wg_show(wgtool, report_in):
 
             case  'endpoint':
                 user_rpt["endpoint"] = val
-                user_rpts.append(user_rpt)
 
             case  'allowed ips':
                 user_rpt["address"] = val
@@ -137,13 +134,29 @@ def _parse_wg_show(wgtool, report_in):
             case  'transfer':
                 user_rpt["transfer"] = val
 
+    return (serv_rpt, user_rpts)
+
+def _analyze_report(wgtool, report_in):
+    """
+    Take wg show report - parse it into server and users
+    Identify user:profile and return new report
+      - users 'seen' by vpn have 'endpoint'
+    """
+    # pylint: disable=R0914,R0915
+
+    (serv_rpt, user_rpts) = _parse_serv_users(wgtool, report_in)
+
     #
     # Match address / pub_key against known current users.
-    # Always possible server has not been updated, and pub_key
+    # These are present for every user.
+    # For users wg server has 'seen' there is also 'endpoint'
+    #
+    # Possible server has not been updated, and pub_key
     # may not match. address likely to remain same. But even there
     # it could change (delete re-create, manual edit etc.)
-    # Make sure we handle such edge cases
+    # Make sure we handle such edge cases and warn appropriately
     #
+
     (user_by_add, user_by_key) = _user_by_pubkey_address(wgtool)
 
     all_okay = True
@@ -194,9 +207,105 @@ def _parse_wg_show(wgtool, report_in):
 
     return (all_okay, serv_rpt, user_rpts)
 
+def _rpt_user(wgtool, user):
+    """
+    Print report for one user
+      user = user_dict created by _analyze_report()
+    """
+    # pylint: disable=R0914
+    msg = wgtool.msg
+
+    pub_key = user['pub_key']
+    address = user['address']
+    endpoint = user['endpoint']
+    handshake = user['handshake']
+    transfer = user['transfer']
+    user_name = user['user_name']
+    prof_name = user['prof_name']
+    user_active = user['user_active']
+    prof_active = user['prof_active']
+
+    comment = user['comment']
+
+    actu = '-'
+    if user_active :
+        actu = '+'
+    actp = '-'
+    if prof_active :
+        actp = '+'
+
+    if user_name:
+        msg(f'{user_name:>12s} ({actu}) : {prof_name} ({actp})')
+        if endpoint:
+            msg(f'  {"endpoint":>14s} : {endpoint}')
+        msg(f'  {"address":>14s} : {address}')
+        msg(f'  {"pub_key":>14s} : {pub_key}')
+        if handshake:
+            msg(f'  {"handshake":>14s} : {handshake}')
+        if transfer:
+            msg(f'  {"transfer":>14s} : {transfer}')
+    else:
+        msg('user:prof not found')
+        msg(f'  {"address":>14s} : {address}')
+        msg(f'  {"pub_key":>14s} : {pub_key}')
+
+    if comment:
+        msg(f'  {"warn":>14s} : {comment}')
+
+    msg('')
+
+def _show_rpt_from_output(wgtool, output):
+    """
+    Takes output from 'wg show' as string
+     - make report
+    """
+    # pylint: disable=R0914
+    msg = wgtool.msg
+    wmsg = wgtool.wmsg
+
+    details = wgtool.opts.details
+
+    (all_okay, serv, users) = _analyze_report(wgtool, output)
+
+    #
+    # Server
+    #
+    msg('wg server:')
+    iface = serv['interface']
+    pub_key = serv['pub_key']
+    port = serv['port']
+
+    msg(f'  {"interface":>14s} : {iface}')
+    msg(f'  {"port":>14s} : {port}')
+    msg(f'  {"pub_key":>14s} : {pub_key}')
+
+    #
+    # check server pub key is current
+    #
+    if pub_key != wgtool.server.PublicKey:
+        wmsg(f'  {"Warn":>14s} : server pub key out of date')
+        wmsg(f'  {"Expected":>14s} : {wgtool.server.PublicKey}')
+    #
+    # users - seen / connected
+    #
+    msg('\nwg users seen/connected:')
+    for user in users:
+        if user["endpoint"]:
+            _rpt_user(wgtool, user)
+
+    if details:
+        msg('\nwg other users :')
+        for user in users:
+            if not user["endpoint"]:
+                _rpt_user(wgtool, user)
+
+    if not all_okay:
+        wmsg('  Warning: not all user:prof found or perfectly matched.')
+        wmsg('  Check server has current wg0.conf and/or restart')
+
 def show_rpt(wgtool, file_in):
     """
-    Read output of "wg show" on our stdin.
+    Read output of "wg show" from file or on stdin.
     Identify connected user profiles
     """
     # pylint: disable=R0914
@@ -213,74 +322,7 @@ def show_rpt(wgtool, file_in):
             emsg('Error in show_rpt:  failed to read file : {file_in}')
             return
 
-    show_rpt_from_output(wgtool, wg_show_output)
-
-def show_rpt_from_output(wgtool, output):
-    """
-    Takes output from 'wg show' as string
-     - make report
-    """
-    # pylint: disable=R0914
-    msg = wgtool.msg
-    wmsg = wgtool.wmsg
-
-    (all_okay, serv, users) = _parse_wg_show(wgtool, output)
-
-    #
-    # Server
-    #
-    msg('wg server:')
-    iface = serv['interface']
-    pub_key = serv['pub_key']
-    port = serv['port']
-
-    msg(f'  {"interface":>14s} : {iface}')
-    msg(f'  {"port":>14s} : {port}')
-    msg(f'  {"pub_key":>14s} : {pub_key}')
-
-    #
-    # users
-    #
-    msg('\nwg users:')
-    for user in users:
-        pub_key = user['pub_key']
-        address = user['address']
-        endpoint = user['endpoint']
-        handshake = user['handshake']
-        transfer = user['transfer']
-        user_name = user['user_name']
-        prof_name = user['prof_name']
-        user_active = user['user_active']
-        prof_active = user['prof_active']
-
-        comment = user['comment']
-
-        actu = '-'
-        if user_active :
-            actu = '+'
-        actp = '-'
-        if prof_active :
-            actp = '+'
-
-        if user_name:
-            msg(f'{user_name:>12s} ({actu}) : {prof_name} ({actp})')
-            msg(f'  {"endpoint":>14s} : {endpoint}')
-            msg(f'  {"address":>14s} : {address}')
-            msg(f'  {"pub_key":>14s} : {pub_key}')
-            msg(f'  {"handshake":>14s} : {handshake}')
-            msg(f'  {"transfer":>14s} : {transfer}')
-        else:
-            msg('user:prof not found')
-            msg(f'  {"address":>14s} : {address}')
-            msg(f'  {"pub_key":>14s} : {pub_key}')
-
-        if comment:
-            msg(f'  {"warn":>14s} : {comment}')
-
-        msg('')
-    if not all_okay:
-        wmsg('  Warning: not all user:prof found or perfectly matched.')
-        wmsg('  Check server has current wg0.conf and/or restart')
+    _show_rpt_from_output(wgtool, wg_show_output)
 
 
 def run_show_rpt(wgtool):
@@ -297,4 +339,4 @@ def run_show_rpt(wgtool):
         emsg('Failed running "wg show"')
         msg(errors)
     else:
-        show_rpt_from_output(wgtool, output)
+        _show_rpt_from_output(wgtool, output)
