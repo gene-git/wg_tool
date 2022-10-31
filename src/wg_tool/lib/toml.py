@@ -3,7 +3,16 @@ toml helper functions
     - NB toml write cannot handle None values
 """
 import os
-import tomli
+import sys
+if sys.version_info >= (3,11):
+    # 3.11 has tomllib 
+    try:
+        import tomllib as toml
+    except ImportError:
+        pass
+else:
+    import tomli as toml
+
 import tomli_w
 from .utils import open_file
 
@@ -64,5 +73,5 @@ def read_toml_file(fpath):
         if fobj:
             data = fobj.read()
             fobj.close()
-            this_dict = tomli.loads(data)
+            this_dict = toml.loads(data)
     return this_dict
