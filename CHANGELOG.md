@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.7.1] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-10-31
+ - Change build from poetry/pip to python -m build/installer  
+ - update CHANGELOG.md  
+
 ## [1.7.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-10-31
  - Add support for python 3.11 tomllib  
  - update CHANGELOG.md  
