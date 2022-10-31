@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.7.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-10-31
+ - Add support for python 3.11 tomllib  
+ - update CHANGELOG.md  
+
 ## [1.6.1] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-10-30
  - update readme  
  - update CHANGELOG.md  
