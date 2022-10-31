@@ -21,22 +21,18 @@ Available on
 
 ## Interesting, New or Coming Soon
 
-New:
-    For python 3.11 or later, now uses tomllib
+ - New:  
 
-New:
+   - For python 3.11 or later, now uses tomllib
 
- - *--details*   
-Modifies -l, -rpt and -rrpt to provide detailed information in addition to the summary.
+   - *-det, --details*    
+     Modifies -l, -rpt and -rrpt to provide detailed information in addition to the summary.
 
-New:
-
- - *--run_show_rpt*   
-Same as --show_rpt, but runs *wg show* for you. This obviously only works 
-when run on the vpn server.  
+   - *-rrpt, --run_show_rpt*   
+     Same as -rpt, but runs *wg show* for you. This obviously only works 
+     when run on the vpn server.  
 
         wg-tool -rrpt
-
 
 ## Overview
 
@@ -403,6 +399,7 @@ As per usual, a change to any user profiles will generate a corresponding new se
 
 Distribution of the updated config/QR code to each user is not addressed by the tool.
 Continue to use existing methods - encyrpted email, in person display of QR code etc. ...
+
 
 ## License
 

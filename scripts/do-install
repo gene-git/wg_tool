@@ -11,13 +11,13 @@ info="README.md CHANGELOG.md scripts archlinux"
 infodir="/usr/share/${self}"
 
 license="LICENSE"
-licensedir="/usr/share/licenses"
+licensedir="/usr/share/licenses/${self}"
 
 # list apps without the ".py" or leave empty string
 apps="wg-tool"
 
-sysdir=$(python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
-tdir="${dest}/${sysdir}"
+# so can make app link in /usr/bin
+sitedir=$(python -c "import site; print(site.getsitepackages()[0])")
 
 if [ ! -d "$dest" ] ; then
     echo 'Missing destination directory'
@@ -25,17 +25,16 @@ if [ ! -d "$dest" ] ; then
 else
     # shared
     /usr/bin/rsync --mkpath -a ${info} ${dest}${infodir}
-    /usr/bin/rsync --mkpath -a ${license} ${dest}/${licensedir}/${self}
+    /usr/bin/rsync --mkpath -a ${license} ${dest}/${licensedir}/${license}
 
-    # application
-    /usr/bin/pip install --upgrade --compile dist/${self}-*.whl  -t ${tdir}
+    /usr/bin/python -m installer --destdir="${dest}" dist/*.whl
 
     # link(s) in /usr/bin/
     if [ ! -z "${apps}" ] ; then
         /usr/bin/mkdir -p "${dest}/usr/bin"
         for app in "${apps}"
         do
-            /usr/bin/ln -sf ${sysdir}/${self}/${app}.py "${dest}/usr/bin/${app}"
+            /usr/bin/ln -sf ${sitedir}/${self}/${app}.py "${dest}/usr/bin/${app}"
         done
     fi
     exit 0
