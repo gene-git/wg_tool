@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.7.3] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-11-04
+ - add poetry back to PKGBUILD makedepends  
+ - update CHANGELOG.md  
+
 ## [1.7.2] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-11-04
  - change installer to use bash array for app list (even tho we onlly have 1 here)  
    tweak readme  
