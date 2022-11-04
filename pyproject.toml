@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "wg_tool"
-version = "1.7.2"
+version = "1.7.3"
 description = "Tool to administer wireguard VPN"
 authors = ["Gene C"]
 license = "MIT"
