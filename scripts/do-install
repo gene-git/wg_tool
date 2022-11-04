@@ -3,6 +3,7 @@
 # installer script for wg_tool
 # e.g. Call from PKGBUILD:  
 #   ./do-install ${pkgdir}
+# gene c (2022)
 #
 dest="$1"
 self="wg_tool"
@@ -14,7 +15,7 @@ license="LICENSE"
 licensedir="/usr/share/licenses/${self}"
 
 # list apps without the ".py" or leave empty string
-apps="wg-tool"
+apps=('wg-tool')
 
 # so can make app link in /usr/bin
 sitedir=$(python -c "import site; print(site.getsitepackages()[0])")
@@ -30,11 +31,11 @@ else
     /usr/bin/python -m installer --destdir="${dest}" dist/*.whl
 
     # link(s) in /usr/bin/
-    if [ ! -z "${apps}" ] ; then
+    if [ ! -z ${apps[@]} ] ; then
         /usr/bin/mkdir -p "${dest}/usr/bin"
-        for app in "${apps}"
+        for app in ${apps[@]}
         do
-            /usr/bin/ln -sf ${sitedir}/${self}/${app}.py "${dest}/usr/bin/${app}"
+            /usr/bin/ln -sf ${sitedir}/${self}/${app}.py ${dest}/usr/bin/${app}
         done
     fi
     exit 0

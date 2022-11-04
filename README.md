@@ -9,8 +9,9 @@ Available on
  - [Archlinux AUR](https://aur.archlinux.org/packages/wg_tool)   
    PKGBUILD also in source tree under archlinux
 
-### dependenceis
+### Dependencies
 
+- Run Time :
   - python (3.9 or later)
   - wireguard-tools
   - nftables (for wireguard server postup.nft)
@@ -18,6 +19,14 @@ Available on
   - netaddr (aka python-netaddr )
   - python-qrcode
   - If python < 3.11 : tomli (aka python-tomli)
+
+- Building Package:
+  - git
+  - build (aka python-build)
+  - intaller (aka python-installer)
+  - wheel (aka python-wheel)
+  - poetry (aka python-poetry)
+  - rsync
 
 ## Interesting, New or Coming Soon
 
