@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.7.4] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-11-07
+ - tweak readme  
+ - update CHANGELOG.md  
+
 ## [1.7.3] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-11-04
  - add poetry back to PKGBUILD makedepends  
  - update CHANGELOG.md  
