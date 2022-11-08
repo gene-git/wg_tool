@@ -21,12 +21,13 @@ def _dict_none_to_empty(dic):
     Replaces None values with empty string ''
     returns copy of dictionary
     """
-    clean = dic.copy()
     if not dic:
-        return clean
+        return {}
+
+    clean = dic.copy()
 
     for key,val in clean.items():
-        if not val:
+        if val is None:
             clean[key] = ''
         elif isinstance(val, dict):
             clean[key] = _dict_none_to_empty(val)
@@ -43,15 +44,13 @@ def _dict_remove_none(dic):
         return clean
 
     for key,val in dic.items():
-        if not val:
-            continue
-        if isinstance(val, dict):
-            new_val = _dict_remove_none(val)
-            if new_val:
-                clean[key] = new_val
-        else:
-            clean[key] = val
-
+        if val is not None:
+            if isinstance(val, dict):
+                new_val = _dict_remove_none(val)
+                if new_val:
+                    clean[key] = new_val
+            else:
+                clean[key] = val
     return clean
 
 def dict_to_toml_string(dic):
