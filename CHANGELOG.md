@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.7.5] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-11-08
+ - Improve handling of booelan False vs None in pre-file-write dictionary cleaner  
+ - update CHANGELOG.md  
+
 ## [1.7.4] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-11-07
  - tweak readme  
  - update CHANGELOG.md  
