@@ -4,6 +4,7 @@
 import os
 from .toml import read_toml_file
 from .file_tools import os_scandir
+from .utils import file_date_time_str
 
 def read_server_config(wgtool):
     """
@@ -12,7 +13,30 @@ def read_server_config(wgtool):
     conf_path = os.path.join(wgtool.conf_serv_dir, wgtool.conf_serv_file)
     conf = read_toml_file(conf_path)
 
+    if not conf.get("mod_time"):
+        # use conf file mod time
+        conf["mod_time"] = file_date_time_str(conf_path)
+        conf["_changed"] = True
+
     return conf
+
+def _fix_profile_mod_times(user_conf, conf_file):
+    """
+    If user conf missing mod_time set it to mod time of conf gile
+    If any profile missing mod_time, set it to user conf time
+        - better than None
+        - as things get updated this will updated
+    """
+    if not user_conf.get("mod_time"):
+        user_conf["mod_time"] = file_date_time_str(conf_file)
+        user_conf["_changed"] = True
+    mod_time = user_conf["mod_time"]
+
+    for _prof_name, prof in user_conf.items():
+        if isinstance(prof, dict):
+            if not prof.get("mod_time"):
+                prof["mod_time"] = mod_time
+                prof["_changed"] = True
 
 def _read_one_user(wgtool, user_name, user_path, conf_dicts):
     """
@@ -30,8 +54,10 @@ def _read_one_user(wgtool, user_name, user_path, conf_dicts):
                 conf = read_toml_file(item.path)
                 if conf:
                     if not conf.get('name'):
-                        # ensure user name in config
                         conf['name'] = user_name
+
+                    _fix_profile_mod_times(conf, item.path)
+
                     conf_dicts.append(conf)
                 else:
                     wmsg(f'Failed to read user config : {item.path}')

@@ -1,6 +1,7 @@
 """
 wg-tool support utils`
 """
+import os
 from datetime import datetime
 import qrcode
 
@@ -30,6 +31,13 @@ def current_date_time_str (fmt='%Y%m%d-%H:%M:%S'):
     today = datetime.today()
     today_str = today.strftime(fmt)
     return today_str
+
+def file_date_time_str(file, fmt='%y%m%d-%H:%M'):
+    """ return mod time of file """
+    mod_time = os.path.getmtime(file)
+    dtime = datetime.fromtimestamp(mod_time)
+    mod_time_str = dtime.strftime(fmt)
+    return mod_time_str
 
 def open_file(path, mode):
     """

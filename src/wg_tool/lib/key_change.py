@@ -4,6 +4,7 @@
 from .keys import gen_keys
 from .cli_users import cli_user_prof_names
 from .cli_users import all_users_prof_names
+from .utils import current_date_time_str
 
 def upd_user_keys(wgtool):
     """
@@ -36,6 +37,8 @@ def upd_user_keys(wgtool):
             profile.PublicKey = key_pub
             profile.PresharedKey = key_psk
 
+            profile.mod_time = current_date_time_str(fmt='%y%m%d-%H:%M')
+
             wgtool.user_changed(user_name)
 
     return okay
@@ -54,7 +57,8 @@ def upd_serv_keys(wgtool):
     server.PrivateKey = key_priv
     server.PublicKey = key_pub
 
-    wgtool.server_changed = True
+    server.mod_time = current_date_time_str(fmt='%y%m%d-%H:%M')
+    wgtool.server.set_changed(True)
 
     if okay:
         okay = upd_user_serv_key(wgtool)
@@ -74,9 +78,11 @@ def upd_user_serv_key(wgtool):
     for (user_name, prof_names) in users_profiles.items():
         msg(f'Updating server public key for {user_name}:')
         user = wgtool.users[user_name]
+        user.date = wgtool.now
         for prof_name in prof_names :
             vmsg(f'    {prof_name}')
             profile = user.profile[prof_name]
             profile.PublicKey = wgtool.server.PublicKey
+            profile.mod_time = current_date_time_str(fmt='%y%m%d-%H:%M')
         wgtool.user_changed(user_name)
     return okay

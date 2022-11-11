@@ -3,7 +3,7 @@
 """
 # pylint: disable=R0902
 
-#from .msg import hdr_msg, warn_msg, err_msg
+from .utils import current_date_time_str
 
 class WgtServer:
     """
@@ -22,12 +22,23 @@ class WgtServer:
         self.PostUp = None
         self.PostDown = None
         self.DNS = None
+        self.mod_date = None
+
+        self._changed = None
 
         for key, val in serv_dict.items():
             setattr(self, key, val)
 
     def __getattr__(self,name) :
         return None
+
+    def set_changed(self, change_value: bool):
+        """ setter for _changed """
+        self._changed = change_value
+
+    def get_changed(self):
+        """ getter for _changed """
+        return self._changed
 
     def to_dict(self):
         """" return dict of self """
@@ -56,8 +67,10 @@ class WgtServer:
         if self.active_users:
             if user_name not in self.active_users:
                 self.active_users.append(user_name)
+                self.mod_date = current_date_time_str(fmt='%y-%m-%d-%H:%M')
         else :
             self.active_users = [user_name]
+            self.mod_date = current_date_time_str(fmt='%y-%m-%d-%H:%M')
 
     def remove_active_user(self, user_name):
         """ remove user from active_users list """
@@ -65,7 +78,9 @@ class WgtServer:
         if self.active_users:
             if user_name in self.active_users:
                 self.active_users.remove(user_name)
+                self.mod_date = current_date_time_str(fmt='%m-%m-%d-%H:%M')
                 changed = True
+                self._changed = True
         return changed
 
     def is_user_active(self, user_name):

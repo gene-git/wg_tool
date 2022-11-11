@@ -3,11 +3,14 @@
     - This will be marked changed by caller and written out as usual
 """
 from .keys import gen_keys
+from .utils import current_date_time_str
+from .class_wgtserv import WgtServer
 
 def _sample_server_config():
     """
     Make dictionary sample server config
     """
+    mod_time = current_date_time_str(fmt='%y%m%d-%H:%M')
     (key_priv, key_pub, _key_psk) = gen_keys()
     serv_dict = {
             'active_users' : [],
@@ -21,6 +24,7 @@ def _sample_server_config():
             'PostUp' :  '/usr/bin/nft -f /etc/wireguard/scripts/postup.nft',
             'PostDown' :  '/usr/bin/nft flush ruleset',
             'DNS' :  ['10.99.99.21', '10.99.99.22'],
+            'mod_time' : mod_time
             }
     return serv_dict
 
@@ -31,4 +35,6 @@ def initial_server_config(_wgtool):
     """
     print('Making sample server config - please edit for your setup')
     serv_dict = _sample_server_config()
+    server = WgtServer(serv_dict)
+    server.set_changed(True)
     return serv_dict

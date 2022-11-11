@@ -11,12 +11,16 @@ def _user_summary(wgtool, users_profiles):
     """
     msg = wgtool.msg
 
-    msg('Summary of Users and Profiles:')
+    msg('Users & Profiles Summary:')
     if not users_profiles:
         msg('  No users found')
         return
+    #
+    # Sort by user name
+    #
+    users_profs_sorted = dict(sorted(users_profiles.items()))
 
-    for (user_name, prof_names) in users_profiles.items():
+    for (user_name, prof_names) in users_profs_sorted.items():
         user = wgtool.users[user_name]
         user_act = wgtool.is_user_active(user_name)
 
@@ -24,7 +28,13 @@ def _user_summary(wgtool, users_profiles):
         if user_act:
             act_mark = '+'
 
-        user_str = f'{user_name:>15s} ({act_mark}) :'
+        dts = ''
+        if user.mod_time:
+            # just the date - time only with detail
+            dts = user.mod_time
+            dts = dts[0:6]
+
+        user_str = f'{user_name:>15s} ({act_mark}) {dts} :'
         msg(user_str, end='')
 
         prof_str = ''
@@ -56,25 +66,42 @@ def _user_details(wgtool, users_profiles):
     if not users_profiles:
         msg('  No users found')
         return
+    users_profs_sorted = dict(sorted(users_profiles.items()))
 
-    for (user_name, prof_names) in users_profiles.items():
+    line = 40*'-'
+    for (user_name, prof_names) in users_profs_sorted.items():
         user = wgtool.users[user_name]
         act_mark = _marker_active(wgtool.is_user_active(user_name))
 
-        user_str = f'{user_name:>15s} ({act_mark}) :'
+        mod_time = ''
+        if user.mod_time:
+            mod_time = user.mod_time
+        msg(f'{line:>43s}')
+        user_str = f'{user_name:>15s} ({act_mark}) {mod_time:15s}'
         msg(user_str)
+        msg(f'{line:>43s}')
 
+        first = True
         for prof_name in prof_names :
             act_mark = _marker_active(user.is_profile_active(prof_name))
             this_prof = f'{prof_name} ({act_mark})'
             prof = user.profile[prof_name]
 
-            msg(f'{this_prof:>25s}')
-            msg(f'{"Address":>35s} : {prof.Address}')
-            msg(f'{"PublicKey":>35s} : {prof.PublicKey}')
-            msg(f'{"Endpoint":>35s} : {prof.Endpoint}')
+            mod_time = ''
+            if prof.mod_time:
+                mod_time = prof.mod_time
+                #msg(f'{"Mod_Date":>41s} : {prof.mod_time}')
 
-        msg('')
+            if first:
+                first = False
+            else:
+                msg('')
+            msg(f'{this_prof:>32s} {mod_time:>23s}')
+            msg(f'{"Address":>41s} : {prof.Address}')
+            msg(f'{"PublicKey":>41s} : {prof.PublicKey}')
+            msg(f'{"Endpoint":>41s} : {prof.Endpoint}')
+
+        #msg('')
 
 def list_users(wgtool):
     """

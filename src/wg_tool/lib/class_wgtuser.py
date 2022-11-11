@@ -6,6 +6,7 @@
 """
 # pylint: disable=R0902,C0301
 from .msg import warn_msg
+from .utils import current_date_time_str
 
 class WgtUserProfile:
     """
@@ -19,12 +20,23 @@ class WgtUserProfile:
         self.PresharedKey = None
         self.AllowedIPs = None
         self.Endpoint = None
+        self.mod_time = current_date_time_str(fmt='%y%m%d-%H:%M')
+
+        self._changed = None
 
         for key,val in prof_dict.items():
             setattr(self, key, val)
 
     def __getattr__(self,name) :
         return None
+
+    def set_changed(self, change_val: bool):
+        """ setter for _changed """
+        self._changed = change_val
+
+    def get_changed(self):
+        """ getter for _changed """
+        return self._changed
 
     def to_dict(self):
         """ return dict of self """
@@ -41,7 +53,8 @@ class WgtUser:
     def __init__(self, user_name, user_dict):
         self.active_profiles = []
         self.profile = {}
-        self.changed = False
+        self.mod_time = current_date_time_str(fmt='%y%m%d-%H:%M')
+        self._changed = False
 
         self.name = user_name
         for key,val in user_dict.items():
@@ -55,6 +68,14 @@ class WgtUser:
     def __getattr__(self,name) :
         return None
 
+    def set_changed(self, change_val: bool):
+        """ setter for _changed """
+        self._changed = change_val
+
+    def get_changed(self):
+        """ getter for _changed """
+        return self._changed
+
     def refresh_active_profiles(self):
         """ refresh active_profiles - remove any if profile missing """
 
@@ -62,7 +83,9 @@ class WgtUser:
             return
 
         if not self.profile:
-            self.changed = True
+            # errr - seems over cautious
+            self.mod_time = current_date_time_str(fmt='%y%m%d-%H:%M')
+            self._changed = True
             self.active_profiles = None
             return
 
@@ -72,7 +95,8 @@ class WgtUser:
                 if prof_name not in active_profiles:
                     active_profiles.append(prof_name)
             else:
-                self.changed = True
+                self.mod_time = current_date_time_str(fmt='%m%m%d-%H:%M')
+                self._changed = True
         self.active_profiles = active_profiles
 
     def profile_names(self):
@@ -86,6 +110,7 @@ class WgtUser:
     def to_dict(self):
         """ return dict of self """
         user_dict = {'name' : self.name,
+                     'mod_time' : self.mod_time,
                      'active_profiles' : self.active_profiles,
                      }
         if self.profile:
@@ -116,7 +141,8 @@ class WgtUser:
         else:
             self.profile[prof_name] = WgtUserProfile(prof_name, prof_dict)
             self.add_active_profile(prof_name)
-            self.changed = True
+            self.mod_time = current_date_time_str(fmt='%y%m%d-%H:%M')
+            self._changed = True
 
     def add_active_profile(self, prof_name):
         """ add profile to users active_profile list """
@@ -131,6 +157,9 @@ class WgtUser:
                 changed = True
         else:
             warn_msg(f'Config {prof_name} not found - not added to active_profiles')
+        if changed:
+            self.mod_time = current_date_time_str(fmt='%y%m%d-%H:%M')
+            self._changed = True
         return changed
 
     def remove_active_profile(self, prof_name):
@@ -141,4 +170,6 @@ class WgtUser:
                 if prof_name in self.active_profiles:
                     self.active_profiles.remove(prof_name)
                     changed = True
+                    self._changed = True
+                    self.mod_time = current_date_time_str(fmt='%y%m%d-%H:%M')
         return changed

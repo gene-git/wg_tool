@@ -39,15 +39,17 @@ To build it manually, clone the repo and do:
 ## Interesting, New or Coming Soon
 
  - New:  
+   - Added support for tracking modification times.  
+     For existing user/profiles without a saved value of *mod\_time*, 
+     the last change date-time of the config file is used and saved.
+     These mod times are displayed when using *-l* and *-l -det*.
 
-   - For python 3.11 or later, now uses tomllib
+   - Users are now sorted in user report
 
-   - *-det, --details*    
-     Modifies -l, -rpt and -rrpt to provide detailed information in addition to the summary.
-
-   - *-rrpt, --run_show_rpt*   
+   - *-rrpt*   
      Same as -rpt, but runs *wg show* for you. This obviously only works 
-     when run on the vpn server.  
+     when run on the vpn server. Will advise if current server is out of 
+     sync with current config and therefore needs updating and/or restarting
 
         wg-tool -rrpt
 
@@ -380,7 +382,7 @@ Summary of available options.
  - *-l, --list_users*   
    Summary of users/profiles 
 
- - *-det, **details*    
+ - *-det, --details*    
    Adds more detail to *-l* and *-rrpt*.
    For *-l* report will also include details about each profile.
    For *-rrpt* report will show all user:profiles known to running server, not just

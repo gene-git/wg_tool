@@ -10,6 +10,18 @@ from .file_tools import write_conf_file
 from .file_tools import setup_save_path
 from .file_tools import save_prev_symlink
 
+def _strip_private(dic):
+    """
+    remove any private attributes
+      - we recurse on sub dictionaries
+    """
+    for key,value in dic.items():
+        if key[0] == '_':
+            dic[key] = None
+        if isinstance(value, dict):
+            _strip_private(value)
+    return dic
+
 def write_server_config(wgtool):
     """
     Write server config if changed
@@ -23,7 +35,7 @@ def write_server_config(wgtool):
     vmsg = wgtool.vmsg
     emsg = wgtool.emsg
 
-    if wgtool.server_changed :
+    if wgtool.server.get_changed() :
         serv_dir = wgtool.conf_serv_dir
         serv_file = wgtool.conf_serv_file
 
@@ -33,6 +45,8 @@ def write_server_config(wgtool):
 
         header = format_file_header('Server Config', wgtool.now)
         server_dict = wgtool.server.to_dict()
+        server_dict = _strip_private(server_dict)
+
         okay = write_conf_file(header, server_dict, actual_file)
         if okay:
             save_prev_symlink(serv_dir, link_name)
@@ -55,6 +69,8 @@ def write_user_configs(wgtool):
     for user_name in wgtool.users_changed:
         user = wgtool.users[user_name]
         user_dict = user.to_dict()
+        user_dict = _strip_private(user_dict)
+
         this_user_dir = os.path.join(user_dir, user_name)
         user_file = f'{user_name}.conf'
         (actual_file, link_name, link_targ) = setup_save_path(wgtool, this_user_dir, user_file,mkdirs=True)

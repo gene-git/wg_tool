@@ -81,7 +81,6 @@ class WgTool:
         self.server = None
         self.users = None
 
-
         # where & when
         self.now = current_date_time_str()
         self.cwd = os.getcwd()
@@ -94,9 +93,7 @@ class WgTool:
                 err_msg('Error: Existing server config found - wont overwrite')
                 self.okay = False
             else:
-                serv_dict = initial_server_config(self)
-                self.server = WgtServer(serv_dict)
-                self.server_changed = True
+                self.server = initial_server_config(self)
         else:
             #
             # Not init case - read our wg-tool config files
@@ -123,7 +120,7 @@ class WgTool:
             #
             # check current active_users
             self.server = WgtServer(serv_dict)
-            self.server_changed = False
+            self.server.set_changed(False)
 
             self.users_all = []
             self.users_changed = []
@@ -139,9 +136,9 @@ class WgTool:
                     # check active profiles are in user config
                     if user.active_profiles:
                         user.refresh_active_profiles()
-                        if user.changed:
+                        if user.get_changed():
                             self.user_changed(user_name)
-                            self.server_changed = True
+                            self.server.set_changed(True)
 
             self.refresh_active_users()
 
@@ -170,7 +167,8 @@ class WgTool:
                 changed = True
         self.server.active_users = active_users
         if changed:
-            self.server_changed = True
+            self.server.set_changed(True)
+            self.server.mod_time = current_date_time_str(fmt='%y%m%d-%H:%M')
         return
 
     def user_exists(self, user_name):
@@ -203,8 +201,9 @@ class WgTool:
         else:
             self.users[user_name] = WgtUser(user_name, user_dict)
             user = self.users[user_name]
+            user.set_changed(True)
         self.add_active_user_profile(user_name, prof_name)
-        if user.changed:
+        if user.get_changed():
             self.user_changed(user_name)
         return user
 
@@ -217,7 +216,8 @@ class WgTool:
         """ add user to active_users list """
         if self.user_exists(user_name):
             self.server.add_active_user(user_name)
-            self.server_changed = True
+            self.server.mod_time = current_date_time_str(fmt='%m-%m-%d-%H:%M')
+            self.server.set_changed(True)
         else:
             warn_msg(f'No such user {user_name}. Cannot add to active_users')
 
@@ -228,7 +228,8 @@ class WgTool:
         """
         changed = self.server.remove_active_user(user_name)
         if changed:
-            self.server_changed = True
+            self.server.mod_time = current_date_time_str(fmt='%m-%m-%d-%H:%M')
+            self.server.set_changed(True)
 
     def add_active_user_profile(self, user_name, prof_name):
         """ add prof_name to users active_profile list """
