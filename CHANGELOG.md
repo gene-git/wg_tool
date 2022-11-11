@@ -1,5 +1,10 @@
 # Changelog
 
+## [2.0.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-11-11
+ - list users report now sorts by user name  
+   Add support for tracking config modification date-time. mod_time displayed in list user report  
+ - update CHANGELOG.md  
+
 ## [1.7.5] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-11-08
  - Improve handling of booelan False vs None in pre-file-write dictionary cleaner  
  - update CHANGELOG.md  
