@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.1.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-11-24
+ - - improve error msg  
+   - Check conf before using it - added when auto updating older configs using mtime of config  
+   - minor tweak to bash variable check in install script  
+ - update CHANGELOG.md  
+
 ## [2.0.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-11-11
  - list users report now sorts by user name  
    Add support for tracking config modification date-time. mod_time displayed in list user report  
