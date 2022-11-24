@@ -13,8 +13,8 @@ def read_server_config(wgtool):
     conf_path = os.path.join(wgtool.conf_serv_dir, wgtool.conf_serv_file)
     conf = read_toml_file(conf_path)
 
-    if not conf.get("mod_time"):
-        # use conf file mod time
+    if conf and not conf.get("mod_time"):
+        # use conf file mod time if older config
         conf["mod_time"] = file_date_time_str(conf_path)
         conf["_changed"] = True
 

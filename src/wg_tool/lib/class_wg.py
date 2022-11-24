@@ -106,7 +106,8 @@ class WgTool:
 
             if not serv_dict:
                 err_msg(f'Error: Missing input server config : {self.wg_serv_dir}/{self.wg_serv_conf_file}')
-                err_msg('Perhaps you need run "--init" then edit server config template for your setup')
+                self.msg('       Not in the config directory? Or perhaps you need to initialize?')
+                self.msg('       To initilize:  "--init" then edit server config template for your setup')
                 self.okay = False
                 return
 

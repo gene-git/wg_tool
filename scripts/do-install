@@ -31,7 +31,7 @@ else
     /usr/bin/python -m installer --destdir="${dest}" dist/*.whl
 
     # link(s) in /usr/bin/
-    if [ ! -z ${apps[@]} ] ; then
+    if [ -v apps ] ; then
         /usr/bin/mkdir -p "${dest}/usr/bin"
         for app in ${apps[@]}
         do
