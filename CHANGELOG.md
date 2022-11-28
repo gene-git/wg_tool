@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.1.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-11-28
+ - fix typo creating new user profile with -dnssrc/-dnslin  
+ - tweak readme  
+ - update CHANGELOG.md  
+
 ## [3.0.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-11-28
  - Adds 3 new options:  
    - --mod_users : modify existing user profile (with --dns_search and --dns_linux)  
