@@ -8,7 +8,7 @@ wg-tool
 gc 20221022
 """
 # pylint: disable=C0103
-import pdb
+#import pdb
 from lib import WgTool
 
 def main():
@@ -16,7 +16,7 @@ def main():
     Top level entry for wg-tool.
     managers wireguard server wg0.conf as well as users .conf and R codes
     """
-    pdb.set_trace()
+    #pdb.set_trace()
     wgtool = WgTool()
     if wgtool.okay:
         wgtool.doit()

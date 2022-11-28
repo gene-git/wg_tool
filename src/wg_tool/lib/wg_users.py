@@ -37,7 +37,7 @@ def _user_prof_str(wgtool, _user_name, _prof_name, profile):
         dns_updn_script = wgtool.dns_updn_script
         args = ''
         if profile.DnsSearch and server.DNS_SEARCH:
-            args += ' --dnsrch ' + ','.join(server.DNS_SEARCH) 
+            args += ' -dnsrch ' + ','.join(server.DNS_SEARCH) 
         args += ' -dns ' + ','.join(server.DNS) 
 
         prof += f'{"Postup":15s} = {dns_updn_script} -u{args}\n'
