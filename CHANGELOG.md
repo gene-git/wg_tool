@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.2.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-11-28
+ - typo  
+ - update CHANGELOG.md  
+
 ## [3.1.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-11-28
  - fix typo creating new user profile with -dnssrc/-dnslin  
  - tweak readme  
