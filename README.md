@@ -44,8 +44,8 @@ To build it manually, clone the repo and do:
      Modify existing user:profile(s).  Use with *-dnsrch* and *-dnslin*
 
    - *-dnsrch, --dns_search*  
-     Adds the list DNS_SEARCH from server config to client DNS search list.
-     DNS_SEARCH in server.conf should contain a list of dns domains for dns search and 
+     Adds the list DNS_SEARCH from server config to client DNS search list.  
+     DNS_SEARCH in server.conf should contain a list of dns domains for dns search.  
      Use together with *-add* for new user:profile or with *-mod* with existing profile.
 
    - *-dnslin, --dns_linux*  
