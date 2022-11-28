@@ -29,11 +29,11 @@ def _make_new_profile_dict(wgtool):
     AllowedIPs = server.user_allowedips()
 
     DnsSearch = False
-    if wgtool.server.dns_search:
+    if wgtool.opts.dns_search:
         DnsSearch = True
 
     DnsLinux = False
-    if wgtool.server.dns_linux:
+    if wgtool.opts.dns_linux:
         DnsLinux = True
 
     (key_priv, key_pub, key_psk) = gen_keys()
