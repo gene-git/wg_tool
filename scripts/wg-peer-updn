@@ -1,0 +1,190 @@
+#!/usr/bin/python
+"""
+When using linux as a client, there are 2 ways to bring up wg.
+  (a) by default wg-quick uses resolvconf to change /etc/resolv.conf
+      If using this method this script is not needed.
+      The client.conf file should have DNS = comma separated list of IPS 
+      and optinally domains to add to search list.
+
+  (b) Use PostUp to save existing resolv.conf, install wg resolv.conf
+          PostDown to restire the resolv.conf from saved.
+
+  This script implements (b) - either --up or --down
+  for --up dns info must be provided
+
+  options for postup : dns=ip1,ip2,... dns_search=dom1,dom2,..
+
+  In either case to start and stop vpn 
+    wg-quick up <foo.conf>
+    wg-quick down <foo.conf>
+
+  NB This should be standalone tool so we wont use any of utilities in wg-tool library
+"""
+
+import os
+import argparse
+#import pdb
+
+class wgSettings:
+    """
+    parse command line
+      -up
+      -down
+      -dns=ip1,ip2.
+      -dns_search=dom1,dom2
+    """
+    # pylint: disable=R0903
+    def __init__(self):
+
+        self.resolv = '/etc/resolv.conf'
+        self.resolv_save = '/etc/resolv.conf.saved'
+        #self.resolv = './resolv.conf'
+        #self.resolv_save = './resolv.conf.saved'
+        self.up = None
+        self.down = None
+        self.dns_ips = None
+        self.dns_search = None
+
+        desc = 'wg peer for wg-quick PostUp / PostDown'
+
+        opts = [
+                [('-u', '--up'),               {'help'     : 'For PostUp',
+                                                'action'   : 'store_true'}],
+                [('-d', '--down'),             {'help'     : 'For PostDown',
+                                                'action'   : 'store_true'}],
+                [('-dns', '--dns_ips'),        {'help'     : 'List of dns ips (comma separated)'}],
+                [('-dnsrch', '--dns_search'),  {'help'     : 'List of dns search domains'}],
+               ]
+
+        par = argparse.ArgumentParser(description=desc)
+        for opt in opts:
+            (opt_s, opt_l), kwargs = opt
+            if opt_l :
+                par.add_argument(opt_s, opt_l, **kwargs)
+            else:
+                par.add_argument(opt_s, **kwargs)
+
+        parsed = par.parse_args()
+        if parsed:
+            # map each option to attribute
+            for (opt, val) in vars(parsed).items():
+                setattr(self, opt, val)
+
+        if self.dns_ips:
+            self.dns_ips_list = self.dns_ips.split(',')
+
+        if self.dns_search:
+            self.dns_search_list = self.dns_search.split(',')
+
+    def __getattr__(self, name):
+        """ non-set items simply return None makes it easy to check existence"""
+        return None
+
+
+def open_file(path, mode):
+    """
+    Open a file and return file object
+    """
+    # pylint: disable=W1514,R1732
+    try:
+        fobj = open(path, mode)
+    except OSError as err:
+        print(f'Error opening file {path} : {err}')
+        fobj = None
+    return fobj
+
+def read_file(f_from):
+    """
+    read file
+    """
+    data = None
+    if os.path.exists(f_from):
+        fobj = open_file(f_from, 'r')
+        if fobj:
+            data = fobj.read()
+            fobj.close()
+
+    return data
+
+def write_file(data, f_to):
+    """
+    write file
+    """
+    okay = True
+    fobj = open_file(f_to, 'w')
+    if fobj:
+        fobj.write(data)
+        fobj.close()
+        return okay
+    return not okay
+
+def copy_file(f_from, f_to):
+    """
+    copy file
+    """
+    okay = True
+    from_data = read_file(f_from)
+    if from_data:
+        if not write_file(from_data, f_to):
+            print(f'Failed to write {f_to}')
+            return not okay
+    else:
+        print(f'Failed to read {f_from}')
+        return not okay
+    return okay
+
+
+def make_wg_resolv(settings):
+    """
+    build the resolv.conf for wg
+    """
+    resolv = '#\n# Wireguard Resolv.conf\n#\n'
+    if settings.dns_search_list:
+        dns_search = ' '.join(settings.dns_search_list)
+        resolv += f'search {dns_search}\n'
+    if settings.dns_ips_list:
+        for one_ip in settings.dns_ips_list:
+            resolv += f'nameserver {one_ip}\n'
+
+    return resolv
+
+def post_up(settings):
+    """
+     - save resolv.conf
+     - install wg resolv.conf
+    """
+    okay = True
+    wg_resolv = make_wg_resolv(settings)
+
+    if not copy_file(settings.resolv, settings.resolv_save):
+        return not okay
+
+    if not write_file(wg_resolv, settings.resolv):
+        return not okay
+    return okay
+
+def post_down(settings):
+    """
+     - restore resolv.conf
+    """
+    okay = copy_file(settings.resolv_save, settings.resolv)
+    return okay
+
+def main():
+    """
+    Support for linux wg clients
+    """
+    #pdb.set_trace()
+    settings = wgSettings()
+
+    if settings.up:
+        if  not post_up(settings):
+            print('Post up failed')
+
+    elif settings.down:
+        if not post_down(settings):
+            print('Post up failed')
+
+
+if __name__ == '__main__':
+    main()

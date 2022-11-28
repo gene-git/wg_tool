@@ -20,6 +20,8 @@ class WgtUserProfile:
         self.PresharedKey = None
         self.AllowedIPs = None
         self.Endpoint = None
+        self.DnsSearch = False
+        self.DnsLinux = False
         self.mod_time = current_date_time_str(fmt='%y%m%d-%H:%M')
 
         self._changed = None
@@ -172,4 +174,36 @@ class WgtUser:
                     changed = True
                     self._changed = True
                     self.mod_time = current_date_time_str(fmt='%y%m%d-%H:%M')
+        return changed
+
+    def mod_profile_dns_search(self, dns_search, prof_name):
+        """ Set dns search for this profile """
+        changed = False
+        if self.profile_exists(prof_name):
+            profile = self.profile[prof_name]
+            if profile.DnsSearch != dns_search:
+                profile.DnsSearch = dns_search
+                changed = True
+        else:
+            warn_msg(f'dns_search: {prof_name} not found - ignored')
+
+        if changed:
+            self.mod_time = current_date_time_str(fmt='%y%m%d-%H:%M')
+            self._changed = True
+        return changed
+
+    def mod_profile_dns_linux(self, dns_linux, prof_name):
+        """ Set dns linux for this profile """
+        changed = False
+        if self.profile_exists(prof_name):
+            profile = self.profile[prof_name]
+            if profile.DnsLinux != dns_linux:
+                profile.DnsLinux = dns_linux
+                changed = True
+        else:
+            warn_msg(f'dns_linux: {prof_name} not found - ignored')
+
+        if changed:
+            self.mod_time = current_date_time_str(fmt='%y%m%d-%H:%M')
+            self._changed = True
         return changed

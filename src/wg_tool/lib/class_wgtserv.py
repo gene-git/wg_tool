@@ -22,6 +22,7 @@ class WgtServer:
         self.PostUp = None
         self.PostDown = None
         self.DNS = None
+        self.DNS_SEARCH = None
         self.mod_date = None
 
         self._changed = None

@@ -14,6 +14,10 @@ infodir="/usr/share/${self}"
 license="LICENSE"
 licensedir="/usr/share/licenses/${self}"
 
+etcwg='/etc/wireguard/'
+scriptdir="/$etcwg/scripts"
+scripts='scripts/wg-peer-updn'
+
 # list apps without the ".py" or leave empty string
 apps=('wg-tool')
 
@@ -25,8 +29,13 @@ if [ ! -d "$dest" ] ; then
     exit 1
 else
     # shared
+
     /usr/bin/rsync --mkpath -a ${info} ${dest}${infodir}
     /usr/bin/rsync --mkpath -a ${license} ${dest}/${licensedir}/${license}
+    # keep /etc/wireguard same perms as wireguard-tool
+    mkdir -p ${dest}/${etcwg}
+    chmod 700 ${dest}/${etcwg}
+    /usr/bin/rsync -a ${scripts} ${dest}/${scriptdir}/
 
     /usr/bin/python -m installer --destdir="${dest}" dist/*.whl
 

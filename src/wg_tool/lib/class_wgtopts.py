@@ -35,6 +35,18 @@ class WgtOpts:
                  {'action'      : 'store_true',
                   'help'        : 'Add user(s) and/or user profiles user:prof1,prof2,... '}
                 ],
+                [('-mod', '--mod_users'),
+                 {'action'      : 'store_true',
+                  'help'        : 'Modify user(s) profiles (with -dnsrch, -dnslin)'}
+                ],
+                [('-dnsrch', '--dns_search'),
+                 {'action'      : 'store_true',
+                  'help'        : 'Add/Mod user with dns search list from server config DNS_SEARCH'}
+                ],
+                [('-dnslin', '--dns_linux'),
+                 {'action'      : 'store_true',
+                  'help'        : 'Linux. profile resolv.conf managed using PostUp/Down scripts'}
+                ],
                 [('-int', '--int_serv'),
                  {'action'      : 'store_true',
                   'help'        : 'With --add_users uses internal wireguard server'}

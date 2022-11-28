@@ -17,8 +17,6 @@ def _user_prof_str(wgtool, _user_name, _prof_name, profile):
     """
     Generate one users profile as a string ready to write
     """
-    emsg = wgtool.emsg
-
     server = wgtool.server
 
     serv_PublicKey = server.PublicKey
@@ -34,10 +32,24 @@ def _user_prof_str(wgtool, _user_name, _prof_name, profile):
     prof += f'{"PrivateKey":15s} = {PrivateKey}\n'
     prof += f'{"Address":15s} = {Address}\n'
 
-    if not server.DNS:
-        emsg('Error - server has no DNS listed')
+    if profile.DnsLinux:
+        # linux we manage resolv.conf
+        dns_updn_script = wgtool.dns_updn_script
+        args = ''
+        if profile.DnsSearch and server.DNS_SEARCH:
+            args += ' --dnsrch ' + ','.join(server.DNS_SEARCH) 
+        args += ' -dns ' + ','.join(server.DNS) 
+
+        prof += f'{"Postup":15s} = {dns_updn_script} -u{args}\n'
+        prof += f'{"PostDown":15s} = {dns_updn_script} -d\n'
+
     else:
-        for dns in server.DNS:
+        # non-linux or linux with wg-quick/resolvconf
+        if profile.DnsSearch and server.DNS_SEARCH:
+            dns_items = server.DNS + server.DNS_SEARCH
+        else:
+            dns_items = server.DNS
+        for dns in dns_items:
             prof += f'{"DNS":15s} = {dns}\n'
 
     prof += '\n'
@@ -60,11 +72,19 @@ def write_wg_users(wgtool):
       - see README for directory / file structure
     """
     # pylint: disable=R0914,C0301
+    errors = 0
     msg = wgtool.msg
     vmsg = wgtool.vmsg
     emsg = wgtool.emsg
 
-    errors = 0
+    # require DNS
+    if not wgtool.server.DNS:
+        emsg('Error: Server missing DNS')
+        msg('  No user wg configs saved')
+        errors += 1
+        return errors
+
+
     topdir = wgtool.wg_users_dir
 
     for user_name,user in wgtool.users.items() :

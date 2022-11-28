@@ -19,7 +19,7 @@ from .wg_users import write_wg_users
 from .wg_server import write_wg_server
 from .find_user_ip import find_user_ip
 
-from .users import add_users
+from .users import add_users, mod_users
 from .key_change import upd_user_keys
 from .key_change import upd_serv_keys
 from .users import add_active_users_profiles
@@ -37,8 +37,6 @@ from .cleanup import cleanup
 class WgTool:
     """
     Class WgTool
-
-        NB Name(s) required - can use 'all' to operate on all names
     """
     # pylint: disable=R0912,R0915
     def __init__(self):
@@ -72,6 +70,11 @@ class WgTool:
         self.wg_serv_dir = os.path.join(self.wg_dir, 'server')
         self.wg_serv_conf_file = 'wg0.conf'
         self.wg_users_dir = os.path.join(self.wg_dir, 'users')
+
+        #
+        # script to save, restore and install wg resolv.conf
+        #
+        self.dns_updn_script = '/etc/wireguard/scripts/wg-peer-updn'
 
         self.wg_server = None
         self.wg_users = None
@@ -232,6 +235,31 @@ class WgTool:
             self.server.mod_time = current_date_time_str(fmt='%m-%m-%d-%H:%M')
             self.server.set_changed(True)
 
+    def mod_user_profile(self, user_name, prof_name):
+        """
+        Modify existing user:profile(s)
+        mods:
+         - dns_search (add dns search to dns)
+         - dns_linux (use linux resolv.conf manager)
+        """
+        changed = False
+        dns_search = self.opts.dns_search
+        dns_linux = self.opts.dns_linux
+        user = self.users[user_name]
+
+        if user and dns_search :
+            one_change = user.mod_profile_dns_search(dns_search, prof_name)
+            if one_change:
+                changed = True
+
+        if user and dns_linux:
+            one_change = user.mod_profile_dns_linux(dns_linux, prof_name)
+            if one_change:
+                changed = True
+
+        if changed:
+            self.user_changed(user_name)
+
     def add_active_user_profile(self, user_name, prof_name):
         """ add prof_name to users active_profile list """
         self.add_active_user(user_name)
@@ -283,6 +311,9 @@ class WgTool:
         # make any requested user changes
         if self.opts.add_users:
             add_users(self)
+
+        if self.opts.mod_users:
+            mod_users(self)
 
         if self.opts.import_user:
             if not import_user(self):

@@ -23,6 +23,7 @@ def _sample_server_config():
             'PublicKey' :  key_pub,
             'PostUp' :  '/usr/bin/nft -f /etc/wireguard/scripts/postup.nft',
             'PostDown' :  '/usr/bin/nft flush ruleset',
+            'DNS_SEARCH' :  ['sales.example.com', 'example.com'],
             'DNS' :  ['10.99.99.21', '10.99.99.22'],
             'mod_time' : mod_time
             }

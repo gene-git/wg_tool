@@ -28,6 +28,14 @@ def _make_new_profile_dict(wgtool):
     Address = wgtool.find_avail_user_ip()
     AllowedIPs = server.user_allowedips()
 
+    DnsSearch = False
+    if wgtool.server.dns_search:
+        DnsSearch = True
+
+    DnsLinux = False
+    if wgtool.server.dns_linux:
+        DnsLinux = True
+
     (key_priv, key_pub, key_psk) = gen_keys()
 
     prof_dict = {}
@@ -37,6 +45,8 @@ def _make_new_profile_dict(wgtool):
     prof_dict['PresharedKey'] = key_psk
     prof_dict['AllowedIPs'] = AllowedIPs
     prof_dict['Endpoint'] = Endpoint
+    prof_dict['DnsSearch'] = DnsSearch
+    prof_dict['DnsLinux'] = DnsLinux
 
     return prof_dict
 
@@ -75,6 +85,32 @@ def add_users(wgtool):
 
     for (user_name, prof_names) in users_profiles.items():
         _add_user_profiles(wgtool, user_name, prof_names)
+        #wgtool.user_changed(user_name)
+    return okay
+
+def mod_users(wgtool):
+    """
+    Modify existing user:profile(s)
+      - Takes user/prof names from command line
+      - Must specify users - could extend to apply to all - safer this way.
+      - mods:
+        - dns_search (add dns search to dns)
+        - dns_linux (use linux resolv.conf manager)
+    """
+    wmsg = wgtool.wmsg
+
+    okay = True
+    users_profiles = cli_user_prof_names(wgtool)
+    if not users_profiles:
+        wmsg('Missing user:profile(s) : None given on command line; ignoring')
+        return okay
+
+    for (user_name, prof_names) in users_profiles.items():
+        if not prof_names:
+            wmsg(f'Modify user {user_name} requires profile name - skipped')
+            continue
+        for prof_name in prof_names:
+            wgtool.mod_user_profile(user_name, prof_name)
         #wgtool.user_changed(user_name)
     return okay
 

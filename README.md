@@ -38,13 +38,45 @@ To build it manually, clone the repo and do:
 
 ## Interesting, New or Coming Soon
 
- - New:  
-   - Added support for tracking modification times.  
-     For existing user/profiles without a saved value of *mod\_time*, 
-     the last change date-time of the config file is used and saved.
-     These mod times are displayed when using *-l* and *-l -det*.
+### New
 
-   - Users are now sorted in user report
+   - *-mod, --mod_users*   
+     Modify existing user:profile(s).  Use with *-dnsrch* and *-dnslin*
+
+   - *-dnsrch, --dns_search*  
+     Adds the list DNS_SEARCH from server config to client DNS search list.
+     DNS_SEARCH in server.conf should contain a list of dns domains for dns search and 
+     Use together with *-add* for new user:profile or with *-mod* with existing profile.
+
+   - *-dnslin, --dns_linux*  
+     Use together with *-add* for new user:profile or with *-mod* with existing profile.
+     *Linux Only*
+     To bring up wireguard on a linux client one uses 
+
+            wg-quick up \<user-prof.conf\> 
+            wg-quick down \<user-prof.conf\> 
+
+For example to add dns search and use dns_linux on existing user profile. First edit 
+*configs/server/server.conf* and add list of seach domains :
+
+        DNS_SEARCH = ['sales.example.com', 'example.com']
+        wg-tool -mod -dnsrch -dns_linux bob:laptop
+
+By default wg-quick uses resolvconf to manage dns resolv.conf.  If you prefer, or dont use resolvconf
+then use this option. But only use with Linux - it will not work for other clients (Android, iOS, etc)
+
+With this option the usual DNS rows in in the conf file are replaced with PostUp and PostDown.  
+PostUp saves existing resolv.conf, and installs the one needed by wireguard.
+PostDown restores the original saved resolv.conf.
+
+To use this the script *wg-peer-post-updn*, available in the *scripts* directory must be
+in /etc/wireguard/scripts for the client. 
+The installer for the wg_tool package installs the script - but clients without this
+package should be provided both the user-profile.conf as well as the supporting 
+script *wg-peer-post-updn*. 
+
+
+### Useful: Report from running wg server showing user:profile names
 
    - *-rrpt*   
      Same as -rpt, but runs *wg show* for you. This obviously only works 
@@ -52,7 +84,7 @@ To build it manually, clone the repo and do:
      sync with current config and therefore needs updating and/or restarting
 
         wg-tool -rrpt
-
+    
 ## Overview
 
 Tool to manage wireguard configs for server and users.
@@ -337,6 +369,42 @@ Summary of available options.
  - *-add, --add_users*   
    Add user(s) and/or user profiles user:prof1,prof2,...
 
+ - *-mod, --mod_users*   
+   Modify existing user:profile(s).  Use with *-dnsrch* and *-dnslin*
+
+ - *-dnsrch, --dns_search*  
+   Adds the list DNS_SEARCH from server config to client DNS search list.
+   DNS_SEARCH in server.conf should contain a list of dns domains for dns search and 
+   Use together with *-add* for new user:profile or with *-mod* with existing profile.
+
+ - *-dnslin, --dns_linux*  
+   *Linux Only*
+   Use together with *-add* for new user:profile or with *-mod* with existing profile.
+   To bring up wireguard as a linux client one uses 
+
+        wg-quick up \<user-prof.conf\> 
+        wg-quick down \<user-prof.conf\> 
+
+For example to add dns search and use dns_linux on existing user profile. First edit 
+*configs/server/server.conf* and add list of seach domains :
+
+        DNS_SEARCH = ['sales.example.com', 'example.com']
+        wg-tool -mod -dnsrch -dns_linux bob:laptop
+
+By default wg-quick uses resolvconf to manage dns resolv.conf.  If you prefer, or dont use resolvconf
+then use this option. But only use with Linux - it will not work for other clients (Android, iOS, etc)
+
+With this option the usual DNS rows in in the conf file are replaced with PostUp and PostDown.  
+PostUp saves existing resolv.conf, and installs the one needed by wireguard.
+PostDown restores the original saved resolv.conf.
+
+To use this the script *wg-peer-post-updn*, available in the *scripts* directory must be
+in /etc/wireguard/scripts for the client. 
+The installer for the wg_tool package installs the script - but clients without this
+package should be provided both the user-profile.conf as well as the supporting 
+script *wg-peer-post-updn*. 
+
+
  - *-int, --int_serv*   
    With --add_users uses internal wireguard server
 
@@ -380,7 +448,7 @@ Summary of available options.
    If file is name *stdin*, then it reads from stdin.
 
  - *-l, --list_users*   
-   Summary of users/profiles 
+   Summary of users/profiles - sorted by user.
 
  - *-det, --details*    
    Adds more detail to *-l* and *-rrpt*.
@@ -418,6 +486,15 @@ As per usual, a change to any user profiles will generate a corresponding new se
 
 Distribution of the updated config/QR code to each user is not addressed by the tool.
 Continue to use existing methods - encyrpted email, in person display of QR code etc. ...
+
+
+
+## Notes
+
+   - Config changes are tracked by modification times.  
+     For existing user/profiles without a saved value of *mod\_time*, 
+     the last change date-time of the config file is used and saved.
+     These mod times are displayed when using *-l* and *-l -det*.
 
 
 ## License
