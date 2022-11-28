@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-11-28
+ - Adds 3 new options:  
+   - --mod_users : modify existing user profile (with --dns_search and --dns_linux)  
+   - --dns_search : adds support for dns search domain list  
+   - --dns_linux : adds support for managing resolv.conf instead of relying on qg-quick/resolconf  
+ - update CHANGELOG.md  
+
 ## [2.1.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-11-24
  - - improve error msg  
    - Check conf before using it - added when auto updating older configs using mtime of config  
