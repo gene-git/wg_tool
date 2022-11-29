@@ -129,6 +129,10 @@ saves the current dns resolv.conf file when VPN is brought up using *wg-quick up
 the VPN dns into /etc/resolv.conf and restores prior resolv.conf when VPN is 
 deactivated (wg-quick down).
 
+For convenience, previous configs are saved with *.prev* extension making it easy
+to compare with a prior version. It can be useful after making changes to
+diff the two configs.
+
 Key features:
 
  - simplifies wireguard administration. ( server and users )
