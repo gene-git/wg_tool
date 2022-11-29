@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.4.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-11-29
+ - Improve wg-peer-updn  
+   - Rename existing resolv.conf when saving  
+   - Add timestamp to wireguard resolv.conf  
+ - update CHANGELOG.md  
+
 ## [3.3.1] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-11-29
  - Small add to README  
  - update CHANGELOG.md  
