@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.5.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-11-29
+ - turn off test mode  
+ - update CHANGELOG.md  
+
 ## [3.4.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-11-29
  - Improve wg-peer-updn  
    - Rename existing resolv.conf when saving  
