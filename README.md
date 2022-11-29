@@ -53,8 +53,8 @@ To build it manually, clone the repo and do:
      *Linux Only*
      To bring up wireguard on a linux client one uses 
 
-            wg-quick up \<user-prof.conf\> 
-            wg-quick down \<user-prof.conf\> 
+            wg-quick up <user-prof.conf> 
+            wg-quick down <user-prof.conf> 
 
 For example to add dns search and use dns_linux on existing user profile. First edit 
 *configs/server/server.conf* and add list of seach domains :
@@ -69,11 +69,11 @@ With this option the usual DNS rows in in the conf file are replaced with PostUp
 PostUp saves existing resolv.conf, and installs the one needed by wireguard.
 PostDown restores the original saved resolv.conf.
 
-To use this the script *wg-peer-post-updn*, available in the *scripts* directory must be
+To use this the script *wg-peer-updn*, available in the *scripts* directory must be
 in /etc/wireguard/scripts for the client. 
 The installer for the wg_tool package installs the script - but clients without this
 package should be provided both the user-profile.conf as well as the supporting 
-script *wg-peer-post-updn*. 
+script *wg-peer-updn*. 
 
 
 ### Useful: Report from running wg server showing user:profile names
@@ -84,13 +84,50 @@ script *wg-peer-post-updn*.
      sync with current config and therefore needs updating and/or restarting
 
         wg-tool -rrpt
+
+This feature solves a long standing problem with native wireguard reports which 
+burden the administrator with mapping IPs or public keys to a user profile. 
+This eliminates any need for schemes, such as Vanity keys, attempting to map 
+public keys to something more palatable.
+
     
 ## Overview
 
 Tool to manage wireguard configs for server and users.
+
 It also guarantees that server and user configs are kept properly synchronized.  
 Handles key creation whenever needed, such as adding user/profile or doing key 
 rollover.
+
+In a nutshell to setup and use wireguard vpn one needs a server and each client 
+gets a configuration, either in the form of a text based *.conf* file or
+a QR code. QR codes work nicely for wireguard phone app, for example, where the 
+app uses on board camera to read the the QR code. For computer clients, the conf file 
+is the simplest. The server and client keys share common information which mst be kept
+synchronized. This includes shared public keys, pre-shared keys for added security
+along with network information (IPs, Ports and DNS).
+
+The tool uses a file based configuration database kept under the *config* directory.
+This provides all the inputs the tool needs to generate the server and client configs.
+The latter are saved into the *wg-config/server* and *wg-config/users* directories 
+for server and clients respectively.
+
+The wg server config, *wg-config/server/wg0.conf* should be installed, as usual, 
+in /etc/wireguard. 
+
+Each user can have 1 or more profiles. For example bob may have *bob:phone* and 
+*bob:laptop*.  The configs to share with each profile is saved into, in this example,
+*wg-config/users/bob* as bob-phone.conf, bob-phone-qr.png, bob-laptop.conf and bob-laptop-qr.png.
+These are provided to the user - bob in this case.
+
+For computer clients running Linux, there are 2 kinds of configs available. The standard config
+where the DNS infomation in config is used by wg-quick. wg-quick, in turn, relies on resolvconf.
+
+The alternative, which is definitely my preference, is to use the --dns\_linux option in which
+wg-quick uses the *wg-peer-updn* script (provided here) via PostUp/PostDown. This 
+saves the current dns resolv.conf file when VPN is brought up using *wg-quick up*, instalsl 
+the VPN dns into /etc/resolv.conf and restores prior resolv.conf when VPN is 
+deactivated (wg-quick down).
 
 Key features:
 
@@ -398,11 +435,11 @@ With this option the usual DNS rows in in the conf file are replaced with PostUp
 PostUp saves existing resolv.conf, and installs the one needed by wireguard.
 PostDown restores the original saved resolv.conf.
 
-To use this the script *wg-peer-post-updn*, available in the *scripts* directory must be
+To use this the script *wg-peer-updn*, available in the *scripts* directory must be
 in /etc/wireguard/scripts for the client. 
 The installer for the wg_tool package installs the script - but clients without this
 package should be provided both the user-profile.conf as well as the supporting 
-script *wg-peer-post-updn*. 
+script *wg-peer-updn*. 
 
 
  - *-int, --int_serv*   
