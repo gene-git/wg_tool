@@ -1,45 +1,57 @@
 #!/usr/bin/python
 """
 When using linux as a client, there are 2 ways to bring up wg.
+
   (a) by default wg-quick uses resolvconf to change /etc/resolv.conf
       If using this method this script is not needed.
-      The client.conf file should have DNS = comma separated list of IPS 
+      The client.conf file should have DNS = comma separated list of IPS
       and optinally domains to add to search list.
 
-  (b) Use PostUp to save existing resolv.conf, install wg resolv.conf
-          PostDown to restire the resolv.conf from saved.
+  (b) PostUp to save existing resolv.conf, install wg resolv.conf
+      PostDown to restire the resolv.conf from saved.
 
-  This script implements (b) - either --up or --down
-  for --up dns info must be provided
+  This script implements (b) - both --up and --down
 
-  options for postup : dns=ip1,ip2,... dns_search=dom1,dom2,..
+  e.g.
+  PostUp = wg-peer-updn -u  -dns 10.0.0.1,10.0.0.2 -dnsrch foo.example.com,example.com
+  PostDown = wg-peer-updn -d
 
-  In either case to start and stop vpn 
+  In either case to start and stop vpn
     wg-quick up <foo.conf>
     wg-quick down <foo.conf>
 
-  NB This should be standalone tool so we wont use any of utilities in wg-tool library
-"""
+  NB 
+    - This should be standalone tool so we dont use any of utilities in wg-tool library
+    - 
 
+"""
 import os
 import argparse
+from datetime import datetime
 #import pdb
 
+#-------------------------------------
+# Options/Settings
+#--------------
 class wgSettings:
     """
     parse command line
       -up
       -down
       -dns=ip1,ip2.
-      -dns_search=dom1,dom2
+      -dnsrch=dom1,dom2
     """
     # pylint: disable=R0903
     def __init__(self):
 
+        # Keep on same filesytem so we can rename instead of copy
         self.resolv = '/etc/resolv.conf'
         self.resolv_save = '/etc/resolv.conf.saved'
-        #self.resolv = './resolv.conf'
-        #self.resolv_save = './resolv.conf.saved'
+
+        # testing
+        self.resolv = './resolv.conf'
+        self.resolv_save = './resolv.conf.saved'
+
         self.up = None
         self.down = None
         self.dns_ips = None
@@ -56,6 +68,7 @@ class wgSettings:
                 [('-dnsrch', '--dns_search'),  {'help'     : 'List of dns search domains'}],
                ]
 
+        # Set options to be parsed
         par = argparse.ArgumentParser(description=desc)
         for opt in opts:
             (opt_s, opt_l), kwargs = opt
@@ -64,9 +77,9 @@ class wgSettings:
             else:
                 par.add_argument(opt_s, **kwargs)
 
+        # parse options and map to class attributes
         parsed = par.parse_args()
         if parsed:
-            # map each option to attribute
             for (opt, val) in vars(parsed).items():
                 setattr(self, opt, val)
 
@@ -81,6 +94,9 @@ class wgSettings:
         return None
 
 
+#-------------------------------------
+# File utils
+#--------------
 def open_file(path, mode):
     """
     Open a file and return file object
@@ -133,12 +149,43 @@ def copy_file(f_from, f_to):
         return not okay
     return okay
 
+def rename_file(f_from, f_to):
+    """
+    rename file (same filesys as usual)
+    """
+    okay = True
+    if os.path.exists(f_to):
+        try:
+            os.unlink(f_to)
+        except OSError as err:
+            print(f'Error saving {f_from}: Failed to delete old {f_to} : {err}')
+            okay = False
+
+    try:
+        os.rename(f_from, f_to)
+    except OSError as err:
+        print(f'Error renaming {f_from} to {f_to} : {err}')
+        okay = False
+
+    return okay
+
+#-------------------------------------
+# The wg stuff
+#--------------
+
+def date_str():
+    """ time stamp for the wg resolv file """
+    fmt = '%Y-%m-%d %H:%M:%S'
+    now = datetime.today()
+    now_str = now.strftime(fmt)
+    return now_str
 
 def make_wg_resolv(settings):
     """
     build the resolv.conf for wg
     """
-    resolv = '#\n# Wireguard Resolv.conf\n#\n'
+    now = date_str()
+    resolv = f'#\n# Wireguard Resolv.conf\n# {now}\n#\n'
     if settings.dns_search_list:
         dns_search = ' '.join(settings.dns_search_list)
         resolv += f'search {dns_search}\n'
@@ -156,7 +203,8 @@ def post_up(settings):
     okay = True
     wg_resolv = make_wg_resolv(settings)
 
-    if not copy_file(settings.resolv, settings.resolv_save):
+    # these are both on same filesystem, can be file or link (e.g. NetworkManager)
+    if not rename_file(settings.resolv, settings.resolv_save):
         return not okay
 
     if not write_file(wg_resolv, settings.resolv):
@@ -167,7 +215,7 @@ def post_down(settings):
     """
      - restore resolv.conf
     """
-    okay = copy_file(settings.resolv_save, settings.resolv)
+    okay = rename_file(settings.resolv_save, settings.resolv)
     return okay
 
 def main():
@@ -184,7 +232,6 @@ def main():
     elif settings.down:
         if not post_down(settings):
             print('Post up failed')
-
 
 if __name__ == '__main__':
     main()
