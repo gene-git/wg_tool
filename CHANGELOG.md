@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.3.1] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-11-29
+ - Small add to README  
+ - update CHANGELOG.md  
+
 ## [3.3.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-11-29
  - Improve README  
  - update CHANGELOG.md  
