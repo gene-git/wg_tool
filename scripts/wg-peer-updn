@@ -49,8 +49,8 @@ class wgSettings:
         self.resolv_save = '/etc/resolv.conf.saved'
 
         # testing
-        self.resolv = './resolv.conf'
-        self.resolv_save = './resolv.conf.saved'
+        #self.resolv = './resolv.conf'
+        #self.resolv_save = './resolv.conf.saved'
 
         self.up = None
         self.down = None
