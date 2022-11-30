@@ -38,4 +38,4 @@ def initial_server_config(_wgtool):
     serv_dict = _sample_server_config()
     server = WgtServer(serv_dict)
     server.set_changed(True)
-    return serv_dict
+    return server
