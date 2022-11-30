@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.6.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-11-30
+ - bug fix for --init  
+   Thanks to @ycardon - this fixes issue #1 : https://github.com/gene-git/wg_tool/issues/1  
+ - update CHANGELOG.md  
+
 ## [3.5.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-11-29
  - turn off test mode  
  - update CHANGELOG.md  
