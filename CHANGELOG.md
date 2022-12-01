@@ -1,5 +1,9 @@
 # Changelog
 
+## [HEAD] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-12-01
+ - Typo in README fixed by @ycardon  
+ - update CHANGELOG.md  
+
 ## [3.6.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-11-30
  - bug fix for --init  
    Thanks to @ycardon - this fixes issue #1 : https://github.com/gene-git/wg_tool/issues/1  
