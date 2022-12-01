@@ -125,7 +125,7 @@ where the DNS infomation in config is used by wg-quick. wg-quick, in turn, relie
 
 The alternative, which is definitely my preference, is to use the --dns\_linux option in which
 wg-quick uses the *wg-peer-updn* script (provided here) via PostUp/PostDown. This 
-saves the current dns resolv.conf file when VPN is brought up using *wg-quick up*, instalsl 
+saves the current dns resolv.conf file when VPN is brought up using *wg-quick up*, installs 
 the VPN dns into /etc/resolv.conf and restores prior resolv.conf when VPN is 
 deactivated (wg-quick down).
 
@@ -228,7 +228,7 @@ Aside from the QR image files, all the text files are in standard TOML format.
 
 There are 2 ways to get started; either create a new suite of users/profiles or 
 import existing wireguard user.conf files.  You can add users or new profiles for existing users
-at any time. This is very easy and explained below using the *--add-user* option.
+at any time. This is very easy and explained below using the *--add_user* option.
 You can also import a user at any time, though it's primarily useful when first
 setting up wg-tool.
 
