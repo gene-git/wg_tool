@@ -318,7 +318,7 @@ Each user has their own namespace, so profile names can be same for different us
 Users and profiles can be created at any time. They can be created in bulk 
 or one user at a time. For example this command:
 
-        wg-tool --add-user bob:phone,desk,ipad jane:phone,laptop
+        wg-tool --add_user bob:phone,desk,ipad jane:phone,laptop
 
 creates 2 users. *bob* gets 3 profiles : phone, desk and ipad while 
 *jane* gets 2 profiles: phone and laptop.
