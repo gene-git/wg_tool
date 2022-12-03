@@ -110,6 +110,19 @@ def list_users(wgtool):
     details = wgtool.opts.details
 
     users_profiles = cli_user_prof_names(wgtool)
+
+    # if user given but without profiles - list all profiles
+    users_profs = {}
+    for (user_name,prof_names) in users_profiles.items():
+        if prof_names:
+            users_profs[user_name] = prof_names
+        else:
+            user = wgtool.users[user_name]
+            users_profs[user_name] = user.profile_names()
+
+    users_profiles = users_profs
+
+
     if not users_profiles or wgtool.opts.all_users:
         users_profiles = all_users_prof_names(wgtool)
 
