@@ -1,7 +1,14 @@
 # Changelog
 
-## [HEAD] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-12-01
+## [3.7.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-12-03
+ - bug: --list if username(s) given without profile. Now we list all profiles  
+ - update CHANGELOG.md  
  - Typo in README fixed by @ycardon  
+ - Merge: 8c05f936df 6dcc5b6459  
+   Merge pull request #2 from ycardon/master  
+   small typo in the readme  
+ - small typo  
+   --add-users > --add_users  
  - update CHANGELOG.md  
 
 ## [3.6.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-11-30
