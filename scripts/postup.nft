@@ -2,13 +2,26 @@
 #
 # Wireguard postup
 #
-#  nat from wireguard iface (e.g. wg0) -> local network
-#  similar to nat from internal to internet - internal here is wg0 and internet is local network
+# Network Assumptions for VPN server :
+# ------------------------------------
+#   - vpn server has access to the DNS servers used by wg configs via local lan
+#   - vpn server has access to internet via local lan
+#   - no other nft rules are being used at same time
+#   - This script NATs vpn traffic via the local LAN
 #
-#  Packets for internal will be routed to internal host otherwise to default route and internet as usual
+# Adjust as appropriate if network setup is different and see alternate postup examples.
 #
-# So, here we use: internal as VPN tunnel, and external as local netork  
-# This way it looks same as regular firewall rules
+# What it does:
+# -------------
+#   NAT from wireguard iface (e.g. wg0) -> local network
+#   similar to what is done for normal firewall, where nat is from internal network to internet,
+#   For this use case,  internal is wg0 and "internet" is local lan network
+#
+# Packets destined for local lan (e.g. DNS servers) will be routed to local lan. 
+# Packets destined elsewhere will use vpn server default route(s) (via lan). 
+# e.g. Packets destined for internet will go out via local lan (NAT'd) to internet and
+# on the local lan, these NAT'd packets will look like all other vpn server traffic.
+#
 #
 define vpn_net = 10.99.99.0/24  # must match server config
 define lan_ip = 10.0.0.1        # real lan ip of wg server
