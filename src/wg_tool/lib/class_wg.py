@@ -15,20 +15,23 @@ from .utils import current_date_time_str
 
 from .read_config import read_server_config, read_user_configs
 from .write_config import write_server_config, write_user_configs
+from .find_user_ip import find_user_ip
 from .wg_users import write_wg_users
 from .wg_server import write_wg_server
-from .find_user_ip import find_user_ip
 
 from .users import add_users, mod_users
-from .key_change import upd_user_keys
-from .key_change import upd_serv_keys
 from .users import add_active_users_profiles
 from .users import remove_active_users_profiles
+from .key_change import upd_user_keys
+from .key_change import upd_serv_keys
 from .list_users import list_users
 
 from .import_user import import_user
 from .show_rpt import show_rpt
 from .show_rpt import run_show_rpt
+from .file_tools import set_restictive_file_perms
+from .work_dir import find_work_dir
+from .work_dir import check_work_dir_access
 
 from .msg import hdr_msg, warn_msg, err_msg
 
@@ -44,17 +47,30 @@ class WgTool:
         #
         # Input Configs
         #
-        work_dir = './'
+        work_path = '/etc/wireguard/wg-tool:./'
         conf_dir_name = 'configs'
 
         # saved options are kept in work_dir/conf_dir/
-        self.opts = WgtOpts(work_dir, conf_dir_name)
+        self.opts = WgtOpts(work_path, conf_dir_name)
 
         if not self.opts.check():
             self.okay = False
 
-        self.work_dir = self.opts.work_dir
-        self.conf_dir = os.path.join(self.work_dir, 'configs')
+        #
+        # Find work dir. Try:
+        #  - work_dir passed in - use it, Otherwise
+        #  - search work_path
+        #
+        if self.opts.work_dir:
+            self.work_dir = self.opts.work_dir
+            have_access = check_work_dir_access(self.work_dir)
+            if not have_access:
+                err_msg(f'Error: no permission on dir {self.work_dir}')
+                return
+        else:
+            self.work_dir = find_work_dir(self.opts.init, work_path, conf_dir_name)
+
+        self.conf_dir = os.path.join(self.work_dir, conf_dir_name)
         self.conf_serv_dir = os.path.join(self.conf_dir,'server')
         self.conf_serv_file = 'server.conf'
 
@@ -306,6 +322,7 @@ class WgTool:
         """
         if self.opts.init :
             write_server_config(self)
+            set_restictive_file_perms(self.conf_dir)
             return
 
         # make any requested user changes
@@ -367,6 +384,10 @@ class WgTool:
         # always update wireguard configs (server and users)
         write_wg_users(self)
         write_wg_server(self)
+
+        # Extra caution to ensure permissions are user/root only
+        set_restictive_file_perms(self.conf_dir)
+        set_restictive_file_perms(self.wg_dir)
 
         # clean up
         cleanup(self)

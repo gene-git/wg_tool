@@ -77,6 +77,7 @@ def setup_save_path(wgtool, topdir, name, mkdirs=False):
     if mkdirs:
         make_dir_path(db_path_dir)
         os.chmod(topdir, dirmode)
+        os.chmod(db_path_dir, dirmode)
 
     actual = os.path.join(db_path_dir, name)
     link_name = os.path.join(topdir, name)
@@ -94,7 +95,10 @@ def format_file_header(name, datetime):
 def write_conf_file(header, data_dict, path):
     """
     Write config file - header at top and data follows
+     - set perms to user,group = RW
     """
+    file_perm = stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP
+
     okay = True
     fobj = open_file(path, 'w')
     if fobj:
@@ -104,6 +108,9 @@ def write_conf_file(header, data_dict, path):
     else:
         print(f'Failed to write {path}')
         okay = False
+
+    # don't need exception check as we successfully created file above.
+    os.chmod(path, file_perm)
     return okay
 
 def os_scandir(tdir):
@@ -152,3 +159,64 @@ def dir_list (indir, which='name'):
                 dlist.append(file)
         scan.close()
     return [flist, dlist, llist]
+
+def os_chmod(path, perm):
+    """
+    os.chmod with exception check
+     - returns True/False if all okay/not okay
+    """
+    okay = True
+    try:
+        os.chmod(path, perm)
+    except OSError:
+        okay = False
+
+    return okay
+
+def set_restictive_file_perms(topdir):
+    """
+    Restrict permissions recursively
+        user = rwX
+        group = rX
+        other =
+     where X means x if a dir
+     Return True unless any os.chmod() throws exception
+    """
+    okay = True
+
+    if not (os.path.exists(topdir) and os.path.isdir(topdir)):
+        return okay
+
+    file_perm_x = stat.S_IRWXU | stat.S_IXGRP | stat.S_IRGRP
+    file_perm = stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP
+    dir_perm = stat.S_IRWXU | stat.S_IRGRP | stat.S_IXGRP
+
+    is_ok = os_chmod(topdir, dir_perm)
+    if not is_ok:
+        okay = False
+
+    for (root, dirs, files) in os.walk(topdir):
+        # directories
+        for this_dir in dirs:
+            this_path = os.path.join(root, this_dir)
+            if os.path.islink(this_path):
+                continue
+
+            is_ok = os_chmod(this_path, dir_perm)
+            if not is_ok:
+                okay = False
+
+        # files
+        for this_file in files:
+            this_path = os.path.join(root, this_file)
+            if os.path.islink(this_path):
+                continue
+
+            # keep existing executable
+            perms = file_perm
+            if os.access(this_path, os.X_OK):
+                perms = file_perm_x
+            is_ok = os_chmod(this_path, perms)
+            if not is_ok:
+                okay = False
+    return okay

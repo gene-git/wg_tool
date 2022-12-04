@@ -10,9 +10,9 @@ class WgtOpts:
     Manage command line options
     """
     # pylint: disable=R0903
-    def __init__(self, work_dir, save_dir):
+    def __init__(self, work_path, save_dir):
         desc = 'WgTool : Manage wireguard Server & User/Profiles '
-        self.work_dir = work_dir
+        #self.work_dir = work_dir
         self.save_dir = save_dir
         self.save_file = 'saved_options'
 
@@ -24,12 +24,12 @@ class WgtOpts:
 
         opts = [
                 [('-wkd', '--work_dir'),
-                 {'default'     : self.work_dir,
-                  'help'        : f'Set working dir (default {self.work_dir})'}
+                 {'help'        : f'Set the working dir. If unset, use dir path : {work_path} '}
                 ],
                 [('-i',   '--init'),
                  {'action'      : 'store_true',
-                  'help'        : 'Initialize - make server config template - please edit'}
+                  'help'        : 'Initialize: create server config - please edit.' \
+                                 +' Can also set --work_dir'}
                 ],
                 [('-add', '--add_users'),
                  {'action'      : 'store_true',
