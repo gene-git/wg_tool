@@ -1,5 +1,19 @@
 # Changelog
 
+## [4.0.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-12-04
+ - Stronger file access permissions to protect private data in configs.  
+   Changes to work_dir:  
+   Backward compatible with previous version.  
+   Now prefers to use */etc/wireguard/wg-tool* if possible, otherwise falls back to current directory.  
+   Thanks to Yann Cardon  
+ - Improve comments in postup.nft including reference to alternate postup from Yann Cardon  
+ - Merge: f74aa16bc2 26e957cd19  
+   Merge pull request #3 from ycardon/master  
+   Create postup-alternate.nft  
+ - Create postup-alternate.nft  
+   provides an other example of postup script with useful comments  
+ - update CHANGELOG.md  
+
 ## [3.7.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-12-03
  - bug: --list if username(s) given without profile. Now we list all profiles  
  - update CHANGELOG.md  
