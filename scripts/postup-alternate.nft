@@ -1,0 +1,49 @@
+#!/usr/bin/nft -f
+
+#
+# Wireguard postup nftables script
+# --------------------------------
+#
+# adapted from https://github.com/gene-git/wg_tool/blob/master/scripts/postup.nft
+#
+# this is an alternative minimal configuration example that
+# - tranlates wireguard vpn traffic to lan traffic (SNAT)
+# - port forwards services (DNAT), in this example DNS service on an other server, use with DNS: ["10.99.99.1"]
+#  
+# do not forget to enable ip forwarding `sysctl -w net.ipv4.ip_forward=1` on your wireguard server
+# check https://wiki.archlinux.org/title/Internet_sharing
+#
+# you should not reset the whole nftables configuration (`flush ruleset`) in the PostDown section config if you already
+# have nftables rules on your server (for instance created by docker), you can check existing ones with `nft list ruleset`
+# 
+# use instead:
+# PostDown: "/usr/bin/nft delete table inet wireguard-nat"
+#
+
+define wg_iface = wg0             # wg interface
+define wg_net   = 10.99.99.0/24   # wg network (cf. /etc/wireguard/wg0.conf)
+define wg_peer  = 10.99.99.1      # wg ip of the wg server (cf. /etc/wireguard/wg0.conf)
+
+define lan_iface = enp3s0         # lan interface
+define lan_peer = 192.168.10.10   # lan ip of wg server
+define lan_dns  = 192.168.10.53   # lan DNS ip
+
+# set of nat rules related to wireguard
+table inet wireguard-nat {
+
+    # port forwatding rules (DNAT) - you can delete the whole chain if you don't need it
+    chain wireguard-port-forwarding {
+        type nat hook prerouting priority dstnat;
+
+        # forward DNS traffic adressed to the wg server to a local DNS server
+        iifname $wg_iface ip daddr $wg_peer udp dport 53 dnat to $lan_dns
+    }
+
+    # gateway (SNAT)
+    chain wireguard-gateway {
+        type nat hook postrouting priority srcnat; policy accept;
+
+        # translates VPN traffic to local traffic
+        oifname $lan_iface ip saddr $wg_net snat to $lan_peer
+    }
+}
