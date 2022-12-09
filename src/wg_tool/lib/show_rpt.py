@@ -301,13 +301,20 @@ def _any_missing_users(wgtool, users_on_serv):
     # check names
     #
     for (user_name, prof_names) in users_profiles.items():
+        if not wgtool.is_user_active(user_name):
+            continue
+
         if user_name not in user_profs_serv:
             if not warning_done:
                 wmsg(' Missing current users\n')
             msg(f'  {"Missing":>15s} : {user_name}')
             continue
 
+        user = wgtool.users[user_name]
         for prof_name in prof_names :
+            if not user.is_profile_active(prof_name):
+                continue
+
             if prof_name not in user_profs_serv[user_name]:
                 if not warning_done:
                     wmsg(' Missing current users\n')
