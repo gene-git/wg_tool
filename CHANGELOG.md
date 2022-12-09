@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.1.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-12-08
+ - Server show_rpt was not treating inactive users/profiles properly - fixed  
+ - update CHANGELOG.md  
+
 ## [4.0.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-12-04
  - Stronger file access permissions to protect private data in configs.  
    Changes to work_dir:  
