@@ -1,6 +1,7 @@
 # Changelog
 
-## [HEAD] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-12-14
+## [4.2.0, origin/master] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-12-14
+ - update CHANGELOG.md  
  - Installer now uses pip install  
    PKGBUILD now uses poetry to build wheel  
  - update CHANGELOG.md  
