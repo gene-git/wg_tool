@@ -1,5 +1,10 @@
 # Changelog
 
+## [HEAD] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-12-14
+ - Installer now uses pip install  
+   PKGBUILD now uses poetry to build wheel  
+ - update CHANGELOG.md  
+
 ## [4.1.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-12-08
  - Server show_rpt was not treating inactive users/profiles properly - fixed  
  - update CHANGELOG.md  
