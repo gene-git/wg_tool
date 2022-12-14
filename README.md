@@ -14,7 +14,7 @@ If on Arch can build using the PKGBUILD provided which is also available in the 
 To build it manually, clone the repo and do:
 
         rm -f dist/*
-        python python -m build --wheel --no-isolation
+        poetry build --format wheel
         ./scripts/do-install /
 
 ### Dependencies
@@ -87,7 +87,7 @@ In a nutshell to setup and use wireguard vpn one needs a server and each client
 gets a configuration, either in the form of a text based *.conf* file or
 a QR code. QR codes work nicely for wireguard phone app, for example, where the 
 app uses on board camera to read the the QR code. For computer clients, the conf file 
-is the simplest. The server and client keys share common information which mst be kept
+is the simplest. The server and client keys share common information which must be kept
 synchronized. This includes shared public keys, pre-shared keys for added security
 along with network information (IPs, Ports and DNS).
 

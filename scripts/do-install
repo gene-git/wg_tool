@@ -37,7 +37,13 @@ else
     chmod 700 ${dest}/${etcwg}
     /usr/bin/rsync -a ${scripts} ${dest}/${scriptdir}/
 
-    /usr/bin/python -m installer --destdir="${dest}" dist/*.whl
+    #
+    # Ensure no pip config is used.
+    #
+    #/usr/bin/python -m installer --destdir="${dest}" dist/*.whl
+    export PIP_CONFIG_FILE=/dev/null
+    pipopts="--root-user-action=ignore --isolated --ignore-installed --no-deps"
+    /usr/bin/pip install --root="${dest}" $pipopts dist/*.whl
 
     # link(s) in /usr/bin/
     if [ -v apps ] ; then
