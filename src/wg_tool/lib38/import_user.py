@@ -68,28 +68,28 @@ def _read_wg_user_config(wgtool, fname):
 
         _section = None
         if key == '[Interface]':
-                _section = 'Interface'
+            _section = 'Interface'
         elif key == '[Peer]':
-                _section = 'Peer'
+            _section = 'Peer'
 
             # only in Interface - could check but not necessary
         elif key == 'PrivateKey':
-                PrivateKey = val
+            PrivateKey = val
         elif key == 'Address':
-                Address = val
+            Address = val
         elif key == 'DNS':
-                DNS.append(val)
+            DNS.append(val)
 
             # only in Peer - could check but not necessary
         elif key == 'PublicKey':
-                PublicKey = val
+            PublicKey = val
         elif key == 'PresharedKey':
-                PresharedKey = val
+            PresharedKey = val
         elif key == 'AllowedIPs':
-                AllowedIPs = val
+            AllowedIPs = val
         elif key == 'Endpoint':
-                Endpoint = val
-                [Hostname, ListenPort] = Endpoint.split(':')
+            Endpoint = val
+            [Hostname, ListenPort] = Endpoint.split(':')
 
     conf_user = {
             'Address'       : Address,
