@@ -1,0 +1,4 @@
+For versions of python lacking the 'match' statement, use these files instead.
+Simply copy these over the regular versions.
+
+To best of my knowledge these are the only changes needed to run with older python.
