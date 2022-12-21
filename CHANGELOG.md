@@ -1,6 +1,14 @@
 # Changelog
 
-## [4.2.0, origin/master] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-12-14
+## [4.3.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-12-20
+ - Change python to python3 (as per GH issue #5 on ubuntu/debian.  
+   Remove pip option from installer (--root-user-action=ignore)  
+ - indent fix  
+ - To help with older pre 3.9 python versions, provide files without match().  
+   They are in lib38. Copy to lib38/*.py lib/  
+ - update CHANGELOG.md  
+
+## [4.2.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-12-14
  - update CHANGELOG.md  
  - Installer now uses pip install  
    PKGBUILD now uses poetry to build wheel  
