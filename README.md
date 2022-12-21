@@ -15,7 +15,10 @@ To build it manually, clone the repo and do:
 
         rm -f dist/*
         poetry build --format wheel
-        ./scripts/do-install /
+        root_dest="/"
+        ./scripts/do-install $root_dest
+
+  If running as non-root then set root\_dest a user writable directory
 
 ### Dependencies
 
