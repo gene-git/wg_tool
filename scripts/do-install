@@ -22,7 +22,7 @@ scripts='scripts/wg-peer-updn'
 apps=('wg-tool')
 
 # so can make app link in /usr/bin
-sitedir=$(python -c "import site; print(site.getsitepackages()[0])")
+sitedir=$(/usr/bin/env python3 -c "import site; print(site.getsitepackages()[0])")
 
 if [ ! -d "$dest" ] ; then
     echo 'Missing destination directory'
@@ -40,9 +40,8 @@ else
     #
     # Ensure no pip config is used.
     #
-    #/usr/bin/python -m installer --destdir="${dest}" dist/*.whl
     export PIP_CONFIG_FILE=/dev/null
-    pipopts="--root-user-action=ignore --isolated --ignore-installed --no-deps"
+    pipopts="--isolated --ignore-installed --no-deps"
     /usr/bin/pip install --root="${dest}" $pipopts dist/*.whl
 
     # link(s) in /usr/bin/
