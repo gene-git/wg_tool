@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.3.1] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-12-25
+ - Move archlinux dir to packaging.  
+   Add packaging/requirements.txt  
+   Update build dependencies in PKGBUILD  
+   Tweak README  
+ - tweak README  
+ - update CHANGELOG.md  
+
 ## [4.3.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-12-20
  - Change python to python3 (as per GH issue #5 on ubuntu/debian.  
    Remove pip option from installer (--root-user-action=ignore)  
