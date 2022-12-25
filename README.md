@@ -7,7 +7,7 @@ Tool to manage wireguard configs for server and users.
 Available on 
  - [Github source ](https://github.com/gene-git/wg_tool)
  - [Archlinux AUR](https://aur.archlinux.org/packages/wg_tool)   
-   PKGBUILD also in source tree under archlinux
+   PKGBUILD also in source tree under packaging
 
 If on Arch can build using the PKGBUILD provided which is also available in the AUR.
 
@@ -33,10 +33,9 @@ To build it manually, clone the repo and do:
 
 - Building Package:
   - git
-  - build (aka python-build)
-  - intaller (aka python-installer)
-  - wheel (aka python-wheel)
   - poetry (aka python-poetry)
+  - wheel (aka python-wheel)
+  - pip (aka python-pip)
   - rsync
 
 ## Interesting, New or Coming Soon

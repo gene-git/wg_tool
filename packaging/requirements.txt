@@ -1,0 +1,23 @@
+# 
+# requirements.txt
+# qrcode uses pillow and usually has it as a dep but not always (see gh issue #3)
+# pip uses wheel and should have it as dependency 
+
+# Run time
+python >= 3.9
+wireguard-tools
+nftables
+netaddr
+qrcode
+pillow
+tomli_w
+tomli       # needed for python < 3.11
+
+# package building/installing
+git
+poetry
+pip
+rsync
+
+
+
