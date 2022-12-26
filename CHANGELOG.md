@@ -1,5 +1,10 @@
 # Changelog
 
+## [4.3.2] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-12-26
+ - Change default python interpreter location to /usr/bin/python3 (remove env).  
+   This is also recommended by e.g. debian packaging guidelines (https://www.debian.org/doc/packaging-manuals/python-policy). While many distros (Arch, Fedora etc.) recommend /usr/bin/python - we keep python3 which will work on those and on debian until debian provides python (and not just python3).  
+ - update CHANGELOG.md  
+
 ## [4.3.1] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-12-25
  - Move archlinux dir to packaging.  
    Add packaging/requirements.txt  
