@@ -22,7 +22,7 @@ scripts='scripts/wg-peer-updn'
 apps=('wg-tool')
 
 # so can make app link in /usr/bin
-sitedir=$(/usr/bin/env python3 -c "import site; print(site.getsitepackages()[0])")
+sitedir=$(/usr/bin/python3 -c "import site; print(site.getsitepackages()[0])")
 
 if [ ! -d "$dest" ] ; then
     echo 'Missing destination directory'

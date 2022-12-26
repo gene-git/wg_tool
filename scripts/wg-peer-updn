@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 """
 When using linux as a client, there are 2 ways to bring up wg.
 

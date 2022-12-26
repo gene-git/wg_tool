@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 """
 wg-tool
   Tool to help manage wireguard configs for server and users. 
