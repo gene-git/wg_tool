@@ -8,8 +8,13 @@
 #   - vpn server has access to internet via local lan
 #   - no other nft rules are being used at same time
 #   - This script NATs vpn traffic via the local LAN
+#   - ensure ip forwarding is on
+#     sysctl -w net.ipv4.ip_forward=1
+#     and add to /etc/sysctl.d/systctl.conf :
+#       net.ipv4.ip_forward = 1
 #
 # Adjust as appropriate if network setup is different and see alternate postup examples.
+# See the alternate script for another example.
 #
 # What it does:
 # -------------
