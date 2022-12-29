@@ -10,7 +10,7 @@
 #   - This script NATs vpn traffic via the local LAN
 #   - ensure ip forwarding is on
 #     sysctl -w net.ipv4.ip_forward=1
-#     and add to /etc/sysctl.d/systctl.conf :
+#     and add to /etc/sysctl.d/sysctl.conf :
 #       net.ipv4.ip_forward = 1
 #
 # Adjust as appropriate if network setup is different and see alternate postup examples.

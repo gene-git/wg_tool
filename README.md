@@ -278,6 +278,16 @@ Edit the 3 variables at the top of postup.nft for your own server.
  - lan_ip lan_iface  
    IP and interface of wireguard server
 
+
+Remember to allow forwarding on the wireguard server, to allow the VPN traffic to LAN:
+
+        sysctl -w net.ipv4.ip_forward=1
+
+to keep this on reboot add to /etc/sysctl.d/sysctl.conf (you can choose the filename):
+
+        net.ipv4.ip_forward = 1
+
+
 The list of active users is managed in this server.conf file.
 This is generated and updated automatically. The tool provides options to add and remove
 users from the active list. If a user is inactive, none of their profiles will be in server
