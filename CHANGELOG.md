@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.3.4] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-12-29
+ - Add reminder in README to allow ip forwarding on wireguard server  
+ - update CHANGELOG.md  
+
 ## [4.3.3] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-12-28
  - Add brief networking note  
  - update CHANGELOG.md  
