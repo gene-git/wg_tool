@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2022,2023 Gene C
 """
 conf_file_check
 Before writing a file we check if current file has same content (aside from header).

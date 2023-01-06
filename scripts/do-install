@@ -1,4 +1,6 @@
 #!/bin/bash
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2022,2023 Gene C
 #
 # installer script for wg_tool
 # e.g. Call from PKGBUILD:  

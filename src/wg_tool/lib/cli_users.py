@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2022,2023 Gene C
 """
    Helpers for parse the list of user:prof,prof, ..
 

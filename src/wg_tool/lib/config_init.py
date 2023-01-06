@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2022,2023 Gene C
 """
  Create server config template
     - This will be marked changed by caller and written out as usual

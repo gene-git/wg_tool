@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2022,2023 Gene C
 """
 Takes output from 'wg show' and adds user:profile
 to any current connections.

@@ -1,7 +1,9 @@
 #!/usr/bin/python3
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2022,2023 Gene C
 """
 wg-tool
-  Tool to help manage wireguard configs for server and users. 
+  Tool to help manage wireguard configs for server and users.
   Guarantee that server and user config kept in sync.
   Handles creating any keys.
   See --help for options and README for details.

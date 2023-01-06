@@ -549,9 +549,8 @@ Continue to use existing methods - encyrpted email, in person display of QR code
 
 ## License
 
-`wg_tool` was created by Gene C. It is licensed under the terms of the MIT license.
+Created by Gene C. and licensed under the terms of the MIT license.
 
-
-
-    
+ - SPDX-License-Identifier: MIT
+ - Copyright (c) 2022-2023 Gene C 
 
