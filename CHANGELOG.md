@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.3.5] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2023-01-06
+ - Add SPDX licensing lines  
+ - update CHANGELOG.md  
+
 ## [4.3.4] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2022-12-29
  - Add reminder in README to allow ip forwarding on wireguard server  
  - update CHANGELOG.md  
