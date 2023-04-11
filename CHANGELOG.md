@@ -1,5 +1,11 @@
 # Changelog
 
+## [4.3.6] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2023-04-11
+ - postup.nft script add extra line: ct status dnat accept - I saw a martial packat at firewall from vpn which was unexpected  
+   minor readme edit  
+   update project version  
+ - update CHANGELOG.md  
+
 ## [4.3.5] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2023-01-06
  - Add SPDX licensing lines  
  - update CHANGELOG.md  
