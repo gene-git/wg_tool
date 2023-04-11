@@ -68,15 +68,18 @@ To build it manually, clone the repo and do:
      Same as -rpt, but runs *wg show* for you. This obviously only works 
      when run on the vpn server. Will advise if current server is out of 
      sync with current config and therefore needs updating and/or restarting
+     This report shows users and profiles in nice human readable form.
 
         wg-tool -rrpt
 
 This feature solves a long standing problem with native wireguard reports which 
 burden the administrator with mapping IPs or public keys to a user profile. 
-This eliminates any need for schemes, such as Vanity keys, attempting to map 
-public keys to something more palatable.
+The report does it for you and shows actual user and profile names.
 
-    
+Because of this feature, this tool eliminates any need for schemes, 
+such as Vanity keys, attempting to map public keys to something more palatable.
+
+
 ## Overview
 
 Tool to manage wireguard configs for server and users.
@@ -268,7 +271,7 @@ Again, remember to edit the network variables at the top of the script to match 
 In my case,  I want to provide users with access to internet as well as internal network. So the 
 system firewall forwards vpn traffic to the wireguard server which runs on the inside. 
 This script provides access to internet and lan as long as the wireguard server host that access.
-If your wg server is in the DMZ then it probably only has access to DMS net and internet. 
+If your wg server is in the DMZ then it probably only has access to DMZ net and internet. 
 
 Edit the 3 variables at the top of postup.nft for your own server.
 

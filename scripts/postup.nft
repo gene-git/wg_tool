@@ -53,6 +53,7 @@ table inet t_filter {
 
         iifname $wg accept
         #iifname $lan_iface ct state related,established accept
+        ct status dnat accept
         iifname $lan_iface accept
     }
 }
