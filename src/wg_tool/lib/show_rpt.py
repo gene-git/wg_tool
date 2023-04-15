@@ -217,6 +217,7 @@ def _rpt_user(wgtool, user):
     """
     # pylint: disable=R0914
     msg = wgtool.msg
+    details = wgtool.opts.details
 
     pub_key = user['pub_key']
     address = user['address']
@@ -242,7 +243,8 @@ def _rpt_user(wgtool, user):
         if endpoint:
             msg(f'  {"endpoint":>14s} : {endpoint}')
         msg(f'  {"address":>14s} : {address}')
-        msg(f'  {"pub_key":>14s} : {pub_key}')
+        if details:
+            msg(f'  {"pub_key":>14s} : {pub_key}')
         if handshake:
             msg(f'  {"handshake":>14s} : {handshake}')
         if transfer:
