@@ -1,5 +1,10 @@
 # Changelog
 
+## [HEAD] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2023-04-15
+ - Only show user public key for "-rpt" when also using "-det".  
+   Since we show user and profile name, the user key is not really needed  
+ - update CHANGELOG.md  
+
 ## [4.3.6] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2023-04-11
  - postup.nft script add extra line: ct status dnat accept - I saw a martial packat at firewall from vpn which was unexpected  
    minor readme edit  
