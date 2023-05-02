@@ -59,7 +59,7 @@ Philosophy
 We follow the *live at head commit* philosophy. This means we recommend using the
 latest commit on git master branch. 
 
-This aproach is also taken by Google [1]_ [2]_.
+This approach is also taken by Google [1]_ [2]_.
 
 New
 ----
