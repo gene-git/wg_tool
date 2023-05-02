@@ -10,7 +10,7 @@
 dest="$1"
 self="wg_tool"
 
-info="README.md CHANGELOG.md scripts packaging Network-Notes.md"
+info="README.rst CHANGELOG.md scripts packaging Network-Notes.md"
 infodir="/usr/share/${self}"
 
 license="LICENSE"
