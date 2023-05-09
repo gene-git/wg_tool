@@ -1,10 +1,15 @@
 # Changelog
 
+## [4.5.1] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2023-05-08
+ - Add comment to README about linux using wg and ssh and MTU  
+ - typo  
+ - update CHANGELOG.md  
+
 ## [4.5.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2023-05-02
  - Add comment on philosophy of living at the head commit.  
    Change README from markdown to restructured text  
 
-## [4.4.0, origin/master] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2023-04-15
+## [4.4.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2023-04-15
  - update CHANGELOG.md  
  - Only show user public key for "-rpt" when also using "-det".  
    Since we show user and profile name, the user key is not really needed  
