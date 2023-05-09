@@ -52,9 +52,8 @@ table inet t_filter {
         type filter hook forward priority -50; policy drop;
 
         iifname $wg accept
-        #iifname $lan_iface ct state related,established accept
-        ct status dnat accept
         iifname $lan_iface accept
+        ct status dnat accept
     }
 }
 

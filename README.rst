@@ -502,6 +502,22 @@ The installer for the wg_tool package installs the script - but clients without 
 package should be provided both the user-profile.conf as well as the supporting 
 script *wg-peer-updn*. 
 
+NB
+  I have come across one hotel wifi, that while the vpn worked fine to provide internet access, I found
+  that for my laptop to be able to also 'ssh internal-host' it would hang. 
+
+  ssh -v <host> 
+  hangs right after this is logged:
+
+      expecting SSH2_MSG_KEX_ECDH_REPLY
+
+  The 'fix' was to set the MTU down from 1500 down to 1400 on my laptop while at that hotel. 
+  The internet access continued to work fine, but this fixed whatever was a problem for ssh;
+  so now 'ssh internal-host' worked as usual. 
+  
+  I have only had to change MTU setting at one hotel, but I mention it here in case 
+  anyone else comes across this.
+
 
  - *-int, --int_serv*   
 
