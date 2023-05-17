@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.5.2] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2023-05-17
+ - Simplify Arch PKGBUILD and more closely follow arch guidelines  
+ - update CHANGELOG.md  
+
 ## [4.5.1] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2023-05-08
  - Add comment to README about linux using wg and ssh and MTU  
  - typo  
