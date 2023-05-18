@@ -20,7 +20,7 @@ To build it manually, clone the repo and do:
 .. code:: bash
 
     rm -f dist/*
-    poetry build --format wheel
+    /usr/bin/python -m build --wheel --no-isolation
     root_dest="/"
     ./scripts/do-install $root_dest
 
@@ -44,7 +44,8 @@ Dependencies
   - git
   - poetry (aka python-poetry)
   - wheel (aka python-wheel)
-  - pip (aka python-pip)
+  - build (aka python-build)
+  - installer (aka python-installer)
   - rsync
 
 Interesting, New or Coming Soon

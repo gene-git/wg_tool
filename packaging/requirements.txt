@@ -15,8 +15,10 @@ tomli       # needed for python < 3.11
 
 # package building/installing
 git
+wheel
+build
+installer
 poetry
-pip
 rsync
 
 
