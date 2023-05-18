@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.5.3] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2023-05-18
+ - PKGBUILD: build wheel back to using python -m build instead of poetry  
+ - update CHANGELOG.md  
+
 ## [4.5.2] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2023-05-17
  - Simplify Arch PKGBUILD and more closely follow arch guidelines  
  - update CHANGELOG.md  
