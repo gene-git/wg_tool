@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.7.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2023-07-28
+ - Fix import open_file buglet  
+ - update CHANGELOG.md  
+
 ## [4.6.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2023-05-18
  - install: switch from pip to python installer package. This adds optimized bytecode  
  - update CHANGELOG.md  
