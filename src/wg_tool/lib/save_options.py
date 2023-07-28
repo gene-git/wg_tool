@@ -7,7 +7,7 @@ save/restore some command line options
 import os
 from .msg import err_msg
 from .file_tools import make_dir_path
-from .file_tools import open_file
+from .utils import open_file
 from .toml import dict_to_toml_string
 from .toml import read_toml_file
 

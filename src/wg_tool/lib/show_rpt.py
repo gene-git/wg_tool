@@ -5,7 +5,7 @@ Takes output from 'wg show' and adds user:profile
 to any current connections.
 """
 import sys
-from .file_tools import open_file
+from .utils import open_file
 from .run_prog import run_prog
 from .cli_users import all_users_prof_names
 

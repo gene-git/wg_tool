@@ -20,7 +20,7 @@
               --import file.conf user_1:laptop  -> user_name : user_1, config : laptop
 """
 import os
-from .file_tools import open_file
+from .utils import open_file
 from .users import cli_user_prof_names
 from .find_user_ip import is_user_address_available
 from .keys import public_from_private_key
