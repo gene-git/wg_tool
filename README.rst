@@ -274,7 +274,8 @@ These are all wireguard standard fields.
 The key fields to edit are:
 
  * Address  
-   This is the internal wg cidr mask on the server IP address 
+   This is the internal wg cidr mask on the server IP addresses (IPv4 and IPv6).  
+   N.B. If you prefer user:profile get IPv6 then put it first in the list.
 
  * Hostname and ListenPort  
    wg server hostname as seen from internet and port chosen 
