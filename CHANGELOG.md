@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.1.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2023-08-02
+ - Improve code finding available client IPs to properly support IPv6.  
+   Client IPs are chosen from the server Address list in natural order. If you prefer clients  
+   get IPv6 addresses, those should be listed first. Similarly, if IPv4 is preferred, then put that first.  
+   Tidy to keep pylint clean  
+ - update CHANGELOG.md  
+
 ## [4.7.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2023-07-28
  - Fix import open_file buglet  
  - update CHANGELOG.md  
