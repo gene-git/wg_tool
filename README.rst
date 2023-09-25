@@ -9,11 +9,12 @@ Installation
 ============
 
 Available on 
- - [Github source ](https://github.com/gene-git/wg_tool)
- - [Archlinux AUR](https://aur.archlinux.org/packages/wg_tool)   
-   PKGBUILD also in source tree under packaging
 
-If on Arch can build using the PKGBUILD provided which is also available in the AUR.
+ - `Github`_
+ - `Archlinux AUR`_
+
+If on Arch can build using the PKGBUILD provided in packaging directory or from the AUR.
+
 
 To build it manually, clone the repo and do:
 
@@ -627,6 +628,9 @@ Notes
      For existing user/profiles without a saved value of *mod\_time*, 
      the last change date-time of the config file is used and saved.
      These mod times are displayed when using *-l* and *-l -det*.
+
+.. _Github: https://github.com/gene-git/wg-client
+.. _Archlinux AUR: https://aur.archlinux.org/packages/wg-client
 
 .. [1] https://github.com/google/googletest  
 .. [2] https://abseil.io/about/philosophy#upgrade-support
