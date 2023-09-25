@@ -1,5 +1,9 @@
 # Changelog
 
+## [5.1.1] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2023-09-25
+ - README - replace markdown url links with rst link notation  
+ - update CHANGELOG.md  
+
 ## [5.1.0] ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2023-08-02
  - Improve code finding available client IPs to properly support IPv6.  
    Client IPs are chosen from the server Address list in natural order. If you prefer clients  
