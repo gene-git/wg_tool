@@ -2,6 +2,7 @@ Changelog
 =========
 
 [head] ----- 2023-09-26
+ * fix rst list items in Changelog  
  * update Docs/Changelog.rst  
 
 [5.3.0] ----- 2023-09-26
