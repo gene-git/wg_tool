@@ -10,10 +10,10 @@
 dest="$1"
 self="wg_tool"
 
-info="README.rst CHANGELOG.md scripts packaging Network-Notes.md"
+info="README.rst Docs scripts packaging"
 infodir="/usr/share/${self}"
 
-license="LICENSE"
+license="Docs/License.rst"
 licensedir="/usr/share/licenses/${self}"
 
 etcwg='/etc/wireguard/'
@@ -33,7 +33,8 @@ else
     # shared
 
     /usr/bin/rsync --mkpath -a ${info} ${dest}${infodir}
-    /usr/bin/rsync --mkpath -a ${license} ${dest}/${licensedir}/${license}
+    /usr/bin/rsync --mkpath -a ${license} ${dest}/${licensedir}/
+
     # keep /etc/wireguard same perms as wireguard-tool
     mkdir -p ${dest}/${etcwg}
     chmod 700 ${dest}/${etcwg}
