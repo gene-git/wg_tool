@@ -1,7 +1,8 @@
 Changelog
 =========
 
-[head] ----- 2023-09-26
+[5.3.1] ----- 2023-09-26
+ * Release as 5.3.1  
  * fix rst list items in Changelog  
  * update Docs/Changelog.rst  
 
