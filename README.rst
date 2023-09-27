@@ -629,8 +629,8 @@ Notes
      the last change date-time of the config file is used and saved.
      These mod times are displayed when using *-l* and *-l -det*.
 
-.. _Github: https://github.com/gene-git/wg-client
-.. _Archlinux AUR: https://aur.archlinux.org/packages/wg-client
+.. _Github: https://github.com/gene-git/wg_tool
+.. _Archlinux AUR: https://aur.archlinux.org/packages/wg_tool
 
 .. [1] https://github.com/google/googletest  
 .. [2] https://abseil.io/about/philosophy#upgrade-support
