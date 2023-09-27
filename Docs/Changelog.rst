@@ -1,7 +1,8 @@
 Changelog
 =========
 
-[head] ----- 2023-09-27
+[5.3.2, origin/master] ----- 2023-09-27
+ * update Docs/Changelog.rst  
  * Fix links in readme.  
  * Remove doc build dependency on myst-parser since no more mardown  
  * update Docs/Changelog.rst  
