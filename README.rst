@@ -64,6 +64,19 @@ such as Vanity keys, attempting to map public keys to something more palatable.
 It will also advise if the current server config being used is out of 
 sync with current tool config and therefore needs updating and/or restarting
 
+Sample output of *wg-tool -rrpt* ::
+
+    wg server:
+       interface : wg0
+            port : nnnnn
+         pub_key : <x>
+
+       susan (+) : phone (+)
+        endpoint : xxx.xxx.xxx.xxx:yyyyy
+         address : xxx.xxx.xxx.xxx/32
+       handshake : 2 hours, 4 minutes, 15 seconds ago
+        transfer : 102.62 MiB received, 320.29 MiB sent
+
 More background
 ===============
 

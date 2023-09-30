@@ -1,6 +1,11 @@
 Changelog
 =========
 
+[5.3.4] ----- 2023-09-30
+ * update project version  
+ * Add sample output of server report to README  
+ * update Docs/Changelog.rst  
+
 [5.3.3] ----- 2023-09-30
  * update project version  
  * Improve README doc  
