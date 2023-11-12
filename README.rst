@@ -36,7 +36,8 @@ New
 
  * Tidy up documents and improve README. 
  * Can now generate html and pdf docs using sphinx
-   * See *Howto-Build* in the *Docs* directory
+
+   See *Howto-Build* in the *Docs* directory
 
 Interesting
 ===========
@@ -296,7 +297,7 @@ The *postup.nft* script provides access to the internet and lan provided the wir
 host has that access.  
 If the wg server is in the DMZ then it probably only has access to DMZ net and internet. 
 
-Before deployin the *pustup.nft* script, edit the 3 variables at the top for your own 
+Before deploying the *postup.nft* script, edit the 3 variables at the top for your own 
 server setup:
 
  * vpn_net  
@@ -324,7 +325,7 @@ wg0.conf. If a user is active then only their active profiles will be provided t
 Each user config has its own list active profiles.  It too is managed by the tool. 
 
 N.B. the active users and active profiles lists, only affect whether they are included
-in the seerver wg0.conf file. No user or profile is removed when a user and/or profile
+in the server wg0.conf file. No user or profile is removed when a user and/or profile
 is marked inactive.
 
 Step 2 - import and/or add users and profiles
@@ -370,7 +371,7 @@ Importing existing users and profiles
 
 The tool can import 1 user:profile at a time. This is done using::
 
-        wg-tool --import_user \<user.conf\> user_name:profile_name
+        wg-tool --import_user <user.conf> user_name:profile_name
 
 where \<user.conf\> is the standard wireguard conf file (the text version of the
 QR code). And the user_name and profile_name are what you want them to be known 
@@ -390,7 +391,7 @@ As above you may want to see a list of users/profiles::
         wg-tool --list_users
 
 And compare a user profile conf or 2 with existing ones - QR codes will be different, but contain the
-same informateion. You can check this for bob's laptop QR by doing this::
+same information. You can check this for bob's laptop QR by doing this::
 
     zbarimg wg-configs/users/bob/bob-laptop-qr.png
 
