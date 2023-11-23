@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "wg_tool"
 dynamic = ["version"]
-description = "Tool administer wireguard VPN (server and users)"
+description = "Tool to administer wireguard VPN (server and user configs)"
 authors = [{ name = "Gene C", email = "arch@sapience.com" }]
 license = "MIT"
 readme = "README.rst"
