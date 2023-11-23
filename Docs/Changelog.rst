@@ -1,6 +1,12 @@
 Changelog
 =========
 
+[5.5.0] ----- 2023-11-23
+ * Change python build from poetry to hatch.  
+ * It is cleaner and simpler.  
+ * Switch copyright lines to SPDX format  
+ * update Docs/Changelog.rst Docs/wg_tool.pdf  
+
 [5.4.1] ----- 2023-11-12
  * Minor readme rst format change.  
  * Add wg_tool.pdf  
