@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-# Copyright (c) 2022,2023 Gene C
+# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
 """
 When user doesn't specify then find work_dir by looking wlong the default work_path.
  - We could also check for config_dir/server/server.conf?

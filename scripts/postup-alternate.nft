@@ -1,5 +1,6 @@
 #!/usr/bin/nft -f
-
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
 #
 # Wireguard postup nftables script
 # --------------------------------
@@ -13,8 +14,9 @@
 # do not forget to enable ip forwarding `sysctl -w net.ipv4.ip_forward=1` on your wireguard server
 # check https://wiki.archlinux.org/title/Internet_sharing
 #
-# you should not reset the whole nftables configuration (`flush ruleset`) in the PostDown section config if you already
-# have nftables rules on your server (for instance created by docker), you can check existing ones with `nft list ruleset`
+# you should not reset the whole nftables configuration (`flush ruleset`) in the 
+# PostDown section config if you already have nftables rules on your server 
+# (for instance created by docker), you can check existing ones with `nft list ruleset`
 # 
 # use instead:
 # PostDown: "/usr/bin/nft delete table inet wireguard-nat"

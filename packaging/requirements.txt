@@ -4,7 +4,7 @@
 # pip uses wheel and should have it as dependency 
 
 # Run time
-python >= 3.9
+python >= 3.10
 wireguard-tools
 nftables
 netaddr
@@ -18,7 +18,7 @@ git
 wheel
 build
 installer
-poetry
+hatch
 rsync
 
 

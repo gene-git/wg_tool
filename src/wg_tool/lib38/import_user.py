@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-# Copyright (c) 2022,2023 Gene C
+# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
 """
  Import existing user from standard wireguard user.conf file
  This is same file output write_wg_users()

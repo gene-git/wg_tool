@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-# Copyright (c) 2022,2023 Gene C
+# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
 """
  Generate wireguard user config and QR code for all users
    - don't limit to active users that only affects server config

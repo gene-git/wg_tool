@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # SPDX-License-Identifier: MIT
-# Copyright (c) 2022,2023 Gene C
+# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
 """
 wg-tool
   Tool to help manage wireguard configs for server and users.
@@ -10,7 +10,6 @@ wg-tool
 gc 20221022
 """
 # pylint: disable=C0103
-#import pdb
 from lib import WgTool
 
 def main():
@@ -18,7 +17,6 @@ def main():
     Top level entry for wg-tool.
     managers wireguard server wg0.conf as well as users .conf and R codes
     """
-    #pdb.set_trace()
     wgtool = WgTool()
     if wgtool.okay:
         wgtool.doit()

@@ -34,9 +34,9 @@ Key features
 New
 ===
 
- * Tidy up documents and improve README. 
+ * Change python build from poetry to hatch
  * Can now generate html and pdf docs using sphinx
-
+   Pre-built wg_tool.pdf provided in repo
    See *Howto-Build* in the *Docs* directory
 
 Interesting
@@ -710,7 +710,7 @@ Dependencies
 * Building Package:
 
   * git
-  * poetry (aka python-poetry)
+  * hatch (aka python-hatch)
   * wheel (aka python-wheel)
   * build (aka python-build)
   * installer (aka python-installer)
@@ -730,7 +730,7 @@ License
 Created by Gene C. and licensed under the terms of the MIT license.
 
  * SPDX-License-Identifier: MIT
- * Copyright (c) 2022-2023 Gene C 
+ * SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
 
 .. _Github: https://github.com/gene-git/wg_tool
 .. _Archlinux AUR: https://aur.archlinux.org/packages/wg_tool
