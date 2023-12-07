@@ -34,6 +34,11 @@ Key features
 New
 ===
 
+ * wg-peer-updn now saves additional copy of dns file as resolv.conf.wg
+   Helpful for clients which sleep and on resume network restart overwrites resolv.conf
+   This makes it simple to put back the vpn resolv.conf file by
+   copying resolv.conf.wg to resolv.conf.  Used by wg-client package.
+   Postdown will still restore original resolv.conf.save as usual.
  * Change python build from poetry to hatch
  * Can now generate html and pdf docs using sphinx
    Pre-built wg_tool.pdf provided in repo
@@ -130,7 +135,7 @@ For those computer clients running Linux, there are 2 kinds of configs available
 
 * linux config
 
-    this is definitely my preference. Activated by the *--dns_linux* option. When 
+    this is my preferred approach. Activated by the *--dns_linux* option. When 
     using this, wg-quick uses the provided *wg-peer-updn* script via PostUp/PostDown. 
     
     This scipt saves the current dns resolv.conf file when VPN is brought up using *wg-quick up*, 

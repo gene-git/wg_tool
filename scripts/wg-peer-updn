@@ -22,20 +22,20 @@ When using linux as a client, there are 2 ways to bring up wg.
     wg-quick up <foo.conf>
     wg-quick down <foo.conf>
 
-  NB 
+  NB
     - This should be standalone tool so we dont use any of utilities in wg-tool library
-    - 
+    -
 
 """
+# pylint: disable=invalid-name,too-many-instance-attributes,too-few-public-methods
 import os
 import argparse
 from datetime import datetime
-#import pdb
 
 #-------------------------------------
 # Options/Settings
 #--------------
-class wgSettings:
+class WgSettings:
     """
     parse command line
       -up
@@ -43,30 +43,34 @@ class wgSettings:
       -dns=ip1,ip2.
       -dnsrch=dom1,dom2
     """
-    # pylint: disable=R0903
     def __init__(self):
 
+        #
         # Keep on same filesytem so we can rename instead of copy
+        # resolv_wg is a backup of resolv.conf - if laptop sleep/resume's
+        # then may find resolv.conf is set back to pre-wg - so
+        # this allows us to restore wg config
+        # Used by wg-fix-dns application
+        #
         self.resolv = '/etc/resolv.conf'
+        self.resolv_wg = '/etc/resolv.conf.wg'
         self.resolv_save = '/etc/resolv.conf.saved'
 
         # testing
         #self.resolv = './resolv.conf'
         #self.resolv_save = './resolv.conf.saved'
 
-        self.up = None
-        self.down = None
+        self.up = False
+        self.down = False
         self.dns_ips = None
         self.dns_search = None
 
         desc = 'wg peer for wg-quick PostUp / PostDown'
 
         opts = [
-                [('-u', '--up'),               {'help'     : 'For PostUp',
-                                                'action'   : 'store_true'}],
-                [('-d', '--down'),             {'help'     : 'For PostDown',
-                                                'action'   : 'store_true'}],
-                [('-dns', '--dns_ips'),        {'help'     : 'List of dns ips (comma separated)'}],
+                [('-u', '--up'), {'help' : 'For PostUp', 'action'   : 'store_true'}],
+                [('-d', '--down'), {'help' : 'For PostDown', 'action'   : 'store_true'}],
+                [('-dns', '--dns_ips'), {'help'     : 'List of dns ips (comma separated)'}],
                 [('-dnsrch', '--dns_search'),  {'help'     : 'List of dns search domains'}],
                ]
 
@@ -136,21 +140,6 @@ def write_file(data, f_to):
         return okay
     return not okay
 
-def copy_file(f_from, f_to):
-    """
-    copy file
-    """
-    okay = True
-    from_data = read_file(f_from)
-    if from_data:
-        if not write_file(from_data, f_to):
-            print(f'Failed to write {f_to}')
-            return not okay
-    else:
-        print(f'Failed to read {f_from}')
-        return not okay
-    return okay
-
 def rename_file(f_from, f_to):
     """
     rename file (same filesys as usual)
@@ -211,6 +200,10 @@ def post_up(settings):
 
     if not write_file(wg_resolv, settings.resolv):
         return not okay
+
+    # keep copy for easy dns fixup
+    if not write_file(wg_resolv, settings.resolv_wg):
+        return not okay
     return okay
 
 def post_down(settings):
@@ -218,17 +211,18 @@ def post_down(settings):
      - restore resolv.conf
     """
     okay = rename_file(settings.resolv_save, settings.resolv)
+    if os.path.exists(settings.resolv_wg):
+        os.unlink(settings.resolv_wg)
     return okay
 
 def main():
     """
     Support for linux wg clients
     """
-    #pdb.set_trace()
-    settings = wgSettings()
+    settings = WgSettings()
 
     if settings.up:
-        if  not post_up(settings):
+        if not post_up(settings):
             print('Post up failed')
 
     elif settings.down:

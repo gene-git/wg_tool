@@ -1,19 +1,22 @@
 Changelog
 =========
 
+[head] ----- 2023-11-23
+ * update Docs/Changelog.rst Docs/wg_tool.pdf  
+
 [5.5.1] ----- 2023-11-23
  * Improve description  
  * update Docs/Changelog.rst Docs/wg_tool.pdf  
 
 [5.5.0] ----- 2023-11-23
  * Change python build from poetry to hatch.  
- * It is cleaner and simpler.  
- * Switch copyright lines to SPDX format  
+   It is cleaner and simpler.  
+   Switch copyright lines to SPDX format  
  * update Docs/Changelog.rst Docs/wg_tool.pdf  
 
 [5.4.1] ----- 2023-11-12
  * Minor readme rst format change.  
- * Add wg_tool.pdf  
+   Add wg_tool.pdf  
  * update Docs/Changelog.rst  
 
 [5.3.4] ----- 2023-09-30
@@ -26,7 +29,7 @@ Changelog
 [5.3.2] ----- 2023-09-27
  * update Docs/Changelog.rst  
  * Fix links in readme.  
- * Remove doc build dependency on myst-parser since no more mardown  
+   Remove doc build dependency on myst-parser since no more mardown  
  * update Docs/Changelog.rst  
 
 [5.3.1] ----- 2023-09-26
@@ -36,8 +39,8 @@ Changelog
 
 [5.3.0] ----- 2023-09-26
  * Reorg docs - add Docs/dir with sphinx support  
- * update PKGBUILD for optional doc builds  
- * Migrate to rst from markdown  
+   update PKGBUILD for optional doc builds  
+   Migrate to rst from markdown  
  * update CHANGELOG.md  
 
 [5.1.1] ----- 2023-09-25
@@ -46,9 +49,9 @@ Changelog
 
 [5.1.0] ----- 2023-08-02
  * Improve code finding available client IPs to properly support IPv6.  
- * Client IPs are chosen from the server Address list in natural order. If you prefer clients  
- * get IPv6 addresses, those should be listed first. Similarly, if IPv4 is preferred, then put that first.  
- * Tidy to keep pylint clean  
+   Client IPs are chosen from the server Address list in natural order. If you prefer clients  
+   get IPv6 addresses, those should be listed first. Similarly, if IPv4 is preferred, then put that first.  
+   Tidy to keep pylint clean  
  * update CHANGELOG.md  
 
 [4.7.0] ----- 2023-07-28
@@ -74,18 +77,18 @@ Changelog
 
 [4.5.0] ----- 2023-05-02
  * Add comment on philosophy of living at the head commit.  
- * Change README from markdown to restructured text  
+   Change README from markdown to restructured text  
 
 [4.4.0] ----- 2023-04-15
  * update CHANGELOG.md  
  * Only show user public key for "-rpt" when also using "-det".  
- * Since we show user and profile name, the user key is not really needed  
+   Since we show user and profile name, the user key is not really needed  
  * update CHANGELOG.md  
 
 [4.3.6] ----- 2023-04-11
  * postup.nft script add extra line: ct status dnat accept - I saw a martial packat at firewall from vpn which was unexpected  
- * minor readme edit  
- * update project version  
+   minor readme edit  
+   update project version  
  * update CHANGELOG.md  
 
 [4.3.5] ----- 2023-01-06
@@ -102,29 +105,29 @@ Changelog
 
 [4.3.2] ----- 2022-12-26
  * Change default python interpreter location to /usr/bin/python3 (remove env).  
- * This is also recommended by e.g. debian packaging guidelines (https://www.debian.org/doc/packaging-manuals/python-policy). While many distros (Arch, Fedora etc.) recommend /usr/bin/python - we keep python3 which will work on those and on debian until debian provides python (and not just python3).  
+   This is also recommended by e.g. debian packaging guidelines (https://www.debian.org/doc/packaging-manuals/python-policy). While many distros (Arch, Fedora etc.) recommend /usr/bin/python - we keep python3 which will work on those and on debian until debian provides python (and not just python3).  
  * update CHANGELOG.md  
 
 [4.3.1] ----- 2022-12-25
  * Move archlinux dir to packaging.  
- * Add packaging/requirements.txt  
- * Update build dependencies in PKGBUILD  
- * Tweak README  
+   Add packaging/requirements.txt  
+   Update build dependencies in PKGBUILD  
+   Tweak README  
  * tweak README  
  * update CHANGELOG.md  
 
 [4.3.0] ----- 2022-12-20
  * Change python to python3 (as per GH issue #5 on ubuntu/debian.  
- * Remove pip option from installer (--root-user-action=ignore)  
+   Remove pip option from installer (--root-user-action=ignore)  
  * indent fix  
  * To help with older pre 3.9 python versions, provide files without match().  
- * They are in lib38. Copy to lib38/*.py lib/  
+   They are in lib38. Copy to lib38/*.py lib/  
  * update CHANGELOG.md  
 
 [4.2.0] ----- 2022-12-14
  * update CHANGELOG.md  
  * Installer now uses pip install  
- * PKGBUILD now uses poetry to build wheel  
+   PKGBUILD now uses poetry to build wheel  
  * update CHANGELOG.md  
 
 [4.1.0] ----- 2022-12-08
@@ -133,16 +136,16 @@ Changelog
 
 [4.0.0] ----- 2022-12-04
  * Stronger file access permissions to protect private data in configs.  
- * Changes to work_dir:  
- * Backward compatible with previous version.  
- * Now prefers to use */etc/wireguard/wg-tool* if possible, otherwise falls back to current directory.  
- * Thanks to Yann Cardon  
+   Changes to work_dir:  
+   Backward compatible with previous version.  
+   Now prefers to use */etc/wireguard/wg-tool* if possible, otherwise falls back to current directory.  
+   Thanks to Yann Cardon  
  * Improve comments in postup.nft including reference to alternate postup from Yann Cardon  
  * Merge: f74aa16bc2 26e957cd19  
- * Merge pull request #3 from ycardon/master  
+   Merge pull request #3 from ycardon/master  
+   Create postup-alternate.nft  
  * Create postup-alternate.nft  
- * Create postup-alternate.nft  
- * provides an other example of postup script with useful comments  
+   provides an other example of postup script with useful comments  
  * update CHANGELOG.md  
 
 [3.7.0] ----- 2022-12-03
@@ -150,15 +153,15 @@ Changelog
  * update CHANGELOG.md  
  * Typo in README fixed by @ycardon  
  * Merge: 8c05f936df 6dcc5b6459  
- * Merge pull request #2 from ycardon/master  
- * small typo in the readme  
+   Merge pull request #2 from ycardon/master  
+   small typo in the readme  
  * small typo  
- * --add-users > --add_users  
+   --add-users > --add_users  
  * update CHANGELOG.md  
 
 [3.6.0] ----- 2022-11-30
  * bug fix for --init  
- * Thanks to @ycardon - this fixes issue #1 : https://github.com/gene-git/wg_tool/issues/1  
+   Thanks to @ycardon - this fixes issue #1 : https://github.com/gene-git/wg_tool/issues/1  
  * update CHANGELOG.md  
 
 [3.5.0] ----- 2022-11-29
@@ -167,8 +170,8 @@ Changelog
 
 [3.4.0] ----- 2022-11-29
  * Improve wg-peer-updn  
- * - Rename existing resolv.conf when saving  
- * - Add timestamp to wireguard resolv.conf  
+   - Rename existing resolv.conf when saving  
+   - Add timestamp to wireguard resolv.conf  
  * update CHANGELOG.md  
 
 [3.3.1] ----- 2022-11-29
@@ -190,20 +193,20 @@ Changelog
 
 [3.0.0] ----- 2022-11-28
  * Adds 3 new options:  
- * - --mod_users : modify existing user profile (with --dns_search and --dns_linux)  
- * - --dns_search : adds support for dns search domain list  
- * - --dns_linux : adds support for managing resolv.conf instead of relying on qg-quick/resolconf  
+   - --mod_users : modify existing user profile (with --dns_search and --dns_linux)  
+   - --dns_search : adds support for dns search domain list  
+   - --dns_linux : adds support for managing resolv.conf instead of relying on qg-quick/resolconf  
  * update CHANGELOG.md  
 
 [2.1.0] ----- 2022-11-24
  * - improve error msg  
- * - Check conf before using it - added when auto updating older configs using mtime of config  
- * - minor tweak to bash variable check in install script  
+   - Check conf before using it - added when auto updating older configs using mtime of config  
+   - minor tweak to bash variable check in install script  
  * update CHANGELOG.md  
 
 [2.0.0] ----- 2022-11-11
  * list users report now sorts by user name  
- * Add support for tracking config modification date-time. mod_time displayed in list user report  
+   Add support for tracking config modification date-time. mod_time displayed in list user report  
  * update CHANGELOG.md  
 
 [1.7.5] ----- 2022-11-08
@@ -220,7 +223,7 @@ Changelog
 
 [1.7.2] ----- 2022-11-04
  * change installer to use bash array for app list (even tho we onlly have 1 here)  
- * tweak readme  
+   tweak readme  
  * update CHANGELOG.md  
 
 [1.7.1] ----- 2022-10-31
@@ -241,7 +244,7 @@ Changelog
 
 [1.5.0] ----- 2022-10-30
  * Add --details  
- * Modifes -l, -rpt and -rrpt to provide detailed information in addition to the summary.  
+   Modifes -l, -rpt and -rrpt to provide detailed information in addition to the summary.  
  * update CHANGELOG.md  
 
 [1.4.0] ----- 2022-10-29
@@ -258,7 +261,7 @@ Changelog
 
 [1.3.0] ----- 2022-10-29
  * Add new option --work_dir  
- * Refactor and tidy code up some  
+   Refactor and tidy code up some  
  * upd changelog  
  * tweak readme  
  * tweak readme and sync PKGBUILD  
