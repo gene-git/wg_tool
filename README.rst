@@ -34,6 +34,8 @@ Key features
 New
 ===
 
+ * `wg-client`_ companion package now available. A linux client tool and separate graphical 
+   program to launch wireguard client. Simplify using wg for all users.
  * wg-peer-updn now saves additional copy of dns file as resolv.conf.wg
    Helpful for clients which sleep and on resume network restart overwrites resolv.conf
    This makes it simple to put back the vpn resolv.conf file by
@@ -272,6 +274,7 @@ The key fields to edit are:
 
    wg server hostname and port as seen on internal network.   
    Useful for testing wg while inside the network.
+   Client configs created with the *-int* option of **wg-tool** will use this internal server:port.
 
  * PrivateKey, PublicKey  
 
@@ -739,6 +742,7 @@ Created by Gene C. and licensed under the terms of the MIT license.
 
 .. _Github: https://github.com/gene-git/wg_tool
 .. _Archlinux AUR: https://aur.archlinux.org/packages/wg_tool
+.. _wg-glient: https://github.com/gene-git/wg-client
 
 .. [1] https://github.com/google/googletest  
 .. [2] https://abseil.io/about/philosophy#upgrade-support
