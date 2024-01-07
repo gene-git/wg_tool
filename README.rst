@@ -131,11 +131,11 @@ These are provided to the user - bob in this case.
 
 For those computer clients running Linux, there are 2 kinds of configs available. 
 
-* standard config
+ * standard config
 
     where the DNS infomation in config is used by wg-quick. wg-quick, in turn, relies on resolvconf.
 
-* linux config
+ * linux config
 
     this is my preferred approach. Activated by the *--dns_linux* option. When 
     using this, wg-quick uses the provided *wg-peer-updn* script via PostUp/PostDown. 

@@ -1,6 +1,9 @@
 Changelog
 =========
 
+[5.6.2] ----- 2024-01-07
+ * fix readme typo  
+
 [5.6.1] ----- 2024-01-07
  * small readme update  
  * update Docs/Changelog.rst Docs/wg_tool.pdf  
