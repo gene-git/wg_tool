@@ -742,7 +742,7 @@ Created by Gene C. and licensed under the terms of the MIT license.
 
 .. _Github: https://github.com/gene-git/wg_tool
 .. _Archlinux AUR: https://aur.archlinux.org/packages/wg_tool
-.. _wg-glient: https://github.com/gene-git/wg-client
+.. _wg-client: https://github.com/gene-git/wg-client
 
 .. [1] https://github.com/google/googletest  
 .. [2] https://abseil.io/about/philosophy#upgrade-support

@@ -1,6 +1,10 @@
 Changelog
 =========
 
+[5.6.1] ----- 2024-01-07
+ * small readme update  
+ * update Docs/Changelog.rst Docs/wg_tool.pdf  
+
 [5.6.0] ----- 2023-12-07
  * wg-peer-updn now saves additional copy of wg resolv.conf in resolv.conf.wg.  
    Can be used by client when resume causes network restart to overwrites the wg resolv.conf.  
