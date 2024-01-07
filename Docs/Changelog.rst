@@ -1,6 +1,9 @@
 Changelog
 =========
 
+[5.6.3] ----- 2024-01-07
+ * rst fix in readme  
+
 [5.6.2] ----- 2024-01-07
  * fix readme typo  
 
