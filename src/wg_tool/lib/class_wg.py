@@ -263,6 +263,7 @@ class WgTool:
         changed = False
         dns_search = self.opts.dns_search
         dns_linux = self.opts.dns_linux
+        upd_endpoint = self.opts.upd_endpoint
         user = self.users[user_name]
 
         if user and dns_search :
@@ -272,6 +273,11 @@ class WgTool:
 
         if user and dns_linux:
             one_change = user.mod_profile_dns_linux(dns_linux, prof_name)
+            if one_change:
+                changed = True
+
+        if user and upd_endpoint:
+            one_change = user.upd_endpoint(self, prof_name)
             if one_change:
                 changed = True
 

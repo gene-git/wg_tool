@@ -41,6 +41,10 @@ class WgtOpts:
                  {'action'      : 'store_true',
                   'help'        : 'Modify user(s) profiles (with -dnsrch, -dnslin)'}
                 ],
+                [('-upd', '--upd_endpoint'),
+                 {'action'      : 'store_true',
+                  'help'        : 'Ensure user(s) profiles use current endpoint (add -int if needed)'}
+                ],
                 [('-dnsrch', '--dns_search'),
                  {'action'      : 'store_true',
                   'help'        : 'Add/Mod user with dns search list from server config DNS_SEARCH'}

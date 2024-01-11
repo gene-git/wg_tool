@@ -56,9 +56,9 @@ class WgtServer:
     def endpoint_int(self):
         """ return internal endpoint for user config """
         if self.ListenPort_Int:
-            Endpoint = f'{self.Hostname}:{self.ListenPort_Int}'
+            Endpoint = f'{self.Hostname_Int}:{self.ListenPort_Int}'
         else:
-            Endpoint = f'{self.Hostname}:{self.ListenPort}'
+            Endpoint = f'{self.Hostname_Int}:{self.ListenPort}'
         return Endpoint
 
     def user_allowedips(self):

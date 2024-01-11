@@ -34,6 +34,9 @@ Key features
 New
 ===
 
+ * New option *-upd, --upd_endpoint* used with *-mod* to update existing user profiles when server
+   IP/Port is changed.
+ * *-mod* now supports *-all* to apply to all users.
  * `wg-client`_ companion package now available. A linux client tool and separate graphical 
    program to launch wireguard client. Simplify using wg for all users.
  * wg-peer-updn now saves additional copy of dns file as resolv.conf.wg
@@ -467,15 +470,30 @@ Options:
 
  * (*-mod, --mod_users*)
 
-   Modify existing user:profile(s).  Use with *-dnsrch* and *-dnslin*
+   Modify existing user:profile(s).  Use with *-dnsrch*, *-dnslin*, and *upd*
+   Can apply to all users/profiles via the *-all* option.
+
+ * (*upd, --upd_endpoint*)
+
+   Use with *-mod*
+   Ensure user/profile is using current server endpoint.  Add *-int*
+   if want to use internal hostname/port.
+
+   For example if the server IP changes, then you can update existing user/profiles with
+
+   wg-tool -mod -upd -all
 
  * (*-dnsrch, --dns_search*)
+
+   Use with *-mod*
 
    Adds the list DNS_SEARCH from server config to client DNS search list.
    DNS_SEARCH in server.conf should contain a list of dns domains for dns search and 
    Use together with *-add* for new user:profile or with *-mod* with existing profile.
 
  * (*-dnslin, --dns_linux*)
+
+   Use with *-mod*
 
    For a Linux client, provide support for managing the dns resolv.conf file.
    What this does is save existing one, install the wireguard dns version and 

@@ -5,6 +5,7 @@
 """
 from .keys import gen_keys
 from .cli_users import cli_user_prof_names
+from .cli_users import all_users_prof_names
 
 def _make_new_user(wgtool, user_name, prof_name, prof_dict):
     """
@@ -104,8 +105,11 @@ def mod_users(wgtool):
     okay = True
     users_profiles = cli_user_prof_names(wgtool)
     if not users_profiles:
-        wmsg('Missing user:profile(s) : None given on command line; ignoring')
-        return okay
+        if wgtool.opts.all_users:
+            users_profiles = all_users_prof_names(wgtool)
+        else:
+            wmsg('Missing user:profile(s) : None given on command line; ignoring')
+            return okay
 
     for (user_name, prof_names) in users_profiles.items():
         if not prof_names:

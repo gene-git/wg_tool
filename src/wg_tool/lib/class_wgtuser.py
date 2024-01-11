@@ -209,3 +209,29 @@ class WgtUser:
             self.mod_time = current_date_time_str(fmt='%y%m%d-%H:%M')
             self._changed = True
         return changed
+
+    def upd_endpoint(self, wgt, prof_name):
+        """
+        Ensure current server settings are up to date
+        We don't know if profile was internal or not - so user must tell us.
+        """
+        changed = False
+        host_int = wgt.opts.int_serv
+        if host_int:
+            endpoint = wgt.server.endpoint_int()
+        else:
+            endpoint = wgt.server.endpoint()
+
+        if self.profile_exists(prof_name):
+            profile = self.profile[prof_name]
+            if profile.Endpoint != endpoint:
+                changed = True
+                profile.Endpoint = endpoint
+        else:
+            warn_msg(f'upd_endpoint: {prof_name} not found - ignored')
+
+        if changed:
+            self.mod_time = current_date_time_str(fmt='%y%m%d-%H:%M')
+            self._changed = True
+        return changed
+
