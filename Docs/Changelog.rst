@@ -1,6 +1,12 @@
 Changelog
 =========
 
+[5.7.0] ----- 2024-01-11
+ * Add -upd option to update user/profile endpoint when server config changes.  
+   (closes GH issue #11)  
+   -mod option can now be used with -all  
+ * update Docs/Changelog.rst Docs/wg_tool.pdf  
+
 [5.6.3] ----- 2024-01-07
  * rst fix in readme  
 
