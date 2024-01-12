@@ -3,6 +3,7 @@
 """
 wg-tool support utils`
 """
+# pylint: disable=invalid-name
 import os
 from datetime import datetime
 import qrcode

@@ -3,7 +3,7 @@
 """
 WgOpts  - command line options for WgTool
 """
-# pylint disable=R0902
+# pylint: disable=too-many-statements
 import argparse
 from .save_options import read_merge_saved_opts, write_saved_opts
 
@@ -24,100 +24,101 @@ class WgtOpts:
         self.default_keep_hist = 5
         self.default_keep_hist_wg = 3
 
-        opts = [
-                [('-wkd', '--work_dir'),
-                 {'help'        : f'Set the working dir. If unset, use dir path : {work_path} '}
-                ],
-                [('-i',   '--init'),
-                 {'action'      : 'store_true',
-                  'help'        : 'Initialize: create server config - please edit.' \
-                                 +' Can also set --work_dir'}
-                ],
-                [('-add', '--add_users'),
-                 {'action'      : 'store_true',
-                  'help'        : 'Add user(s) and/or user profiles user:prof1,prof2,... '}
-                ],
-                [('-mod', '--mod_users'),
-                 {'action'      : 'store_true',
-                  'help'        : 'Modify user(s) profiles (with -dnsrch, -dnslin)'}
-                ],
-                [('-upd', '--upd_endpoint'),
-                 {'action'      : 'store_true',
-                  'help'        : 'Ensure user(s) profiles use current endpoint (add -int if needed)'}
-                ],
-                [('-dnsrch', '--dns_search'),
-                 {'action'      : 'store_true',
-                  'help'        : 'Add/Mod user with dns search list from server config DNS_SEARCH'}
-                ],
-                [('-dnslin', '--dns_linux'),
-                 {'action'      : 'store_true',
-                  'help'        : 'Linux. profile resolv.conf managed using PostUp/Down scripts'}
-                ],
-                [('-int', '--int_serv'),
-                 {'action'      : 'store_true',
-                  'help'        : 'With --add_users uses internal wireguard server'}
-                ],
-                [('-uuk', '--upd_user_keys'),
-                 {'action'      : 'store_true',
-                  'help'        : 'Update existing user(s) keys.'}
-                ],
-                [('-usk', '--upd_serv_keys'),
-                 {'action'      : 'store_true',
-                  'help'        : 'Update server keys - affects all users'}
-                ],
-                [('-all', '--all_users'),
-                 {'action'      : 'store_true',
-                  'help'        : 'Some opts (e.g. upd_user_keys) may apply to all users/profiles'}
-                ],
-                [('-act', '--active'),
-                 {'action'      : 'store_true',
-                  'help'        : 'Mark users/profiles user[:profile,...] active'}
-                ],
-                [('-inact', '--inactive'),
-                 {'action'      : 'store_true',
-                  'help'        : 'Mark users/profiles user[:profile,...] inactive'}
-                ],
-                [('-imp', '--import_user'),
-                 {'help'        : 'Import a user profile : --imp user.conf user_name:profile_name'}
-                ],
-                [('-keep', '--keep_hist'),
-                 {'type'        : int,
-                  #'default'     : self.keep_hist,
-                  'help'        : 'Keep config history'}
-                ],
-                [('-keep_wg', '--keep_hist_wg'),
-                 {'type'        : int,
-                  #'default'     : self.keep_hist_wg,
-                  'help'        : 'Keep wg-config history'}
-                ],
-                [('-l',   '--list_users'),
-                 {'action'      : 'store_true',
-                  'help'        : 'List users/profiles'}
-                ],
-                [('-rpt',   '--show_rpt'),
-                 {'help'        : 'Output of "wg show" (file, "stdin") -> connected users report'}
-                ],
-                [('-rrpt',  '--run_show_rpt'),
-                 {'action'      : 'store_true',
-                  'help'        : 'Run "wg show" -> connected users report (see also -rpt)'}
-                ],
-                [('-det',   '--details'),
-                 {'action'      : 'store_true',
-                  'help'        : 'Adds details to rpt and list output'}
-                ],
-                [('-sop',   '--save_opts'),
-                 {'action'      : 'store_true',
-                  'help'        : 'Save defaults for keep_hist/keep_hist_wg '}
-                ],
-                [('-v',   '--verb'),
-                 {'action'      : 'store_true',
-                  'help'        : 'Be more verbose'}
-                ],
-                [('users', None),
-                 {'nargs'       : '*',
-                  'help'        : 'user_1[:prof1,prof2,...] user_2[:prof_1,prof_2]'}
-                ],
-               ]
+        opts = []
+        act = 'action'
+        act_on = 'store_true'
+
+        ohelp = f'Set the working dir. If unset, use dir path : {work_path}'
+        opt = [('-wkd', '--work_dir'), {'help' : ohelp}]
+        opts.append(opt)
+
+        ohelp = 'Initialize: create server config - please edit.  May use --work_dir'
+        opt = [('-i', '--init'), {'help' : ohelp, act : act_on}]
+        opts.append(opt)
+
+        ohelp = 'Add user(s) and/or user profiles user:prof1,prof2,... '
+        opt = [('-add', '--add_users'), {'help' : ohelp, act : act_on}]
+        opts.append(opt)
+
+        ohelp = 'Modify user(s) profiles (with -dnsrch, -dnslin, -upd)'
+        opt = [('-mod', '--mod_users'), {'help' : ohelp, act : act_on}]
+        opts.append(opt)
+
+        ohelp = 'Ensure user(s) profiles use current endpoint (add -int if needed)'
+        opt = [('-upd', '--upd_endpoint'), {'help' : ohelp, act : act_on}]
+        opts.append(opt)
+
+        ohelp = 'Add/Mod user with dns search list from server config DNS_SEARCH'
+        opt = [('-dnsrch', '--dns_search'), {'help' : ohelp, act : act_on}]
+        opts.append(opt)
+
+        ohelp = 'Linux. profile resolv.conf managed using PostUp/Down scripts'
+        opt = [('-dnslin', '--dns_linux'), {'help' : ohelp, act : act_on}]
+        opts.append(opt)
+
+        ohelp = 'With --add_users uses internal wireguard server'
+        opt = [('-int', '--int_serv'), {'help' : ohelp, act : act_on}]
+        opts.append(opt)
+
+        ohelp = 'Update existing user(s) keys.'
+        opt = [('-uuk', '--upd_user_keys'), {'help' : ohelp, act : act_on}]
+        opts.append(opt)
+
+        ohelp = 'Update server keys - affects all users'
+        opt = [('-usk', '--upd_serv_keys'), {'help' : ohelp, act : act_on}]
+        opts.append(opt)
+
+        ohelp = 'Apply to all users/profiles used with: -usk and -mod'
+        opt = [('-all', '--all_users'), {'help' : ohelp, act : act_on}]
+        opts.append(opt)
+
+        ohelp = 'Mark users/profiles user[:profile,...] active'
+        opt = [('-act', '--active'), {'help' : ohelp, act : act_on}]
+        opts.append(opt)
+
+        ohelp = 'Mark users/profiles user[:profile,...] inactive'
+        opt = [('-inact', '--inactive'), {'help' : ohelp, act : act_on}]
+        opts.append(opt)
+
+        ohelp = 'Import a user profile : --imp user.conf user_name:profile_name'
+        opt = [('-imp', '--import_user'), {'help' : ohelp, act : act_on}]
+        opts.append(opt)
+
+        ohelp = 'Keep config history'
+        opt = [('-keep', '--keep_hist'), {'help' : ohelp, 'type' : int}]
+        opts.append(opt)
+
+        ohelp = 'Keep wg-config history'
+        opt = [('-keep_wg', '--keep_hist_wg'), {'help' : ohelp, 'type' : int}]
+        opts.append(opt)
+
+        ohelp = 'List users/profiles'
+        opt = [('-l', '--list_users'), {'help' : ohelp, act : act_on}]
+        opts.append(opt)
+
+        ohelp = 'Output of "wg show" (file, "stdin") -> connected users report'
+        opt = [('-rpt',   '--show_rpt'), {'help' : ohelp}]
+        opts.append(opt)
+
+        ohelp = 'Run "wg show" -> connected users report (see also -rpt)'
+        opt = [('-rrpt',  '--run_show_rpt'), {'help' : ohelp, act : act_on}]
+        opts.append(opt)
+
+        ohelp = 'Adds more detail to rpt and list output'
+        opt = [('-det',   '--details'), {'help' : ohelp, act : act_on}]
+        opts.append(opt)
+
+        ohelp = 'Save defaults for keep_hist/keep_hist_wg '
+        opt = [('-sop',   '--save_opts'), {'help' : ohelp, act : act_on}]
+        opts.append(opt)
+
+        ohelp = 'Be more verbose'
+        opt = [('-v', '--verb'), {'help' : ohelp, act : act_on}]
+        opts.append(opt)
+
+        ohelp = 'user_1[:prof1,prof2,...] user_2[:prof_1,prof_2] ...'
+        opt = [('users', None), {'help' : ohelp, 'nargs' : '*'}]
+        opts.append(opt)
 
         # provide opts to argparse
         par = argparse.ArgumentParser(description=desc)

@@ -6,7 +6,7 @@
     Tool to administer wireguard users and server config with key management
     Driven from 2 types of simple input configs - 1) server.conf and per user.conf
 """
-# pylint: disable=R0902,C0301
+# pylint: disable=invalid-name
 from .msg import warn_msg
 from .utils import current_date_time_str
 
@@ -234,4 +234,3 @@ class WgtUser:
             self.mod_time = current_date_time_str(fmt='%y%m%d-%H:%M')
             self._changed = True
         return changed
-

@@ -19,6 +19,7 @@
     Access :  --import file.conf                -> user_name : file, config : main
               --import file.conf user_1:laptop  -> user_name : user_1, config : laptop
 """
+# pylint: disable=invalid-name
 import os
 from .utils import open_file
 from .users import cli_user_prof_names

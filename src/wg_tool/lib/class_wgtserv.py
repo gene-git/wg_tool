@@ -3,7 +3,7 @@
 """
   wg-tool server class
 """
-# pylint: disable=R0902
+# pylint: disable=invalid-name,too-many-instance-attributes
 
 from .utils import current_date_time_str
 

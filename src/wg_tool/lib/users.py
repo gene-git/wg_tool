@@ -3,6 +3,7 @@
 """
    create new users / profiles
 """
+# pylint: disable=invalid-name
 from .keys import gen_keys
 from .cli_users import cli_user_prof_names
 from .cli_users import all_users_prof_names

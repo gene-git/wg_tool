@@ -4,7 +4,8 @@
  Generate wireguard user config and QR code for all users
    - don't limit to active users that only affects server config
 """
-# pylint disable=C0103,R0914,R1732
+# pylint: disable=invalid-name
+
 import os
 
 from .file_tools import setup_save_path
