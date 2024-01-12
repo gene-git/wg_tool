@@ -1,6 +1,10 @@
 Changelog
 =========
 
+[head] ----- 2024-01-12
+ * lint picking  
+ * update Docs/Changelog.rst Docs/wg_tool.pdf  
+
 [5.7.0] ----- 2024-01-11
  * Add -upd option to update user/profile endpoint when server config changes.  
    (closes GH issue #11)  
