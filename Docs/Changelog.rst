@@ -1,7 +1,11 @@
 Changelog
 =========
 
-[5.7.1, origin/master] ----- 2024-01-12
+[5.7.2] ----- 2024-01-13
+ * Add ubuntu notes provided by Jack Duan (@jduan00 via github #13)  
+ * update Docs/Changelog.rst Docs/wg_tool.pdf  
+
+[5.7.1] ----- 2024-01-12
  * update Docs/Changelog.rst Docs/wg_tool.pdf  
  * lint picking  
  * update Docs/Changelog.rst Docs/wg_tool.pdf  
