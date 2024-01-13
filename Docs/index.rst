@@ -9,6 +9,7 @@ wg_tool documentation
 .. toctree::
    README
    Network-Notes
+   Contrib/ubuntu
    Changelog
    License
    Contributing
