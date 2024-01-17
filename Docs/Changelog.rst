@@ -1,6 +1,10 @@
 Changelog
 =========
 
+[6.2.0] ----- 2024-01-17
+ * Bugfix : generating IPs was skipping too many available blocks  
+ * update Docs/Changelog.rst Docs/wg_tool.pdf  
+
 [6.1.0] ----- 2024-01-17
  * Fix: update AllowedIPs with --ips_refresh  
  * update Docs/Changelog.rst Docs/wg_tool.pdf  
