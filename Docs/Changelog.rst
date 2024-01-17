@@ -1,6 +1,10 @@
 Changelog
 =========
 
+[6.1.0] ----- 2024-01-17
+ * Fix: update AllowedIPs with --ips_refresh  
+ * update Docs/Changelog.rst Docs/wg_tool.pdf  
+
 [6.0.1] ----- 2024-01-17
  * bump patch version for readme change  
  * readme tweak  
