@@ -58,6 +58,12 @@ New
 
    wg-tool -mod -ips <user>:<profile>
 
+or
+
+.. code-block:: bash
+
+   wg-tool -mod -ips -all
+.. 
 
  * New option *-upd, --upd_endpoint* used with *-mod* to update existing user profiles when server
    IP/Port is changed.
