@@ -3,6 +3,7 @@
 User IP tool
 """
 # pylint: disable=too-many-instance-attributes
+import copy
 import netaddr
 from netaddr import AddrConversionError,AddrFormatError,NotRegisteredError
 
@@ -21,8 +22,7 @@ class NetInfo:
         self.iptype = None
         self.ip_net = None
 
-        self.ip_set = netaddr.IPSet([])
-        self.ip_used_set = netaddr.IPSet([])
+        self.ip_avail = netaddr.IPSet([])
 
         #
         # Extract network
@@ -48,78 +48,68 @@ class NetInfo:
         self.server_net = self.ip_net.cidr
 
         #
-        # Make ip_set of available addresses
+        # ip_avail is list of available addresses
         #  - remove server IP
         #  - remove network and broadcast IPs
         #
-        self.ip_set = netaddr.IPSet([wg_address])
-        self.ip_set.remove(self.ip_net.network)
-        self.ip_set.remove(self.ip_net.broadcast)
-        self.ip_set.remove(self.server_ip)
+        self.ip_avail = netaddr.IPSet([wg_address])
+        self.ip_avail.remove(self.ip_net.network)
+        self.ip_avail.remove(self.ip_net.broadcast)
+        self.ip_avail.remove(self.server_ip)
 
-    def add_used_addr(self, ip_addr):
+    def mark_address_unavail(self, ip_addr):
         """
-        If cidr in net then add to used list
-           return true if added else false
+        If cidr in ip_avail remove it
+           return true if removed else false
         """
-        if ip_addr in self.ip_net :
-            self.ip_used_set.add(ip_addr)
+        if ip_addr in self.ip_avail :
+            self.ip_avail.remove(ip_addr)
             return True
         return False
 
-    def remove_used_addr(self, ip_addr):
+    def mark_address_vail(self, ip_addr):
         """
         If cidr in net then add to used list
            return true if added else false
         """
-        if ip_addr in self.ip_used_set :
-            self.ip_used_set.remove(ip_addr)
+        if ip_addr in self.ip_avail :
+            self.ip_avail.remove(ip_addr)
 
     def find_address(self, prefixlen_4, prefixlen_6):
         """
         Find available ip/prefixlen
         """
-        ip_avail = self.ip_set
-        ip_avail -= self.ip_used_set
-
         prefixlen = prefixlen_4
         if self.iptype == 'ip6':
             prefixlen = prefixlen_6
 
         if prefixlen <= 0:
             return None
-
         cidr_found = None
-        for cidr in ip_avail.iter_cidrs():
+        for cidr in self.ip_avail.iter_cidrs():
             if prefixlen >= cidr.prefixlen:
-                cidr_found = cidr
+                cidr_found = copy.deepcopy(cidr)
                 cidr_found.prefixlen = prefixlen
                 break
 
         if cidr_found:
-            self.ip_used_set.add(cidr_found)
+            if cidr_found.size == 1:
+                self.ip_avail.remove(cidr_found.ip)
+            else:
+                ip_range = netaddr.IPRange(cidr_found[0], cidr_found[-1])
+                self.ip_avail.remove(ip_range)
         else:
             print(f'Failed to find available {self.iptype} / {prefixlen}')
         return cidr_found
 
-    def address_available(self, address:str):
+    def is_address_available(self, address:str):
         """ check if address in net and available """
-        ip_avail = self.ip_set - self.ip_used_set
         ip_addr = netaddr.IPNetwork(address)
         avail = False
-        if ip_addr in self.ip_net and ip_addr in ip_avail:
+        #if ip_addr in self.ip_net and ip_addr in self.ip_avail:
+        if ip_addr in self.ip_avail:
             avail = True
         return avail
-
-    def add_used_address(self, cidr):
-        """
-        Add cidr to list of used addresses
-        """
-        if cidr in self.ip_net:
-            if cidr not in self.ip_used_set:
-                self.ip_used_set.add(cidr)
-                return True
-        return False
 
 class IpInfo:
     """ manage user ips """
@@ -162,7 +152,7 @@ class IpInfo:
 
         return addresses
 
-    def address_available(self, address):
+    def is_address_available(self, address):
         """
         check if address (ip or cidr) is available
         """
@@ -172,27 +162,25 @@ class IpInfo:
             print(f'Error: Address {address} is not part of server network')
             return False
 
-        if netinfo.address_available(address):
+        if netinfo.is_address_available(address):
             return True
         return False
 
-    def add_used_addresses(self, cidrs:[str]):
+    def mark_addresses_unavail(self, cidrs:[str]):
         """
         Add cidr_str to list of used
         Must be in one of the known nets
         """
         for cidr_str in cidrs:
             cidr = netaddr.IPNetwork(cidr_str)
-            added = False
-            for (_wg_addr, netinfo) in self.netinfo.items():
-                added = netinfo.add_used_address(cidr)
-                if added:
-                    break
-            if not added:
+            netinfo = self.get_netinfo(cidr)
+            if netinfo:
+                netinfo.mark_address_unavail(cidr)
+            else:
                 print(f'Warning: Address {cidr_str} not in server networks - ignored')
                 print('         Cannot add to list of used IP addresses')
 
-    def remove_used_addresses(self, cidrs:[str]):
+    def mark_addresses_avail(self, cidrs:[str]):
         """
         Remove cidr_str from list of used
         Must be in one of the known nets
@@ -201,7 +189,7 @@ class IpInfo:
             cidr = netaddr.IPNetwork(cidr_str)
             netinfo = self.get_netinfo(cidr)
             if netinfo:
-                netinfo.remove_used_address(cidr)
+                netinfo.mark_address_avail(cidr)
             else :
                 print(f'Error: Address {cidr_str} not in server networks')
                 self.okay = False

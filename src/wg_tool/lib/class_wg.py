@@ -175,7 +175,7 @@ class WgTool:
             self.ipinfo.allowed_ips = self.server.user_allowedips()
             used_ips = self.get_used_ip_addresses()
             if used_ips:
-                self.ipinfo.add_used_addresses(used_ips)
+                self.ipinfo.mark_addresses_unavail(used_ips)
 
 
     def __getattr__(self, name):

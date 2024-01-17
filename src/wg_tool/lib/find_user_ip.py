@@ -36,7 +36,7 @@ def is_user_address_available(ipinfo, address):
         address = [address]
     all_avail = True
     for one in address:
-        avail = ipinfo.address_available(one)
+        avail = ipinfo.is_address_available(one)
         if not avail:
             all_avail = False
     return all_avail
