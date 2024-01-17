@@ -93,11 +93,13 @@ class NetInfo:
                 break
 
         if cidr_found:
-            if cidr_found.size == 1:
-                self.ip_avail.remove(cidr_found.ip)
-            else:
-                ip_range = netaddr.IPRange(cidr_found[0], cidr_found[-1])
-                self.ip_avail.remove(ip_range)
+            # deepcopy fixed bug so can simplify back to original
+            #if cidr_found.size == 1:
+            #    self.ip_avail.remove(cidr_found.ip)
+            #else:
+            #    ip_range = netaddr.IPRange(cidr_found[0], cidr_found[-1])
+            #    self.ip_avail.remove(ip_range)
+            self.ip_avail.remove(cidr_found)
         else:
             print(f'Failed to find available {self.iptype} / {prefixlen}')
         return cidr_found
