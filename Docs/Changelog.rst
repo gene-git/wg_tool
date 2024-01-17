@@ -1,6 +1,19 @@
 Changelog
 =========
 
+[6.0.0] ----- 2024-01-17
+ * Add support for multiple IP addresses in user profiles.  
+   Addresses will now be taken from whichever networks are in server config.  
+   cidr address for each network will have prefixlen_4 for IPv4 and prefixlen_6 for IPv6 networks.  
+   prefixlen are settable with new options.  
+   Existing user:profile (or -all) can have their IPs refreshed to pick up their new IPs from  
+   server config. If you already have multiple networks or simply added them to Address variable in  
+   configs/server/server.conf - then can refresh using:  
+   wg-tool -mod -ips user_name:profile_name  
+   or  
+   wg-tool -mod -ips -all  
+ * update Docs/Changelog.rst Docs/wg_tool.pdf  
+
 [5.7.2] ----- 2024-01-13
  * Add ubuntu notes provided by Jack Duan (@jduan00 via github #13)  
  * update Docs/Changelog.rst Docs/wg_tool.pdf  
