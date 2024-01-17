@@ -172,9 +172,11 @@ class WgTool:
             #
             self.ipinfo = IpInfo(self.server.Address)
             self.ipinfo.set_prefixlen(self.opts.prefixlen_4, self.opts.prefixlen_6)
+            self.ipinfo.allowed_ips = self.server.user_allowedips()
             used_ips = self.get_used_ip_addresses()
             if used_ips:
                 self.ipinfo.add_used_addresses(used_ips)
+
 
     def __getattr__(self, name):
         """ non-set items simply return None so easy to check existence"""

@@ -9,7 +9,7 @@
 project = "wg_tool"
 copyright = '2023, Gene C'
 author = 'Gene C'
-release = '6.0.1'
+release = '6.1.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

@@ -134,6 +134,7 @@ class IpInfo:
         self.netinfo = {}
         self.prefixlen_4 = 32
         self.prefixlen_6 = 128
+        self.allowed_ips = '0.0.0.0/0, ::/0'
 
         for wg_addr in wg_server_addresses:
             netinfo = NetInfo(wg_addr)

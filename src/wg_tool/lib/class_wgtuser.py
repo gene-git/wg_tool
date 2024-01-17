@@ -52,6 +52,7 @@ class WgtUserProfile:
         (address, changed) = ipinfo.refresh_address(self.Address)
         if changed:
             self.Address = address
+            self.AllowedIPs = ipinfo.allowed_ips
         return changed
 
 class WgtUser:

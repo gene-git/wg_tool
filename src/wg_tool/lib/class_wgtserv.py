@@ -63,7 +63,7 @@ class WgtServer:
 
     def user_allowedips(self):
         """ return default AllowedIPs for user config """
-        return '0.0.0.0/0'
+        return '0.0.0.0/0, ::/0'
 
     def add_active_user(self, user_name):
         """ add user to active_users list (user exists check in wgtool """
