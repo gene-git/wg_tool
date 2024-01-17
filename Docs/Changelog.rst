@@ -1,6 +1,10 @@
 Changelog
 =========
 
+[6.3.0] ----- 2024-01-17
+ * Simplify ip address manipulations a few lines to original now bug is fixed  
+ * update Docs/Changelog.rst Docs/wg_tool.pdf  
+
 [6.2.0] ----- 2024-01-17
  * Bugfix : generating IPs was skipping too many available blocks  
  * update Docs/Changelog.rst Docs/wg_tool.pdf  
