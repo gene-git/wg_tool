@@ -1,6 +1,11 @@
 Changelog
 =========
 
+[6.0.1] ----- 2024-01-17
+ * bump patch version for readme change  
+ * readme tweak  
+ * update Docs/Changelog.rst Docs/wg_tool.pdf  
+
 [6.0.0] ----- 2024-01-17
  * Add support for multiple IP addresses in user profiles.  
    Addresses will now be taken from whichever networks are in server config.  
