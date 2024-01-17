@@ -16,7 +16,7 @@ class WgtUserProfile:
     """
     # pylint: disable=R0902,R0903
     def __init__(self, _prof_name, prof_dict):
-        self.Address = None
+        self.Address = None             # str or [str]
         self.PrivateKey = None
         self.PublicKey = None
         self.PresharedKey = None
@@ -46,6 +46,13 @@ class WgtUserProfile:
         """ return dict of self """
         prof_dict = vars(self)
         return prof_dict
+
+    def refresh_address(self, ipinfo):
+        """ ensure have Address for each server net and with right prefixlen """
+        (address, changed) = ipinfo.refresh_address(self.Address)
+        if changed:
+            self.Address = address
+        return changed
 
 class WgtUser:
     """
@@ -229,6 +236,24 @@ class WgtUser:
                 profile.Endpoint = endpoint
         else:
             warn_msg(f'upd_endpoint: {prof_name} not found - ignored')
+
+        if changed:
+            self.mod_time = current_date_time_str(fmt='%y%m%d-%H:%M')
+            self._changed = True
+        return changed
+
+    def mod_profile_address(self, ipinfo, prof_name):
+        """
+        refresh address to ensure has IP(s) from each server network
+        with current prefixlen.
+        """
+        changed = False
+        if self.profile_exists(prof_name):
+            profile = self.profile[prof_name]
+            if profile.refresh_address(ipinfo):
+                changed = True
+        else:
+            warn_msg(f'mod_profile_address: {prof_name} not found - ignored')
 
         if changed:
             self.mod_time = current_date_time_str(fmt='%y%m%d-%H:%M')

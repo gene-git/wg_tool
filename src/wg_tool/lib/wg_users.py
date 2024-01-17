@@ -25,7 +25,11 @@ def _user_prof_str(wgtool, _user_name, _prof_name, profile):
     serv_PublicKey = server.PublicKey
 
     PrivateKey = profile.PrivateKey
+
     Address = profile.Address
+    if isinstance(Address, list):
+        Address = ', '.join(Address)
+
     PresharedKey = profile.PresharedKey
     AllowedIPs = profile.AllowedIPs
     Endpoint = profile.Endpoint

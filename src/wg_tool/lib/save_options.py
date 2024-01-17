@@ -48,6 +48,8 @@ def write_saved_opts(wgtopt):
     opts_dict = {
             'keep_hist'     : wgtopt.keep_hist,
             'keep_hist_wg'  : wgtopt.keep_hist_wg,
+            'prefixlen_4'   : wgtopt.prefixlen_4,
+            'prefixlen_6'   : wgtopt.prefixlen_6,
             }
     opts_str = dict_to_toml_string(opts_dict)
 
@@ -98,3 +100,6 @@ def read_merge_saved_opts(wgtopt):
 
     _set_value(wgtopt, opts_dict, 'keep_hist')
     _set_value(wgtopt, opts_dict, 'keep_hist_wg')
+
+    _set_value(wgtopt, opts_dict, 'prefixlen_4')
+    _set_value(wgtopt, opts_dict, 'prefixlen_6')

@@ -25,6 +25,8 @@ def _user_by_pubkey_address(wgtool):
             prof = user.profile[prof_name]
             pub_key = prof.PublicKey
             address = prof.Address
+            if isinstance(address, list):
+                address = ', '.join(address)
             prof_act = user.is_profile_active(prof_name)
 
             user_by_key[pub_key] = {
@@ -110,31 +112,31 @@ def _parse_serv_users(_wgtool, report_in):
         if len(key_val) > 1:
             val = key_val[1].strip()
 
-        match(key):
-            case  'interface':
+        match key:
+            case 'interface':
                 serv_rpt["interface"] = val
 
-            case  'peer':
+            case 'peer':
                 user_rpt = user_rpt_template.copy()
                 user_rpts.append(user_rpt)
                 user_rpt["pub_key"] = val
 
-            case  'public key':
+            case 'public key':
                 serv_rpt["pub_key"] = val
 
-            case  'listening port':
+            case 'listening port':
                 serv_rpt["port"] = val
 
-            case  'endpoint':
+            case 'endpoint':
                 user_rpt["endpoint"] = val
 
-            case  'allowed ips':
+            case 'allowed ips':
                 user_rpt["address"] = val
 
-            case  'latest handshake':
+            case 'latest handshake':
                 user_rpt["handshake"] = val
 
-            case  'transfer':
+            case 'transfer':
                 user_rpt["transfer"] = val
 
     return (serv_rpt, user_rpts)

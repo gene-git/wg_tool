@@ -49,6 +49,9 @@ def _one_user_conf_str(user_name, conf_name, config):
     PresharedKey = config.PresharedKey
     AllowedIPs = config.Address              ## N.B this is -not- AllowedIPs
 
+    if isinstance(AllowedIPs, list):
+        AllowedIPs = ', '.join(AllowedIPs)
+
     conf = '\n'
     conf += f'{"[Peer]":15s} # {user_name} {conf_name}\n'
     conf += f'{"PublicKey":15s} = {PublicKey}\n'

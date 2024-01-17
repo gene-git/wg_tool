@@ -6,11 +6,12 @@
     Tool to administer wireguard users and server config with key management
     Driven from 2 types of simple input configs - 1) server.conf and per user.conf
 """
-# pylint: disable=R0902,C0301
+# pylint: disable=invalid-name,too-many-instance-attributes,line-too-long
 import os
 from .class_wgtopts import WgtOpts
 from .class_wgtserv import WgtServer
 from .class_wgtuser import WgtUser
+from .class_ipinfo import IpInfo
 
 from .config_init import initial_server_config
 from .utils import current_date_time_str
@@ -38,6 +39,7 @@ from .work_dir import check_work_dir_access
 from .msg import hdr_msg, warn_msg, err_msg
 
 from .cleanup import cleanup
+
 
 class WgTool:
     """
@@ -96,6 +98,7 @@ class WgTool:
 
         self.wg_server = None
         self.wg_users = None
+        self.ipinfo = None
 
         # data
         self.okay = True
@@ -164,9 +167,32 @@ class WgTool:
 
             self.refresh_active_users()
 
+            #
+            # manage user IP addresses
+            #
+            self.ipinfo = IpInfo(self.server.Address)
+            self.ipinfo.set_prefixlen(self.opts.prefixlen_4, self.opts.prefixlen_6)
+            used_ips = self.get_used_ip_addresses()
+            if used_ips:
+                self.ipinfo.add_used_addresses(used_ips)
+
     def __getattr__(self, name):
         """ non-set items simply return None so easy to check existence"""
         return None
+
+    def get_used_ip_addresses(self):
+        """
+        Update ipinfo with all existing user addresses
+        """
+        used_ips = []
+        if self.users:
+            for (_user_name, user) in self.users.items():
+                for (_prof_name, profile) in user.profile.items() :
+                    ip = profile.Address
+                    if not isinstance(ip, list):
+                        ip = [ip]
+                    used_ips += ip
+        return used_ips
 
     def refresh_active_users(self):
         """
@@ -264,6 +290,7 @@ class WgTool:
         dns_search = self.opts.dns_search
         dns_linux = self.opts.dns_linux
         upd_endpoint = self.opts.upd_endpoint
+        ips_refresh = self.opts.ips_refresh
         user = self.users[user_name]
 
         if user and dns_search :
@@ -278,6 +305,11 @@ class WgTool:
 
         if user and upd_endpoint:
             one_change = user.upd_endpoint(self, prof_name)
+            if one_change:
+                changed = True
+
+        if user and ips_refresh:
+            one_change = user.mod_profile_address(self.ipinfo, prof_name)
             if one_change:
                 changed = True
 

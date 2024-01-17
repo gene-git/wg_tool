@@ -20,31 +20,61 @@ Key features
 ============
 
  * simplifies wireguard administration. ( server and users )
+
  * guarantees server and user configs remain synchronized.
+
  * handles key creation when needed
+
  * users can have multiple profiles (bob:laptop bob:phone etc)
+
  * users and/or profiles can be marked active/inactive 
+
  * takes output of 'wg show' and shows connections by user/profile name.  
    This solves a long standing annoyance in a simple way by showing names 
    not public keys.
    Provides check that server is up to date and may need restart 
    with new wg0.conf
+
  * supports importing existing user/profiles
 
 New
 ===
 
+ * New Feature: Multiple IP Address for user profiles.
+
+   See new options *--prefixlen_4* and *--prefixlen_6*.
+
+   I'd appreciate testing and feedback (see Issue #14)
+
+   New user profiles now get ip(s) from each server network. 
+   CIDR address for each network will have prefixlen_4 or IPv4 and prefixlen_6 for IPv6 networks.
+   prefixlen are settable with new options.
+   
+   Existing user profile (or -all) can have their IPs refreshed to pick up their new IPs from
+   server config. If you already have multiple networks or simply added them to the 
+   server *Address* variable in *configs/server/server.conf* - and then refresh using:
+
+.. code-block:: bash
+
+   wg-tool -mod -ips <user>:<profile>
+
+
  * New option *-upd, --upd_endpoint* used with *-mod* to update existing user profiles when server
    IP/Port is changed.
+
  * *-mod* now supports *-all* to apply to all users.
+
  * `wg-client`_ companion package now available. A linux client tool and separate graphical 
    program to launch wireguard client. Simplify using wg for all users.
+
  * wg-peer-updn now saves additional copy of dns file as resolv.conf.wg
    Helpful for clients which sleep and on resume network restart overwrites resolv.conf
    This makes it simple to put back the vpn resolv.conf file by
    copying resolv.conf.wg to resolv.conf.  Used by wg-client package.
    Postdown will still restore original resolv.conf.save as usual.
+
  * Change python build from poetry to hatch
+
  * Can now generate html and pdf docs using sphinx
    Pre-built wg_tool.pdf provided in repo
    See *Howto-Build* in the *Docs* directory
@@ -472,6 +502,16 @@ Options:
 
    Modify existing user:profile(s).  Use with *-dnsrch*, *-dnslin*, and *upd*
    Can apply to all users/profiles via the *-all* option.
+
+ * (*-pfxlen_4, --prefixlen_4*)
+
+   User profiles now get IP Addresses(es) from each server network. Each address
+   is a block with cidr prefixlen_4. Defaults to 32 which means 1 IP address.
+   e.g. if set to 30 then would get a block of 4 x.x.x.x/30
+
+ * (*-pfxlen_5, --prefixlen_5*)
+
+   Similar to --prefixlen_4 but for ipv6. Default is 128
 
  * (*upd, --upd_endpoint*)
 

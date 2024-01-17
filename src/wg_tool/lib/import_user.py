@@ -80,7 +80,10 @@ def _read_wg_user_config(wgtool, fname):
             case 'PrivateKey':
                 PrivateKey = val
             case 'Address':
+                # can be cidr_str or cidr, cidr,  ...
                 Address = val
+                if ',' in Address:
+                    Address = [one.strip() for one in Address.split(',')]
             case 'DNS':
                 DNS.append(val)
 
@@ -186,7 +189,7 @@ def _check_user_fields(wgtool, conf_user):
 
     Address = conf_user['Address']
     if Address:
-        ip_avail = is_user_address_available(wgtool, Address)
+        ip_avail = is_user_address_available(wgtool.ipinfo, Address)
         if not ip_avail:
             okay = False
             wmsg('Import: Address already taken {Address}')

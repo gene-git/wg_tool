@@ -3,5 +3,5 @@
 """
 Project wg_tool
 """
-__version__ = "5.7.2"
+__version__ = "6.0.0"
 
