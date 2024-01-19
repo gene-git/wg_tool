@@ -1,6 +1,11 @@
 Changelog
 =========
 
+[6.5.0] ----- 2024-01-19
+ * Remove githash from version  
+ * Closed github issue #17.  
+   update Docs/Changelog.rst Docs/wg_tool.pdf  
+
 [6.4.0] ----- 2024-01-19
  * Add --version option  
  * update Docs/Changelog.rst Docs/wg_tool.pdf  
