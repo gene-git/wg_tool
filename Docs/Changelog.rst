@@ -1,6 +1,10 @@
 Changelog
 =========
 
+[6.4.0] ----- 2024-01-19
+ * Add --version option  
+ * update Docs/Changelog.rst Docs/wg_tool.pdf  
+
 [6.3.0] ----- 2024-01-17
  * Simplify ip address manipulations a few lines to original now bug is fixed  
  * update Docs/Changelog.rst Docs/wg_tool.pdf  
