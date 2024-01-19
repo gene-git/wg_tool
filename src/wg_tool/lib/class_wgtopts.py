@@ -14,7 +14,9 @@ class WgtOpts:
     """
     # pylint: disable=R0903
     def __init__(self, work_path, save_dir):
+        gh_url = 'https://github.com/gene-git/wg_tool'
         desc = 'wg-tool : Manage wireguard Server & User/Profile configs'
+        desc += f'\n{" ":10s}Detailed docs available at {gh_url}'
         #self.work_dir = work_dir
         self.save_dir = save_dir
         self.save_file = 'saved_options'
@@ -34,7 +36,8 @@ class WgtOpts:
         opts = available_options(work_path)
 
         # provide opts to argparse
-        par = argparse.ArgumentParser(description=desc)
+        par = argparse.ArgumentParser(description=desc,
+                                      formatter_class=argparse.RawDescriptionHelpFormatter)
         for opt in opts:
             (opt_s, opt_l), kwargs = opt
             if opt_l :

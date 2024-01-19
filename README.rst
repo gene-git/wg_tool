@@ -645,6 +645,10 @@ script *wg-peer-updn*.
 
    Adds more verbose output.
 
+ * (*-V, --version*)
+
+   Display current version
+
 Note on MTU
 -----------
 

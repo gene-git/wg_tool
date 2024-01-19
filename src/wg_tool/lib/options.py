@@ -113,6 +113,10 @@ def available_options(work_path:str):
     opt = [('-v', '--verb'), {'help' : ohelp, act : act_on}]
     opts.append(opt)
 
+    ohelp = 'Version info'
+    opt = [('-V', '--version'), {'help' : ohelp, act : act_on}]
+    opts.append(opt)
+
     ohelp = 'user_1[:prof1,prof2,...] user_2[:prof_1,prof_2] ...'
     opt = [('users', None), {'help' : ohelp, 'nargs' : '*'}]
     opts.append(opt)

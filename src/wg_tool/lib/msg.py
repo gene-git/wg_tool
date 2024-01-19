@@ -27,3 +27,8 @@ def err_msg(txt, end=None):
     """ print error (red) """
     col = 196
     _msg_col(col, txt, end=end)
+
+def info_msg(txt, end=None):
+    """ print info (green) """
+    col = 10
+    _msg_col(col, txt, end=end)

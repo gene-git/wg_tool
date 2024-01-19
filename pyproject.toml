@@ -23,7 +23,7 @@ Issues = "https://github.com/gene-git/wg_tool/issues"
 Source = "https://github.com/gene-git/wg_tool"
 
 [tool.hatch.version]
-path = "src/wg_tool/__about__.py"
+path = "src/wg_tool/lib/version.py"
 
 [tool.hatch.envs.default]
 # dependencies = [

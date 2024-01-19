@@ -35,11 +35,11 @@ from .show_rpt import run_show_rpt
 from .file_tools import set_restictive_file_perms
 from .work_dir import find_work_dir
 from .work_dir import check_work_dir_access
+from .version import version
 
 from .msg import hdr_msg, warn_msg, err_msg
 
 from .cleanup import cleanup
-
 
 class WgTool:
     """
@@ -108,6 +108,10 @@ class WgTool:
         # where & when
         self.now = current_date_time_str()
         self.cwd = os.getcwd()
+
+        # print version if requested
+        if self.opts.version:
+            version()
 
         if self.opts.init:
             hdr_msg('Init Mode')
