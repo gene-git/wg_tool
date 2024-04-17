@@ -3,13 +3,11 @@
 """
 Project wg_tool
 """
-from .msg import info_msg
-
-__version__ = "6.6.0"
-__date__ = "2024-01-19"
+__version__ = "6.6.1"
+__date__ = "2024-04-17"
 __reldev__ = "released"
 
-def version() -> None:
+def version() -> str:
     """ report version and release date """
     vers = f'wg-tool: version {__version__} ({__reldev__}, {__date__})'
-    info_msg(f'{vers}')
+    return vers

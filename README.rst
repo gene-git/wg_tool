@@ -40,6 +40,8 @@ Key features
 New
 ===
 
+ * Package : *pacman -Qc wg_tool* now shows the Changelog
+
  * New Feature: Multiple IP Address for user profiles.
 
    See new options *--prefixlen_4* and *--prefixlen_6*.
