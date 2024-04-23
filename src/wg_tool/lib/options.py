@@ -30,11 +30,11 @@ def available_options(work_path:str):
     opts.append(opt)
 
     ohelp = 'cidr prefix length for profile ipv4 addresses (32)'
-    opt = [('-pfxlen_4', '--prefixlen_4'), {'help' : ohelp, 'type' : int}]
+    opt = [('-pfxlen_4', '--prefixlen_4'), {'help' : ohelp}]
     opts.append(opt)
 
     ohelp = 'cidr prefix length for profile ipv6 addresses (128)'
-    opt = [('-pfxlen_6', '--prefixlen_6'), {'help' : ohelp, 'type' : int}]
+    opt = [('-pfxlen_6', '--prefixlen_6'), {'help' : ohelp}]
     opts.append(opt)
 
     ohelp = 'Refresh profile IPs if needed'
@@ -78,15 +78,15 @@ def available_options(work_path:str):
     opts.append(opt)
 
     ohelp = 'Import a user profile : --imp user.conf user_name:profile_name'
-    opt = [('-imp', '--import_user'), {'help' : ohelp, 'type' : str}]
+    opt = [('-imp', '--import_user'), {'help' : ohelp}]
     opts.append(opt)
 
     ohelp = 'Keep config history'
-    opt = [('-keep', '--keep_hist'), {'help' : ohelp, 'type' : int}]
+    opt = [('-keep', '--keep_hist'), {'help' : ohelp}]
     opts.append(opt)
 
     ohelp = 'Keep wg-config history'
-    opt = [('-keep_wg', '--keep_hist_wg'), {'help' : ohelp, 'type' : int}]
+    opt = [('-keep_wg', '--keep_hist_wg'), {'help' : ohelp}]
     opts.append(opt)
 
     ohelp = 'List users/profiles'

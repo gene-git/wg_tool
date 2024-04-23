@@ -40,6 +40,9 @@ Key features
 New
 ===
 
+ * Adjust for upcoming python changes.
+   Some argparse options have been deprecated in 3.12 and will be removed in 3.14
+
  * Package : *pacman -Qc wg_tool* now shows the Changelog
 
  * New Feature: Multiple IP Address for user profiles.

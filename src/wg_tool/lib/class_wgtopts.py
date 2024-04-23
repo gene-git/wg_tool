@@ -3,7 +3,7 @@
 """
 WgOpts  - command line options for WgTool
 """
-# pylint: disable=too-many-statements
+# pylint: disable=too-many-statements,too-many-instance-attributes
 import argparse
 from .options import available_options
 from .save_options import read_merge_saved_opts, write_saved_opts
@@ -14,24 +14,28 @@ class WgtOpts:
     """
     # pylint: disable=R0903
     def __init__(self, work_path, save_dir):
-        gh_url = 'https://github.com/gene-git/wg_tool'
-        desc = 'wg-tool : Manage wireguard Server & User/Profile configs'
+        gh_url:str = 'https://github.com/gene-git/wg_tool'
+        desc: str = 'wg-tool : Manage wireguard Server & User/Profile configs'
         desc += f'\n{" ":10s}Detailed docs available at {gh_url}'
-        #self.work_dir = work_dir
-        self.save_dir = save_dir
-        self.save_file = 'saved_options'
+        self.save_dir: str = save_dir
+        self.save_file : str= 'saved_options'
 
         #
         # User ips
         #
         self.default_prefixlen_4 = 32
         self.default_prefixlen_6 = 128
+        self.prefixlen_4 = self.default_prefixlen_4
+        self.prefixlen_6 = self.default_prefixlen_6
 
         #
         # These can be overriden from cli or from saved options
         #
         self.default_keep_hist = 5
         self.default_keep_hist_wg = 3
+
+        self.keep_hist = self.default_keep_hist
+        self.keep_hist_wg = self.default_keep_hist_wg
 
         opts = available_options(work_path)
 
@@ -52,6 +56,22 @@ class WgtOpts:
             #
             for (opt, val) in vars(parsed).items() :
                 setattr(self, opt, val)
+
+        #
+        # 3.12 deprecated some argparse options such as 'type' : int
+        #
+        if self.prefixlen_4:
+            self.prefixlen_4 = int(self.prefixlen_4)
+
+        if self.prefixlen_6:
+            self.prefixlen_6 = int(self.prefixlen_6)
+
+        if self.keep_hist:
+            self.keep_hist = int(self.keep_hist)
+
+        if self.keep_hist_wg:
+            self.keep_hist_wg = int(self.keep_hist_wg)
+
 
         #
         # for saved, prio is:  command line, saved file, default
