@@ -1,6 +1,12 @@
 Changelog
 =========
 
+**[6.7.2] ----- 2024-04-29** ::
+
+	    PKGBUILD change to get latest Changelog
+	    update Docs/Changelog.rst Docs/wg_tool.pdf
+
+
 **[6.7.1] ----- 2024-04-29** ::
 
 	    Update version.py as our package tooling was updated
