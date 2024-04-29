@@ -1,6 +1,12 @@
 Changelog
 =========
 
+**[6.7.3] ----- 2024-04-29** ::
+
+	    Improve pulling latest Changelog so pacman -Qc shows it
+	    update Docs/Changelog.rst Docs/wg_tool.pdf
+
+
 **[6.7.2] ----- 2024-04-29** ::
 
 	    PKGBUILD change to get latest Changelog
