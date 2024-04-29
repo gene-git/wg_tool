@@ -1,8 +1,14 @@
 Changelog
 =========
 
-**[6.7.3] ----- 2024-04-29** ::
+**[6.7.4] ----- 2024-04-29** ::
 
+	    typo
+
+
+**[6.7.3, origin/master] ----- 2024-04-29** ::
+
+	    update Docs/Changelog.rst Docs/wg_tool.pdf
 	    Improve pulling latest Changelog so pacman -Qc shows it
 	    update Docs/Changelog.rst Docs/wg_tool.pdf
 
