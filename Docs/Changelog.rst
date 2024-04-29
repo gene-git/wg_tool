@@ -1,8 +1,9 @@
 Changelog
 =========
 
-**[HEAD] ----- 2024-04-23** ::
+**[6.7.1] ----- 2024-04-29** ::
 
+	    Update version.py as our package tooling was updated
 	    update Docs/Changelog.rst Docs/wg_tool.pdf
 
 
