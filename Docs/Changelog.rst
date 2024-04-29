@@ -1,6 +1,11 @@
 Changelog
 =========
 
+**[HEAD] ----- 2024-04-23** ::
+
+	    update Docs/Changelog.rst Docs/wg_tool.pdf
+
+
 **[6.7.0] ----- 2024-04-23** ::
 
 	    Adjust for upcoming python changes.
