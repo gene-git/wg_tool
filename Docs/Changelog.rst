@@ -1,8 +1,14 @@
 Changelog
 =========
 
-**[6.7.6] ----- 2024-04-30** ::
+**[6.7.7] ----- 2024-04-30** ::
 
+	    fresh tag
+
+
+**[6.7.6, origin/master] ----- 2024-04-30** ::
+
+	    update Docs/Changelog.rst Docs/wg_tool.pdf
 	    Take Changelog "hack" out of PKGBUILD ... was a bad idea
 	    update Docs/Changelog.rst Docs/wg_tool.pdf
 
