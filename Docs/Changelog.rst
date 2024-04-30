@@ -1,6 +1,12 @@
 Changelog
 =========
 
+**[6.7.6] ----- 2024-04-30** ::
+
+	    Take Changelog "hack" out of PKGBUILD ... was a bad idea
+	    update Docs/Changelog.rst Docs/wg_tool.pdf
+
+
 **[6.7.5] ----- 2024-04-29** ::
 
 	    one of those days ... another typo!
