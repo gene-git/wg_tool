@@ -3,7 +3,7 @@
 """
 Project wg_tool
 """
-__version__ = "6.7.6"
+__version__ = "6.7.7"
 __date__ = "2024-04-30"
 __reldev__ = "released"
 
