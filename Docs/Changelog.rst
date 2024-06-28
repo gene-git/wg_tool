@@ -1,12 +1,34 @@
 Changelog
 =========
 
+**[7.0.0] ----- 2024-06-28** ::
+
+	    - Split routing support via *--allowed_ips*
+	        Gives ability to specify which networks use the vpn tunnel
+	        New option: -aips, --allowed_ips
+	        Applies to wireguard config *AllowedIps*
+	        This is a string of comma separated cidr blocks or can be the word *default*.
+	        Default is all packets use vpn - i.e. 0.0.0.0/0,::/0
+	        Option can be used with new user profile or to modify an existing profile together
+	        with *-mod* option.
+	    - general tidy ups
+	    - add missing contrib directory to installer scrript
+	    - Now uses sha3-384 to detect file changes (using python-cryptography module)
+	      which wraps openssl
+	    - Update to require python 3.11 or greater
+	    - Restricted file permissions - new option, (*-fp, --fperms*), to ensure all files have appropriate
+	      permissions.
+	      Previous version this was always done - but it can be slow (esp. over NFS) so
+	      now its an option to run if needed.
+	    update Docs/Changelog.rst Docs/wg_tool.pdf
+
+
 **[6.7.7] ----- 2024-04-30** ::
 
 	    fresh tag
 
 
-**[6.7.6, origin/master] ----- 2024-04-30** ::
+**[6.7.6] ----- 2024-04-30** ::
 
 	    update Docs/Changelog.rst Docs/wg_tool.pdf
 	    Take Changelog "hack" out of PKGBUILD ... was a bad idea
