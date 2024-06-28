@@ -67,7 +67,7 @@ class NetInfo:
             return True
         return False
 
-    def mark_address_vail(self, ip_addr):
+    def mark_address_avail(self, ip_addr):
         """
         If cidr in net then add to used list
            return true if added else false

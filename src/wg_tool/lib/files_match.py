@@ -1,15 +1,15 @@
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
 """
-conf_file_check
 Before writing a file we check if current file has same content (aside from header).
 This routine reads current file - strins header - and compares to the string about to be
 written and returns true if they don't match
 """
 import os
 from .utils import open_file
+from .digest import message_digest
 
-def file_check_match(fpath, header, data_new):
+def files_match(fpath, header, data_new):
     """
     Read 'fpath' - remove header - compare to data_new
     Returns True if they are the same
@@ -31,13 +31,20 @@ def file_check_match(fpath, header, data_new):
 
     #
     # strip header lines
-    # We ignore same number of chars - if number changes then header format changes
-    # and its not a match
+    # Ignore header size bytes - note that if header size changes then header format changes
+    # and wont match
     #
     hdr_len = len(header)
     data = data[hdr_len:]
 
-    if data == data_new:
+    if len(data) != len(data_new):
+        return not matched
+
+    #
+    # They match if the message_digests match
+    # digest is sha3-384 (strong hash)
+    #
+    if message_digest(data.encode('utf-8')) == message_digest(data_new.encode('utf-8')):
         return matched
 
     return not matched

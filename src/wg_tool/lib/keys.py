@@ -3,7 +3,6 @@
 """
 make private, public and preshared keys using wg genkey/pubkey/genpsk
 """
-# pylint: disable=C0103
 from .run_prog import run_prog
 
 def gen_keys():
@@ -17,10 +16,7 @@ def gen_keys():
     pargs = [wg, 'genkey']
     [_ret, key_prv, _errors] = run_prog(pargs)
 
-    # public key from private
-    #if key_prv:
-    #    pargs = [wg, 'pubkey']
-    #    [_ret, key_pub, _errors] = run_prog(pargs, input_str=key_prv)
+    # pub key
     key_pub = public_from_private_key(key_prv)
 
     # psk

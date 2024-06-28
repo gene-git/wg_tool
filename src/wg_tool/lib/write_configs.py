@@ -12,7 +12,7 @@ from .file_tools import write_conf_file
 from .file_tools import setup_save_path
 from .file_tools import save_prev_symlink
 
-def _strip_private(dic):
+def _strip_private(dic:dict):
     """
     remove any private attributes
       - we recurse on sub dictionaries

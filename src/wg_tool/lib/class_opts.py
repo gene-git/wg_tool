@@ -3,20 +3,26 @@
 """
 WgOpts  - command line options for WgTool
 """
-# pylint: disable=too-many-statements,too-many-instance-attributes
+# pylint: disable=too-many-instance-attributes
+# pylint: disable=too-many-statements
 import argparse
 from .options import available_options
-from .save_options import read_merge_saved_opts, write_saved_opts
+from .options_save import read_merge_saved_opts, write_saved_opts
 
 class WgtOpts:
     """
     Manage command line options
     """
-    # pylint: disable=R0903
     def __init__(self, work_path, save_dir):
         gh_url:str = 'https://github.com/gene-git/wg_tool'
         desc: str = 'wg-tool : Manage wireguard Server & User/Profile configs'
         desc += f'\n{" ":10s}Detailed docs available at {gh_url}'
+
+        self.work_dir = None
+        self.init = False
+        self.add_users = False
+        self.mod_users = False
+
         self.save_dir: str = save_dir
         self.save_file : str= 'saved_options'
 
@@ -27,6 +33,27 @@ class WgtOpts:
         self.default_prefixlen_6 = 128
         self.prefixlen_4 = self.default_prefixlen_4
         self.prefixlen_6 = self.default_prefixlen_6
+
+        self.ips_refresh = False
+        self.allowed_ips = None
+        self.upd_endpoint = False
+        self.dns_search = False
+        self.dns_linux = False
+        self.int_serv = False
+        self.upd_user_keys = False
+        self.upd_serv_keys = False
+        self.all_users = False
+        self.active = False
+        self.import_user = None
+        self.list_users = False
+        self.show_rpt = False
+        self.run_show_rpt = False
+        self.details = False
+        self.save_opts = False
+
+        self.file_perms = False
+        self.verb = False
+        self.version = False
 
         #
         # These can be overriden from cli or from saved options

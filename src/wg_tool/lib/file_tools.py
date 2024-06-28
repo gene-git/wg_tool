@@ -175,7 +175,7 @@ def os_chmod(path, perm):
 
     return okay
 
-def set_restictive_file_perms(topdir):
+def set_restrictive_file_perms(topdir):
     """
     Restrict permissions recursively
         user = rwX
@@ -183,6 +183,8 @@ def set_restictive_file_perms(topdir):
         other =
      where X means x if a dir
      Return True unless any os.chmod() throws exception
+    Note: This can be slow on NFS - however using scandir directly
+          was even slower for some reason.
     """
     okay = True
 
@@ -221,4 +223,57 @@ def set_restictive_file_perms(topdir):
             is_ok = os_chmod(this_path, perms)
             if not is_ok:
                 okay = False
+    return okay
+
+def set_restrictive_file_perms_scan(topdir):
+    """
+    This is slower than os.walk() on NFS
+    Both are fast on non-NFS
+    Restrict permissions recursively
+        user = rwX
+        group = rX
+        other =
+     where X means x if a dir
+     Return True unless any os.chmod() throws exception
+    """
+
+    scan = os.scandir(topdir)
+    if not scan:
+        return True
+
+    #file_perm_x = stat.S_IRWXU | stat.S_IXGRP | stat.S_IRGRP
+    file_perm = stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP
+    dir_perm = stat.S_IRWXU | stat.S_IRGRP | stat.S_IXGRP
+
+    okay = True
+
+    is_ok = os_chmod(topdir, dir_perm)
+    if not is_ok:
+        okay = False
+
+    for item in scan:
+        if item.is_file():
+            # file: keep any user/group executable mode (not other)
+            fstat = item.stat()
+            fmode = fstat.st_mode
+            fperm = file_perm
+            if fmode & stat.S_IXUSR:
+                fperm |= stat.S_IXUSR
+            if fmode & stat.S_IXGRP:
+                fperm |= stat.S_IXGRP
+
+            if fmode != fperm:
+                if not os.chmod(item.path, fperm):
+                    okay = False
+
+        elif item.is_dir():
+            # recursive
+            fstat = item.stat()
+            fmode = fstat.st_mode
+            fperm = dir_perm
+            if fmode != fperm:
+                if not os.chmod(item.path, dir_perm):
+                    okay = False
+                if not set_restrictive_file_perms(item.path):
+                    okay = False
     return okay

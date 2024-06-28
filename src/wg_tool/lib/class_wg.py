@@ -8,31 +8,31 @@
 """
 # pylint: disable=invalid-name,too-many-instance-attributes,line-too-long
 import os
-from .class_wgtopts import WgtOpts
-from .class_wgtserv import WgtServer
-from .class_wgtuser import WgtUser
+from .class_opts import WgtOpts
+from .class_serv import WgtServer
+from .class_user import WgtUser
 from .class_ipinfo import IpInfo
 
 from .config_init import initial_server_config
 from .utils import current_date_time_str
 
 from .read_config import read_server_config, read_user_configs
-from .write_config import write_server_config, write_user_configs
+from .write_configs import write_server_config, write_user_configs
 from .find_user_ip import find_user_ip
-from .wg_users import write_wg_users
-from .wg_server import write_wg_server
+from .write_wg_users import write_wg_users
+from .write_wg_server import write_wg_server
 
 from .users import add_users, mod_users
 from .users import add_active_users_profiles
 from .users import remove_active_users_profiles
 from .key_change import upd_user_keys
 from .key_change import upd_serv_keys
-from .list_users import list_users
+from .users_list import list_users
 
-from .import_user import import_user
+from .user_import import import_user
 from .show_rpt import show_rpt
 from .show_rpt import run_show_rpt
-from .file_tools import set_restictive_file_perms
+from .file_tools import set_restrictive_file_perms
 from .work_dir import find_work_dir
 from .work_dir import check_work_dir_access
 from .version import version
@@ -74,11 +74,12 @@ class WgTool:
         else:
             self.work_dir = find_work_dir(self.opts.init, work_path, conf_dir_name)
 
+        # server config
         self.conf_dir = os.path.join(self.work_dir, conf_dir_name)
         self.conf_serv_dir = os.path.join(self.conf_dir,'server')
         self.conf_serv_file = 'server.conf'
 
-        # do we want to insert "org" above users?
+        # user configs
         self.conf_user_dir = os.path.join(self.conf_dir, 'users')
         self.conf_user_confs = None                     # list of file names
 
@@ -114,19 +115,23 @@ class WgTool:
             version()
 
         if self.opts.init:
+            #
+            # Init - first time only.
+            #
             hdr_msg('Init Mode')
-            # check for existing server file
             serv_dict = read_server_config(self)
             if serv_dict:
                 err_msg('Error: Existing server config found - wont overwrite')
                 self.okay = False
             else:
                 self.server = initial_server_config(self)
+
         else:
             #
-            # Not init case - read our wg-tool config files
-            # Require server config
-            #   - user configs may have or create/import or both
+            # Normal mode (not first time)
+            #  - read our wg-tool config files
+            #  - Require server config
+            #  - user configs have or create/import or both
             #
             hdr_msg('Normal Mode: using existing setup')
             serv_dict = read_server_config(self)
@@ -173,6 +178,7 @@ class WgTool:
 
             #
             # manage user IP addresses
+            # ipinfo is defined by server config network
             #
             self.ipinfo = IpInfo(self.server.Address)
             self.ipinfo.set_prefixlen(self.opts.prefixlen_4, self.opts.prefixlen_6)
@@ -297,25 +303,39 @@ class WgTool:
         dns_linux = self.opts.dns_linux
         upd_endpoint = self.opts.upd_endpoint
         ips_refresh = self.opts.ips_refresh
-        user = self.users[user_name]
+        allowed_ips = self.opts.allowed_ips
+        user = self.users.get(user_name)
 
-        if user and dns_search :
+        if not user:
+            warn_msg(f'Modify user : {user_name} not found')
+            return
+
+        if dns_search :
             one_change = user.mod_profile_dns_search(dns_search, prof_name)
             if one_change:
                 changed = True
 
-        if user and dns_linux:
+        if dns_linux:
             one_change = user.mod_profile_dns_linux(dns_linux, prof_name)
             if one_change:
                 changed = True
 
-        if user and upd_endpoint:
+        if upd_endpoint:
             one_change = user.upd_endpoint(self, prof_name)
             if one_change:
                 changed = True
 
-        if user and ips_refresh:
+        if ips_refresh:
             one_change = user.mod_profile_address(self.ipinfo, prof_name)
+            if one_change:
+                changed = True
+
+        if allowed_ips:
+            if allowed_ips.lower() == 'default':
+                allowed_ips = self.server.user_allowedips()
+
+            allowed_ips_default = self.ipinfo.allowed_ips
+            one_change = user.mod_allowed_ips(allowed_ips_default, allowed_ips, prof_name)
             if one_change:
                 changed = True
 
@@ -368,7 +388,7 @@ class WgTool:
         """
         if self.opts.init :
             write_server_config(self)
-            set_restictive_file_perms(self.conf_dir)
+            set_restrictive_file_perms(self.conf_dir)
             return
 
         # make any requested user changes
@@ -432,8 +452,12 @@ class WgTool:
         write_wg_server(self)
 
         # Extra caution to ensure permissions are user/root only
-        set_restictive_file_perms(self.conf_dir)
-        set_restictive_file_perms(self.wg_dir)
+        if self.opts.file_perms:
+            hdr_msg(' restrict file perms')
+
+            # file perms
+            set_restrictive_file_perms(self.conf_dir)
+            set_restrictive_file_perms(self.wg_dir)
 
         # clean up
         cleanup(self)

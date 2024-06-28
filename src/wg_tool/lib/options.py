@@ -13,7 +13,7 @@ def available_options(work_path:str):
     act = 'action'
     act_on = 'store_true'
 
-    ohelp = f'Set the working dir. If unset, use dir path : {work_path}'
+    ohelp = f'Set the working directory path to search. If unset, path : {work_path}'
     opt = [('-wkd', '--work_dir'), {'help' : ohelp}]
     opts.append(opt)
 
@@ -21,11 +21,20 @@ def available_options(work_path:str):
     opt = [('-i', '--init'), {'help' : ohelp, act : act_on}]
     opts.append(opt)
 
+    # TBD
+    #ohelp = 'Add or modify user/profile(s) from files provided on command line file1,file2,... '
+    #opt = [('-uf', '--user_files'), {'help' : ohelp, act : act_on}]
+    #opts.append(opt)
+
+    #ohelp = 'Write existing user input file to use with -uf. Output file(s) are named username.temp'
+    #opt = [('-ufp', '--user_files_print'), {'help' : ohelp, act : act_on}]
+    #opts.append(opt)
+
     ohelp = 'Add user(s) and/or user profiles user:prof1,prof2,... '
     opt = [('-add', '--add_users'), {'help' : ohelp, act : act_on}]
     opts.append(opt)
 
-    ohelp = 'Modify user(s) profiles (with -dnsrch, -dnslin, -upd, -ips)'
+    ohelp = 'Modify user(s) profiles (with -dnsrch, -dnslin, -upd, -ips, -aips)'
     opt = [('-mod', '--mod_users'), {'help' : ohelp, act : act_on}]
     opts.append(opt)
 
@@ -39,6 +48,10 @@ def available_options(work_path:str):
 
     ohelp = 'Refresh profile IPs if needed'
     opt = [('-ips', '--ips_refresh'), {'help' : ohelp, act : act_on}]
+    opts.append(opt)
+
+    ohelp = 'Set user allowed_ips - cidrs routed to vpn (default "0.0.0.0/0,::/0")'
+    opt = [('-aips', '--allowed_ips'), {'help' : ohelp}]
     opts.append(opt)
 
     ohelp = 'Ensure user(s) profiles use current endpoint (add -int if needed)'
@@ -109,9 +122,14 @@ def available_options(work_path:str):
     opt = [('-sop',   '--save_opts'), {'help' : ohelp, act : act_on}]
     opts.append(opt)
 
+    ohelp = 'Ensure all files use appropriately restricted permissions'
+    opt = [('-fp', '--file_perms'), {'help' : ohelp, act : act_on}]
+    opts.append(opt)
+
     ohelp = 'Be more verbose'
     opt = [('-v', '--verb'), {'help' : ohelp, act : act_on}]
     opts.append(opt)
+
 
     ohelp = 'Version info'
     opt = [('-V', '--version'), {'help' : ohelp, act : act_on}]

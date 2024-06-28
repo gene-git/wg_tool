@@ -102,6 +102,7 @@ def _user_details(wgtool, users_profiles):
             msg(f'{"Address":>41s} : {prof.Address}')
             msg(f'{"PublicKey":>41s} : {prof.PublicKey}')
             msg(f'{"Endpoint":>41s} : {prof.Endpoint}')
+            msg(f'{"AllowedIPs":>41s} : {prof.AllowedIPs}')
 
         #msg('')
 

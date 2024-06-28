@@ -122,7 +122,7 @@ def import_user(wgtool):
         --import file.conf                -> user_name : file, config : main
         --import file.conf user_1:laptop  -> user_name : user_1, config : laptop
     """
-    # pylint: disable=R0914
+    # pylint: disable=too-many-locals
     wmsg = wgtool.wmsg
     emsg = wgtool.emsg
 
@@ -147,6 +147,8 @@ def import_user(wgtool):
             if len(prof_names) > 1:
                 emsg(f'Import {conf_file} for user {user_name} must have max of 1 proile name')
                 return not okay
+        else:
+            prof_name = 'main'
     else:
         user_name = conf_file.replace('.conf','')
         prof_name = 'main'

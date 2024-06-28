@@ -30,7 +30,13 @@ def _make_new_profile_dict(wgtool):
         Endpoint = server.endpoint()
 
     Address = wgtool.find_avail_user_ip()
+
     AllowedIPs = server.user_allowedips()
+    allowed_ips_own = False
+    if wgtool.opts.allowed_ips :
+        if wgtool.opts.allowed_ips.lower() != 'default' and wgtool.opts.allowed_ips != AllowedIPs:
+            AllowedIPs = wgtool.opts.allowed_ips
+            allowed_ips_own = True
 
     DnsSearch = False
     if wgtool.opts.dns_search:
@@ -51,6 +57,7 @@ def _make_new_profile_dict(wgtool):
     prof_dict['Endpoint'] = Endpoint
     prof_dict['DnsSearch'] = DnsSearch
     prof_dict['DnsLinux'] = DnsLinux
+    prof_dict['allowed_ips_own'] = allowed_ips_own
 
     return prof_dict
 

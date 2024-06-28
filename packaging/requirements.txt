@@ -4,14 +4,14 @@
 # pip uses wheel and should have it as dependency 
 
 # Run time
-python >= 3.10
+python >= 3.11
 wireguard-tools
 nftables
 netaddr
 qrcode
 pillow
 tomli_w
-tomli       # needed for python < 3.11
+cryptography
 
 # package building/installing
 git

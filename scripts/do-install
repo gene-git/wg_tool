@@ -10,7 +10,7 @@
 dest="$1"
 self="wg_tool"
 
-info="README.rst Docs scripts packaging"
+info="README.rst contrib Docs scripts packaging"
 infodir="/usr/share/${self}"
 
 license="Docs/License.rst"

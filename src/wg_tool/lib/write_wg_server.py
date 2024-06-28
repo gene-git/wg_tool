@@ -11,7 +11,7 @@ from .file_tools import setup_save_path
 from .file_tools import file_symlink
 from .file_tools import save_prev_symlink
 from .file_tools import format_file_header
-from .file_check_match import file_check_match
+from .files_match import files_match
 
 def _serv_conf_str(wgtool):
     """
@@ -93,7 +93,7 @@ def _users_conf_str(wgtool):
 
 def write_wg_server(wgtool):
     """
-    generate wg server config wg0.con :
+    generate wg server config wg0.conf :
     """
     # pylint: disable=C0301
     errors = 0
@@ -116,7 +116,7 @@ def write_wg_server(wgtool):
     #
     # if same - dont write
     #
-    is_same = file_check_match(link_name, header, full_conf_str)
+    is_same = files_match(link_name, header, full_conf_str)
     if is_same:
         vmsg(f'{"wg-config":>10s}: up to date - {conf_file}')
     else:

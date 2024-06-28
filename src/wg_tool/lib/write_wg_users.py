@@ -14,7 +14,7 @@ from .file_tools import file_symlink
 from .file_tools import format_file_header
 from .utils import open_file
 from .utils import text_to_qr_file
-from .file_check_match import file_check_match
+from .files_match import files_match
 
 def _user_prof_str(wgtool, _user_name, _prof_name, profile):
     """
@@ -116,7 +116,7 @@ def write_wg_users(wgtool):
             comment = f' wg profile :\n# {"User":>10s} {user_name}\n# {"Profile":>10s} {prof_name}'
             header = format_file_header(comment, wgtool.now)
 
-            is_same = file_check_match(link_name, header, prof_str)
+            is_same = files_match(link_name, header, prof_str)
             if is_same:
                 vmsg(f'{"wg-config":>10s}: up to date - {user_name}:{prof_name}')
             else:

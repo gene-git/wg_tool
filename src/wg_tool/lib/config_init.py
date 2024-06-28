@@ -6,7 +6,7 @@
 """
 from .keys import gen_keys
 from .utils import current_date_time_str
-from .class_wgtserv import WgtServer
+from .class_serv import WgtServer
 
 def _sample_server_config():
     """

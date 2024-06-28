@@ -19,31 +19,59 @@ On Arch install using the PKGBUILD provided in packaging directory or from the A
 Key features
 ============
 
- * simplifies wireguard administration. ( server and users )
+ * simplifies wireguard administration. ( server and user config )
 
- * guarantees server and user configs remain synchronized.
+ * guarantees server and user configs always remain synchronized.
 
  * handles key creation when needed
 
- * users can have multiple profiles (bob:laptop bob:phone etc)
+ * users have multiple profiles (bob:laptop bob:phone etc)
 
  * users and/or profiles can be marked active/inactive 
 
- * takes output of 'wg show' and shows connections by user/profile name.  
+ * takes output of 'wg show' and displays connections by user:profile name.
    This solves a long standing annoyance in a simple way by showing names 
-   not public keys.
-   Provides check that server is up to date and may need restart 
-   with new wg0.conf
+   instead of public keys as output by *wg show*.
+   Also provides check that server config is up to date and if it needs to be
+   restarted with new wg0.conf
 
  * supports importing existing user/profiles
 
 New
 ===
 
+ * Split route - new option set allowed_ips in user configs. By default it has 
+   everything going via the VPN.  Split routing is useful. 
+   
+   For example you may want to route via the VPN only those networks on the LAN (inside) 
+   of the vpn server while allowing all other packets to go directly out.  
+   
+   This is also useful when setting up wireguard to join 2+ locations where each 
+   location's subnet is available to users at either location. 
+   
+   This is done using "--allowed_ips" which sets the wireguard config "AllowedIPs". 
+   This option can be used when creating a new user:profile or when modifying 
+   an existing profile with *-mod*.  
+   
+   See :ref:`options-section` section for more detail.
+
+ * Add missing contrib directory to installer scrript
+
+ * Uses sha3-384 to detect file changes (using python-cryptography module
+   which wraps openssl)
+
+ * Require python 3.11 or later
+
+ * Restricted file permissions
+
+   New option, (*-fp, --fperms*), to ensure all files have appropriate permissions.
+   Earlier versions always did this. But it can be slow (esp over NFS) so its
+   now a separate option to run on demand.
+
+ * general tidy ups
+
  * Adjust for upcoming python changes.
    Some argparse options have been deprecated in 3.12 and will be removed in 3.14
-
- * Package : *pacman -Qc wg_tool* now shows the Changelog
 
  * New Feature: Multiple IP Address for user profiles.
 
@@ -463,6 +491,8 @@ Pretty much everything you need to do should be available using wg-tool::
 
 gives list of options.
 
+ .. _options-section:
+
 Options
 -------
 
@@ -509,9 +539,24 @@ Options:
 
    Add user(s) and/or user profiles user:prof1,prof2,...
 
+ * (*-aips, --allowed_ips*)
+
+    Set the cidr blocks which will be routed through the vpn. The default is all ips
+    given by:
+
+    *0.0.0.0/0,::/0*
+
+    Provide a comma separated list of CIDRs or the string *default* to use the 
+    default value where all ips are routed through wireguard.
+
+    The current setting can be viewed by detailed user listing:
+
+    wg-tool -l -det [user:prof]
+
+
  * (*-mod, --mod_users*)
 
-   Modify existing user:profile(s).  Use with *-dnsrch*, *-dnslin*, and *upd*
+   Modify existing user:profile(s).  Use with *-dnsrch*, *-dnslin*, *-aips* and *upd*
    Can apply to all users/profiles via the *-all* option.
 
  * (*-pfxlen_4, --prefixlen_4*)
@@ -523,6 +568,7 @@ Options:
  * (*-pfxlen_5, --prefixlen_5*)
 
    Similar to --prefixlen_4 but for ipv6. Default is 128
+
 
  * (*upd, --upd_endpoint*)
 
@@ -624,6 +670,10 @@ script *wg-peer-updn*.
 
    Together with --keep_hist and/or --keep_hist_wg
    to save these values as new defaults.
+
+ * (*-fp, --file_perms*)
+
+   Ensure all files have appropriately restricted permissions'
 
  * (*-rrpt, --run_show_rpt*)
 

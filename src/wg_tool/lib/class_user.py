@@ -24,9 +24,11 @@ class WgtUserProfile:
         self.Endpoint = None
         self.DnsSearch = False
         self.DnsLinux = False
-        self.mod_time = current_date_time_str(fmt='%y%m%d-%H:%M')
 
+        self.mod_time = current_date_time_str(fmt='%y%m%d-%H:%M')
         self._changed = None
+
+        self.allowed_ips_own = False    # true if set non-default by user
 
         for key,val in prof_dict.items():
             setattr(self, key, val)
@@ -50,10 +52,43 @@ class WgtUserProfile:
     def refresh_address(self, ipinfo):
         """ ensure have Address for each server net and with right prefixlen """
         (address, changed) = ipinfo.refresh_address(self.Address)
-        if changed:
+        if changed :
             self.Address = address
+
+        # If not specified in profile use default from ipinfo
+        if not self.allowed_ips_own :
             self.AllowedIPs = ipinfo.allowed_ips
+
         return changed
+
+    def set_allowed_ips_own(self, allowed_ips_def, allowed_ips:str):
+        """
+        caller sets allowed ips
+        """
+        changed = False
+        if allowed_ips == allowed_ips_def:
+            # setting to default -> turn off "own"
+            if self.allowed_ips_own:
+                self.allowed_ips_own = False
+                changed = True
+        else:
+            # not default
+            if not self.allowed_ips_own:
+                self.allowed_ips_own = True
+                changed = True
+
+        if self.AllowedIPs != allowed_ips:
+            self.AllowedIPs = allowed_ips
+            changed = True
+
+        if changed:
+            self._set_mod_time()
+        return changed
+
+    def _set_mod_time(self):
+        """ upadate last modify time and mark change"""
+        self.mod_time = current_date_time_str(fmt='%y%m%d-%H:%M')
+        self._changed = True
 
 class WgtUser:
     """
@@ -65,7 +100,7 @@ class WgtUser:
     def __init__(self, user_name, user_dict):
         self.active_profiles = []
         self.profile = {}
-        self.mod_time = current_date_time_str(fmt='%y%m%d-%H:%M')
+        self._set_mod_time()
         self._changed = False
 
         self.name = user_name
@@ -96,8 +131,7 @@ class WgtUser:
 
         if not self.profile:
             # errr - seems over cautious
-            self.mod_time = current_date_time_str(fmt='%y%m%d-%H:%M')
-            self._changed = True
+            self._set_mod_time()
             self.active_profiles = None
             return
 
@@ -107,8 +141,8 @@ class WgtUser:
                 if prof_name not in active_profiles:
                     active_profiles.append(prof_name)
             else:
-                self.mod_time = current_date_time_str(fmt='%m%m%d-%H:%M')
-                self._changed = True
+                self._set_mod_time()
+
         self.active_profiles = active_profiles
 
     def profile_names(self):
@@ -153,8 +187,7 @@ class WgtUser:
         else:
             self.profile[prof_name] = WgtUserProfile(prof_name, prof_dict)
             self.add_active_profile(prof_name)
-            self.mod_time = current_date_time_str(fmt='%y%m%d-%H:%M')
-            self._changed = True
+            self._set_mod_time()
 
     def add_active_profile(self, prof_name):
         """ add profile to users active_profile list """
@@ -169,9 +202,9 @@ class WgtUser:
                 changed = True
         else:
             warn_msg(f'Config {prof_name} not found - not added to active_profiles')
+
         if changed:
-            self.mod_time = current_date_time_str(fmt='%y%m%d-%H:%M')
-            self._changed = True
+            self._set_mod_time()
         return changed
 
     def remove_active_profile(self, prof_name):
@@ -182,8 +215,7 @@ class WgtUser:
                 if prof_name in self.active_profiles:
                     self.active_profiles.remove(prof_name)
                     changed = True
-                    self._changed = True
-                    self.mod_time = current_date_time_str(fmt='%y%m%d-%H:%M')
+                    self._set_mod_time()
         return changed
 
     def mod_profile_dns_search(self, dns_search, prof_name):
@@ -198,8 +230,7 @@ class WgtUser:
             warn_msg(f'dns_search: {prof_name} not found - ignored')
 
         if changed:
-            self.mod_time = current_date_time_str(fmt='%y%m%d-%H:%M')
-            self._changed = True
+            self._set_mod_time()
         return changed
 
     def mod_profile_dns_linux(self, dns_linux, prof_name):
@@ -214,8 +245,7 @@ class WgtUser:
             warn_msg(f'dns_linux: {prof_name} not found - ignored')
 
         if changed:
-            self.mod_time = current_date_time_str(fmt='%y%m%d-%H:%M')
-            self._changed = True
+            self._set_mod_time()
         return changed
 
     def upd_endpoint(self, wgt, prof_name):
@@ -239,13 +269,12 @@ class WgtUser:
             warn_msg(f'upd_endpoint: {prof_name} not found - ignored')
 
         if changed:
-            self.mod_time = current_date_time_str(fmt='%y%m%d-%H:%M')
-            self._changed = True
+            self._set_mod_time()
         return changed
 
     def mod_profile_address(self, ipinfo, prof_name):
         """
-        refresh address to ensure has IP(s) from each server network
+        refresh (server) address to ensure has IP(s) from each server network
         with current prefixlen.
         """
         changed = False
@@ -257,6 +286,31 @@ class WgtUser:
             warn_msg(f'mod_profile_address: {prof_name} not found - ignored')
 
         if changed:
-            self.mod_time = current_date_time_str(fmt='%y%m%d-%H:%M')
-            self._changed = True
+            self._set_mod_time()
         return changed
+
+    def mod_allowed_ips(self, allowed_ips_def:str, allowed_ips:str, prof_name:str):
+        """
+        Modify the allowed_ips for this user profil
+         - string with comma separated list actual cidrs
+         - See class_wg where default is set to server provided '0.0.0.0/0, ::/0'
+        """
+        changed = False
+        if not allowed_ips:
+            warn_msg(f'mod_allowed_ips: {prof_name} - missing allowed ips')
+            return changed
+
+        if self.profile_exists(prof_name):
+            profile = self.profile[prof_name]
+            changed = profile.set_allowed_ips_own(allowed_ips_def, allowed_ips)
+        else:
+            warn_msg(f'mod_profile_address: {prof_name} not found - ignored')
+
+        if changed:
+            self._set_mod_time()
+        return changed
+
+    def _set_mod_time(self):
+        """ upadate last modify time """
+        self.mod_time = current_date_time_str(fmt='%y%m%d-%H:%M')
+        self._changed = True
