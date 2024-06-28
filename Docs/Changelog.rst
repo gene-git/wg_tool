@@ -1,6 +1,12 @@
 Changelog
 =========
 
+**[7.0.1] ----- 2024-06-28** ::
+
+	    Remove stray character from PKGBUILD; Add nftables dependency
+	    update Docs/Changelog.rst Docs/wg_tool.pdf
+
+
 **[7.0.0] ----- 2024-06-28** ::
 
 	    - Split routing support via *--allowed_ips*
