@@ -1,6 +1,12 @@
 Changelog
 =========
 
+**[7.0.2] ----- 2024-06-29** ::
+
+	    bug: -V,--version didnt print anything - fixed
+	    update Docs/Changelog.rst Docs/wg_tool.pdf
+
+
 **[7.0.1] ----- 2024-06-28** ::
 
 	    Remove stray character from PKGBUILD; Add nftables dependency
