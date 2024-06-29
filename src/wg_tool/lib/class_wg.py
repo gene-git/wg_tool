@@ -47,7 +47,7 @@ class WgTool:
     """
     # pylint: disable=R0912,R0915
     def __init__(self):
-
+        self.okay = True
         #
         # Input Configs
         #
@@ -56,6 +56,12 @@ class WgTool:
 
         # saved options are kept in work_dir/conf_dir/
         self.opts = WgtOpts(work_path, conf_dir_name)
+
+        # print version and tell main to exit
+        if self.opts.version:
+            self.msg(version())
+            self.okay = False
+            return
 
         if not self.opts.check():
             self.okay = False
@@ -109,10 +115,6 @@ class WgTool:
         # where & when
         self.now = current_date_time_str()
         self.cwd = os.getcwd()
-
-        # print version if requested
-        if self.opts.version:
-            version()
 
         if self.opts.init:
             #
