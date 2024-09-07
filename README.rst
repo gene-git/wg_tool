@@ -199,34 +199,31 @@ Each user can have 1 or more profiles. For example bob may have *bob:phone* and
 *wg-config/users/bob* as bob-phone.conf, bob-phone-qr.png, bob-laptop.conf and bob-laptop-qr.png.
 These are provided to the user - bob in this case.
 
-For those computer clients running Linux, there are 2 kinds of configs available. 
+For wireguard clients running Linux, there are a couple of approches the client DNS. Client DNS should
+always be through the wireguard tunnel.
 
-* standard config
+* **preferred approach**:
 
-   where the DNS infomation in config is used by wg-quick. wg-quick, in turn, relies on resolvconf.
-
-* linux config
-
-   this is my preferred approach. Activated by the *--dns_linux* option. When 
-   using this, wg-quick uses the provided *wg-peer-updn* script via PostUp/PostDown. 
+  * Activated by the *--dns_linux* option. 
     
-   This scipt saves the current dns resolv.conf file when VPN is brought up using *wg-quick up*, 
-   installs the VPN dns into /etc/resolv.conf and restores the prior resolv.conf when VPN is 
-   deactivated (wg-quick down).
+  When using this option, wg-quick uses the provided *wg-peer-updn* script via PostUp/PostDown setting. 
+    
+  This scipt saves the current dns resolv.conf file when VPN is brought up using *wg-quick up*, 
+  installs the VPN dns into /etc/resolv.conf and then restores the prior resolv.conf when VPN is 
+  deactivated (wg-quick down).
 
+* **alternative approach**:
+
+  * DNS information in config is used by wg-quick. wg-quick, in turn, relies on resolvconf.
 
 Directory and File Structure
 ============================
 
-There are 2 kinds of config files. We use the following convention:
+*wg-tool* uses 2 kinds of config files:
 
-* **wg-configs** : configs used by wireguard itself
+* **configs** :  *inputs* to *wg-tool* 
+* **wg-configs** : *outputs* from *wg-tool* which are then used by wireguard server or clients.
 
-  These are the outputs of *wg-tool*. 
-
-* **configs** :  configs used by wg-tool 
-
-  These are the inputs for *wg-tool*
 
 For example, the wireguard server config file, wg0.conf, will be located 
 in ::
@@ -239,7 +236,7 @@ And the user QR codes and *.conf* files will be under ::
 
 Laying out this directory structure in a bit more detail.
 
-*wg-tool* configs ::
+*wg-tool* input configs ::
 
     configs/
            server/
@@ -251,7 +248,7 @@ Laying out this directory structure in a bit more detail.
                    user-2.conf
                ... 
 
-*wireguard* configs will be placed ::
+*wireguard* configs will be saved to ::
 
     wg-configs/
               server/
