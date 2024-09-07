@@ -1,6 +1,12 @@
 Changelog
 =========
 
+**[7.0.4] ----- 2024-09-07** ::
+
+	    more readme tweaks
+	    update Docs/Changelog.rst Docs/wg_tool.pdf
+
+
 **[7.0.3] ----- 2024-09-07** ::
 
 	    tweak RST formatting in readme
