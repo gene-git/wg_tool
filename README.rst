@@ -11,81 +11,76 @@ Manage wireguard server and user configs. Ensures server and user configs remain
 
 Available on 
 
- * `Github`_
- * `Archlinux AUR`_
+* `Github`_
+* `Archlinux AUR`_
 
 On Arch install using the PKGBUILD provided in packaging directory or from the AUR.
 
 Key features
 ============
 
- * simplifies wireguard administration. ( server and user config )
+* simplifies wireguard administration. ( server and user config )
+* guarantees server and user configs always remain synchronized.
+* handles key creation when needed
+* users have multiple profiles (bob:laptop bob:phone etc)
+* users and/or profiles can be marked active/inactive 
+* takes output of 'wg show' and displays connections by user:profile name.
 
- * guarantees server and user configs always remain synchronized.
-
- * handles key creation when needed
-
- * users have multiple profiles (bob:laptop bob:phone etc)
-
- * users and/or profiles can be marked active/inactive 
-
- * takes output of 'wg show' and displays connections by user:profile name.
-   This solves a long standing annoyance in a simple way by showing names 
-   instead of public keys as output by *wg show*.
-   Also provides check that server config is up to date and if it needs to be
-   restarted with new wg0.conf
-
- * supports importing existing user/profiles
+  This solves a long standing annoyance in a simple way by showing names 
+  instead of public keys as output by *wg show*.
+  Also provides check that server config is up to date and if it needs to be
+  restarted with new wg0.conf
+* supports importing existing user/profiles
 
 New
 ===
 
- * Split route - new option set allowed_ips in user configs. By default it has 
-   everything going via the VPN.  Split routing is useful. 
+* Split route - new option set allowed_ips in user configs. By default it has 
+  everything going via the VPN.  Split routing is useful. 
    
-   For example you may want to route via the VPN only those networks on the LAN (inside) 
-   of the vpn server while allowing all other packets to go directly out.  
+  For example you may want to route via the VPN only those networks on the LAN (inside) 
+  of the vpn server while allowing all other packets to go directly out.  
    
-   This is also useful when setting up wireguard to join 2+ locations where each 
-   location's subnet is available to users at either location. 
+  This is also useful when setting up wireguard to join 2+ locations where each 
+  location's subnet is available to users at either location. 
    
-   This is done using "--allowed_ips" which sets the wireguard config "AllowedIPs". 
-   This option can be used when creating a new user:profile or when modifying 
-   an existing profile with *-mod*.  
+  This is done using "--allowed_ips" which sets the wireguard config "AllowedIPs". 
+  This option can be used when creating a new user:profile or when modifying 
+  an existing profile with *-mod*.  
    
-   See :ref:`options-section` section for more detail.
+  See :ref:`options-section` section for more detail.
 
- * Add missing contrib directory to installer scrript
+* Add missing contrib directory to installer scrript
 
- * Uses sha3-384 to detect file changes (using python-cryptography module
-   which wraps openssl)
+* Uses sha3-384 to detect file changes (using python-cryptography module
+  which wraps openssl)
 
- * Require python 3.11 or later
+* Require python 3.11 or later
 
- * Restricted file permissions
+* Restricted file permissions
 
-   New option, (*-fp, --fperms*), to ensure all files have appropriate permissions.
-   Earlier versions always did this. But it can be slow (esp over NFS) so its
-   now a separate option to run on demand.
+  New option, (*-fp, --fperms*), to ensure all files have appropriate permissions.
+  Earlier versions always did this. But it can be slow (esp over NFS) so its
+  now a separate option to run on demand.
 
- * general tidy ups
+* general tidy ups
 
- * Adjust for upcoming python changes.
-   Some argparse options have been deprecated in 3.12 and will be removed in 3.14
+* Adjust for upcoming python changes.
+  Some argparse options have been deprecated in 3.12 and will be removed in 3.14
 
- * New Feature: Multiple IP Address for user profiles.
+* New Feature: Multiple IP Address for user profiles.
 
-   See new options *--prefixlen_4* and *--prefixlen_6*.
+  See new options *--prefixlen_4* and *--prefixlen_6*.
 
-   I'd appreciate testing and feedback (see Issue #14)
+  I'd appreciate testing and feedback (see Issue #14)
 
-   New user profiles now get ip(s) from each server network. 
-   CIDR address for each network will have prefixlen_4 or IPv4 and prefixlen_6 for IPv6 networks.
-   prefixlen are settable with new options.
+  New user profiles now get ip(s) from each server network. 
+  CIDR address for each network will have prefixlen_4 or IPv4 and prefixlen_6 for IPv6 networks.
+  prefixlen are settable with new options.
    
-   Existing user profile (or -all) can have their IPs refreshed to pick up their new IPs from
-   server config. If you already have multiple networks or simply added them to the 
-   server *Address* variable in *configs/server/server.conf* - and then refresh using:
+  Existing user profile (or -all) can have their IPs refreshed to pick up their new IPs from
+  server config. If you already have multiple networks or simply added them to the 
+  server *Address* variable in *configs/server/server.conf* - and then refresh using:
 
 .. code-block:: bash
 
@@ -98,25 +93,25 @@ or
    wg-tool -mod -ips -all
 .. 
 
- * New option *-upd, --upd_endpoint* used with *-mod* to update existing user profiles when server
-   IP/Port is changed.
+* New option *-upd, --upd_endpoint* used with *-mod* to update existing user profiles when server
+  IP/Port is changed.
 
- * *-mod* now supports *-all* to apply to all users.
+* *-mod* now supports *-all* to apply to all users.
 
- * `wg-client`_ companion package now available. A linux client tool and separate graphical 
-   program to launch wireguard client. Simplify using wg for all users.
+* `wg-client`_ companion package now available. A linux client tool and separate graphical 
+  program to launch wireguard client. Simplify using wg for all users.
 
- * wg-peer-updn now saves additional copy of dns file as resolv.conf.wg
-   Helpful for clients which sleep and on resume network restart overwrites resolv.conf
-   This makes it simple to put back the vpn resolv.conf file by
-   copying resolv.conf.wg to resolv.conf.  Used by wg-client package.
-   Postdown will still restore original resolv.conf.save as usual.
+* wg-peer-updn now saves additional copy of dns file as resolv.conf.wg
+  Helpful for clients which sleep and on resume network restart overwrites resolv.conf
+  This makes it simple to put back the vpn resolv.conf file by
+  copying resolv.conf.wg to resolv.conf.  Used by wg-client package.
+  Postdown will still restore original resolv.conf.save as usual.
 
- * Change python build from poetry to hatch
+* Change python build from poetry to hatch
 
- * Can now generate html and pdf docs using sphinx
-   Pre-built wg_tool.pdf provided in repo
-   See *Howto-Build* in the *Docs* directory
+* Can now generate html and pdf docs using sphinx
+  Pre-built wg_tool.pdf provided in repo
+  See *Howto-Build* in the *Docs* directory
 
 Interesting
 ===========
@@ -160,9 +155,12 @@ Sample output of *wg-tool -rrpt* ::
 More background
 ===============
 
-The tool manages wireguard server and user configs.
+The tool manages wireguard server configs and the user configs.
 
-It also guarantees that server and user configs are kept properly synchronized.  
+It also guarantees that server and user configs are kept properly synchronized.
+This ensures that any information that is shared between the server and clients,
+such as public keys, are always consistent.
+
 It handles key creation whenever needed, such as when adding user/profiles or 
 when doing key rollovers.
 
@@ -203,18 +201,18 @@ These are provided to the user - bob in this case.
 
 For those computer clients running Linux, there are 2 kinds of configs available. 
 
- * standard config
+* standard config
 
-    where the DNS infomation in config is used by wg-quick. wg-quick, in turn, relies on resolvconf.
+   where the DNS infomation in config is used by wg-quick. wg-quick, in turn, relies on resolvconf.
 
- * linux config
+* linux config
 
-    this is my preferred approach. Activated by the *--dns_linux* option. When 
-    using this, wg-quick uses the provided *wg-peer-updn* script via PostUp/PostDown. 
+   this is my preferred approach. Activated by the *--dns_linux* option. When 
+   using this, wg-quick uses the provided *wg-peer-updn* script via PostUp/PostDown. 
     
-    This scipt saves the current dns resolv.conf file when VPN is brought up using *wg-quick up*, 
-    installs the VPN dns into /etc/resolv.conf and restores the prior resolv.conf when VPN is 
-    deactivated (wg-quick down).
+   This scipt saves the current dns resolv.conf file when VPN is brought up using *wg-quick up*, 
+   installs the VPN dns into /etc/resolv.conf and restores the prior resolv.conf when VPN is 
+   deactivated (wg-quick down).
 
 
 Directory and File Structure
@@ -222,13 +220,13 @@ Directory and File Structure
 
 There are 2 kinds of config files. We use the following convention:
 
- * **wg-configs** : configs used by wireguard itself
+* **wg-configs** : configs used by wireguard itself
 
-    These are the outputs of *wg-tool*. 
+  These are the outputs of *wg-tool*. 
 
- * **configs** :  configs used by wg-tool 
+* **configs** :  configs used by wg-tool 
 
-    These are the inputs for *wg-tool*
+  These are the inputs for *wg-tool*
 
 For example, the wireguard server config file, wg0.conf, will be located 
 in ::
@@ -333,34 +331,34 @@ These are all wireguard standard fields.
 
 The key fields to edit are:
 
- * Address  
+* Address  
 
-   This is the internal wg cidr mask on the server IP addresses (IPv4 and IPv6).  
-   N.B. If you prefer user:profile get IPv6 then put it first in the list.
+  This is the internal wg cidr mask on the server IP addresses (IPv4 and IPv6).  
+  N.B. If you prefer user:profile get IPv6 then put it first in the list.
 
- * Hostname and ListenPort  
+* Hostname and ListenPort  
 
-   wg server hostname as seen from internet and port chosen 
+  wg server hostname as seen from internet and port chosen 
 
- * Hostname_Int ListenPort_Int  
+* Hostname_Int ListenPort_Int  
 
-   wg server hostname and port as seen on internal network.   
-   Useful for testing wg while inside the network.
-   Client configs created with the *-int* option of **wg-tool** will use this internal server:port.
+  wg server hostname and port as seen on internal network.   
+  Useful for testing wg while inside the network.
+  Client configs created with the *-int* option of **wg-tool** will use this internal server:port.
 
- * PrivateKey, PublicKey  
+* PrivateKey, PublicKey  
 
-   If you have exsiting wg server, change these to your current keys.  
-   If not they are freshly generated by --init. and can be safely used.
+  If you have exsiting wg server, change these to your current keys.  
+  If not they are freshly generated by --init. and can be safely used.
 
- * PostUp PostDown  
+* PostUp PostDown  
 
-   If you want to use the nftables provided by wg-tool - just copy postup.nft from the scripts directory.
-   Change the 3 network variables at top for your setup.
+  If you want to use the nftables provided by wg-tool - just copy postup.nft from the scripts directory.
+  Change the 3 network variables at top for your setup.
 
- * DNS   
+* DNS   
 
-   List of dns servers to be used by wg - typical VPN setup uses internal network DNS 
+  List of dns servers to be used by wg - typical VPN setup uses internal network DNS 
 
 postup.nft
 ^^^^^^^^^^
@@ -380,13 +378,13 @@ If the wg server is in the DMZ then it probably only has access to DMZ net and i
 Before deploying the *postup.nft* script, edit the 3 variables at the top for your own 
 server setup:
 
- * vpn_net  
+* vpn_net  
 
-   this cidr block must match whats in the server config
+  this cidr block must match whats in the server config
 
- * lan_ip lan_iface  
+* lan_ip lan_iface  
 
-   IP and interface of wireguard server
+  IP and interface of wireguard server
 
 Remember to allow forwarding on the wireguard server, to ensure VPN traffic 
 is permitted to go to the LAN::
@@ -453,7 +451,7 @@ The tool can import 1 user:profile at a time. This is done using::
 
         wg-tool --import_user <user.conf> user_name:profile_name
 
-where \<user.conf\> is the standard wireguard conf file (the text version of the
+where <user.conf> is the standard wireguard conf file (the text version of the
 QR code). And the user_name and profile_name are what you want them to be known 
 as now.  
 
@@ -507,202 +505,201 @@ users/profiles are to be given on command line ::
 
 Summary of available options:
 
-Positional arguments:  
+**Positional arguments**:  
 
- * users  : user_1[:prof1,prof2,...] user_2[:prof_1,prof_2]
+* users  : user_1[:prof1,prof2,...] user_2[:prof_1,prof_2]
 
-Options:
+**Options**:
 
- * (*-h, --help*)
+* (*-h, --help*)
 
-   Show this help message and exit
+  Show this help message and exit
 
- * (*-i, --init*)
+* (*-i, --init*)
 
-   Initialize and creat server config template. 
-   Please edit to match your server settings.
+  Initialize and creat server config template. 
+  Please edit to match your server settings.
 
- * (*wkd, --work_dir <dirname>*)
+* (*wkd, --work_dir <dirname>*)
 
-   Set working directory.  
-   This is is the directory holding all configs.
+  Set working directory.  
+  This is is the directory holding all configs.
 
-   By default: 
+  By default: 
 
-     + when used with *--init*, work_dir will be */etc/wireguard/wg-tool* if the directory exists and 
-       with appropriate access permission (i.e. root), otherwise the current directory *./*.
+  + when used with *--init*, work_dir will be */etc/wireguard/wg-tool* if the directory exists and 
+    with appropriate access permission (i.e. root), otherwise the current directory *./*.
 
-     + if not initializing, then, with access permission,  */etc/wireguard/wg-tool/* will be 
-       the work_dir if there is a *config* dir in it, otherwise it is set to current dir *./*.
+  + if not initializing, then, with access permission,  */etc/wireguard/wg-tool/* will be 
+    the work_dir if there is a *config* dir in it, otherwise it is set to current dir *./*.
 
- * (*-add, --add_users*)
+* (*-add, --add_users*)
 
-   Add user(s) and/or user profiles user:prof1,prof2,...
+  Add user(s) and/or user profiles user:prof1,prof2,...
 
- * (*-aips, --allowed_ips*)
+* (*-aips, --allowed_ips*)
 
-    Set the cidr blocks which will be routed through the vpn. The default is all ips
-    given by:
+   Set the cidr blocks which will be routed through the vpn. The default is all ips
+   given by:
 
-    *0.0.0.0/0,::/0*
+   *0.0.0.0/0,::/0*
 
-    Provide a comma separated list of CIDRs or the string *default* to use the 
-    default value where all ips are routed through wireguard.
+   Provide a comma separated list of CIDRs or the string *default* to use the 
+   default value where all ips are routed through wireguard.
 
-    The current setting can be viewed by detailed user listing:
+   The current setting can be viewed by detailed user listing:
 
-    wg-tool -l -det [user:prof]
-
-
- * (*-mod, --mod_users*)
-
-   Modify existing user:profile(s).  Use with *-dnsrch*, *-dnslin*, *-aips* and *upd*
-   Can apply to all users/profiles via the *-all* option.
-
- * (*-pfxlen_4, --prefixlen_4*)
-
-   User profiles now get IP Addresses(es) from each server network. Each address
-   is a block with cidr prefixlen_4. Defaults to 32 which means 1 IP address.
-   e.g. if set to 30 then would get a block of 4 x.x.x.x/30
-
- * (*-pfxlen_5, --prefixlen_5*)
-
-   Similar to --prefixlen_4 but for ipv6. Default is 128
+   wg-tool -l -det [user:prof]
 
 
- * (*upd, --upd_endpoint*)
+* (*-mod, --mod_users*)
 
-   Use with *-mod*
-   Ensure user/profile is using current server endpoint.  Add *-int*
-   if want to use internal hostname/port.
+  Modify existing user:profile(s).  Use with *-dnsrch*, *-dnslin*, *-aips* and *upd*
+  Can apply to all users/profiles via the *-all* option.
 
-   For example if the server IP changes, then you can update existing user/profiles with
+* (*-pfxlen_4, --prefixlen_4*)
 
-   wg-tool -mod -upd -all
+  User profiles now get IP Addresses(es) from each server network. Each address
+  is a block with cidr prefixlen_4. Defaults to 32 which means 1 IP address.
+  e.g. if set to 30 then would get a block of 4 x.x.x.x/30
 
- * (*-dnsrch, --dns_search*)
+* (*-pfxlen_5, --prefixlen_5*)
 
-   Use with *-mod*
+  Similar to --prefixlen_4 but for ipv6. Default is 128
 
-   Adds the list DNS_SEARCH from server config to client DNS search list.
-   DNS_SEARCH in server.conf should contain a list of dns domains for dns search and 
-   Use together with *-add* for new user:profile or with *-mod* with existing profile.
+* (*upd, --upd_endpoint*)
 
- * (*-dnslin, --dns_linux*)
+  Use with *-mod*
+  Ensure user/profile is using current server endpoint.  Add *-int*
+  if want to use internal hostname/port.
 
-   Use with *-mod*
+  For example if the server IP changes, then you can update existing user/profiles with
 
-   For a Linux client, provide support for managing the dns resolv.conf file.
-   What this does is save existing one, install the wireguard dns version and 
-   then restore original on exit.
-   Use together with *-add* for new user:profile or with *-mod* with existing profile.
+  wg-tool -mod -upd -all
 
-   To bring up wireguard as a linux client one uses ::
+* (*-dnsrch, --dns_search*)
+
+  Use with *-mod*
+
+  Adds the list DNS_SEARCH from server config to client DNS search list.
+  DNS_SEARCH in server.conf should contain a list of dns domains for dns search and 
+  Use together with *-add* for new user:profile or with *-mod* with existing profile.
+
+* (*-dnslin, --dns_linux*)
+
+  Use with *-mod*
+
+  For a Linux client, provide support for managing the dns resolv.conf file.
+  What this does is save existing one, install the wireguard dns version and 
+  then restore original on exit.
+  Use together with *-add* for new user:profile or with *-mod* with existing profile.
+
+  To bring up wireguard as a linux client one uses ::
 
         wg-quick up <user-prof.conf> 
         wg-quick down <user-prof.conf> 
 
-   This will then use the wireguard DNS while running and restore previous dns on exit.
+  This will then use the wireguard DNS while running and restore previous dns on exit.
 
-   To add dns search and use dns_linux on existing user profile. First update the 
-   server config by editing *configs/server/server.conf* and add list of seach domains ::
+  To add dns search and use dns_linux on existing user profile. First update the 
+  server config by editing *configs/server/server.conf* and add list of seach domains ::
 
         DNS_SEARCH = ['sales.example.com', 'example.com']
 
-then ::
+  then ::
 
         wg-tool -mod -dnsrch -dns_linux bob:laptop
 
-By default wg-quick uses resolvconf to manage dns resolv.conf.  If you prefer, or dont use resolvconf
-then use this option. But only with Linux - it will not work for other clients (Android, iOS, etc)
+  By default wg-quick uses resolvconf to manage dns resolv.conf.  If you prefer, or dont use resolvconf
+  then use this option. But only with Linux - it will not work for other clients (Android, iOS, etc)
 
-With this option the usual DNS rows in in the conf file are replaced with PostUp and PostDown.  
-PostUp saves existing resolv.conf, and installs the one needed by wireguard.
-PostDown restores the original saved resolv.conf.
+  With this option the usual DNS rows in in the conf file are replaced with PostUp and PostDown.  
+  PostUp saves existing resolv.conf, and installs the one needed by wireguard.
+  PostDown restores the original saved resolv.conf.
 
-To use this the script *wg-peer-updn*, available in the *scripts* directory must be
-in /etc/wireguard/scripts for the client. 
+  To use this the script *wg-peer-updn*, available in the *scripts* directory must be
+  in /etc/wireguard/scripts for the client. 
 
-The installer for the wg_tool package installs the script - but clients without this
-package should be provided both the user-profile.conf as well as the supporting 
-script *wg-peer-updn*. 
+  The installer for the wg_tool package installs the script - but clients without this
+  package should be provided both the user-profile.conf as well as the supporting 
+  script *wg-peer-updn*. 
 
- * (*-int, --int_serv*)
+* (*-int, --int_serv*)
 
-   With --add_users uses internal wireguard server
+  With --add_users uses internal wireguard server
 
- * (*-uuk, --upd_user_keys*)
+* (*-uuk, --upd_user_keys*)
 
-   Generate new set of keys for existing user(s).
-   This is public and private key pair along with new pre-shared key.
+  Generate new set of keys for existing user(s).
+  This is public and private key pair along with new pre-shared key.
 
- * (*-usk, --upd_serv_keys*)
+* (*-usk, --upd_serv_keys*)
 
-   Generate new pair of server keys.
-   NB This affects all users as they all use the server public key.
+  Generate new pair of server keys.
+  NB This affects all users as they all use the server public key.
 
- * (*-all, --all_users*)
+* (*-all, --all_users*)
 
-   Some opts (e.g. upd_user_keys) may apply to all users/profiles when this is turned on.
+  Some opts (e.g. upd_user_keys) may apply to all users/profiles when this is turned on.
 
- * (*-act, --active*)
+* (*-act, --active*)
 
-   Mark one or more users or user[:profile, profile...] active
+  Mark one or more users or user[:profile, profile...] active
 
- * (*-inact, --inactive*)
+* (*-inact, --inactive*)
 
-   Mark one or more users or user[:profile, profile...] inactive
+  Mark one or more users or user[:profile, profile...] inactive
 
- * (*-imp, --import_user <file>*)
+* (*-imp, --import_user <file>*)
 
-   Import a standard wg user conf file into the spcified user_name:profile_name
-   This is for one single user:profile
+  Import a standard wg user conf file into the spcified user_name:profile_name
+  This is for one single user:profile
 
- * (*-keep, --keep_hist <num>*)
+* (*-keep, --keep_hist <num>*)
 
-   How much config history to keep (default 5)
+  How much config history to keep (default 5)
 
- * (*-keep_wg, --keep_hist_wg <num>*)
+* (*-keep_wg, --keep_hist_wg <num>*)
 
-   How much wg-config history to keep (default 3)
+  How much wg-config history to keep (default 3)
 
- * (*-sop, --save_opts*)
+* (*-sop, --save_opts*)
 
-   Together with --keep_hist and/or --keep_hist_wg
-   to save these values as new defaults.
+  Together with --keep_hist and/or --keep_hist_wg
+  to save these values as new defaults.
 
- * (*-fp, --file_perms*)
+* (*-fp, --file_perms*)
 
-   Ensure all files have appropriately restricted permissions'
+  Ensure all files have appropriately restricted permissions
 
- * (*-rrpt, --run_show_rpt*)
+* (*-rrpt, --run_show_rpt*)
 
-   Run "wg show" and generate report of users, profiles.
-   Also checks for consistency with current settings.
+  Run "wg show" and generate report of users, profiles.
+  Also checks for consistency with current settings.
 
- * (*-rpt, --show_rpt <file>*)
+* (*-rpt, --show_rpt <file>*)
 
-   Same as *-rrpt* only reads file containing the output of *wg show*
-   If file is name *stdin*, then it reads from stdin.
+  Same as *-rrpt* only reads file containing the output of *wg show*
+  If file is name *stdin*, then it reads from stdin.
 
- * (*-l, --list_users*)
+* (*-l, --list_users*)
 
-   Summary of users/profiles - sorted by user.
+  Summary of users/profiles - sorted by user.
 
- * (*-det, --details*)
+* (*-det, --details*)
 
-   Adds more detail to *-l* and *-rrpt*.
-   For *-l* report will also include details about each profile.
-   For *-rrpt* report will show all user:profiles known to running server, not just
-   those for which it has a recent connection. 
+  Adds more detail to *-l* and *-rrpt*.
+  For *-l* report will also include details about each profile.
+  For *-rrpt* report will show all user:profiles known to running server, not just
+  those for which it has a recent connection. 
 
- * (*-v, --verb*)
+* (*-v, --verb*)
 
-   Adds more verbose output.
+  Adds more verbose output.
 
- * (*-V, --version*)
+* (*-V, --version*)
 
-   Display current version
+  Display current version
 
 Note on MTU
 -----------
@@ -767,40 +764,40 @@ Appendix
 Notes
 =====
 
- * Config changes are tracked by modification times.  
+* Config changes are tracked by modification times.  
 
-   For existing user/profiles without a saved value of *mod_time*, 
-   the last change date-time of the config file is used and saved.
-   These mod times are displayed when using *-l* and *-l -det* options.
+  For existing user/profiles without a saved value of *mod_time*, 
+  the last change date-time of the config file is used and saved.
+  These mod times are displayed when using *-l* and *-l -det* options.
 
 2022-12
 -------
 
- * Stronger file access permissions to protect private data in configs.
+* Stronger file access permissions to protect private data in configs.
 
- * Changes to work_dir.
+* Changes to work_dir.
 
-   Backward compatible with previous version.
-   Now prefers to use */etc/wireguard/wg-tool* if possible, otherwise 
-   falls back to current directory.
+  Backward compatible with previous version.
+  Now prefers to use */etc/wireguard/wg-tool* if possible, otherwise 
+  falls back to current directory.
 
 2022-11
 -------
 
 See `Options`_ or for more detail.
 
- * (*-dnsrch, --dns_search*)  
+* (*-dnsrch, --dns_search*)  
 
-   Adds the list DNS_SEARCH from server config to client DNS search list.  
-   DNS_SEARCH in server.conf should contain a list of dns domains for dns search.  
-   Use together with *-add* for new user:profile or with *-mod* with existing profile.
+  Adds the list DNS_SEARCH from server config to client DNS search list.  
+  DNS_SEARCH in server.conf should contain a list of dns domains for dns search.  
+  Use together with *-add* for new user:profile or with *-mod* with existing profile.
 
- * (*-dnslin, --dns_linux*)  
+* (*-dnslin, --dns_linux*)  
 
-   For a Linux client, provide support for managing the dns resolv.conf file.
-   What this does is save existing one, install the wireguard dns version and 
-   then restore original on exit.
-   Use together with *-add* for new user:profile or with *-mod* with existing profile.
+  For a Linux client, provide support for managing the dns resolv.conf file.
+  What this does is save existing one, install the wireguard dns version and 
+  then restore original on exit.
+  Use together with *-add* for new user:profile or with *-mod* with existing profile.
 
 
 Install
@@ -828,17 +825,17 @@ When running as non-root then set root_dest to a user writable directory.
 Dependencies
 ------------
 
-* Run Time :
+**Run Time** :
 
   * python (3.9 or later)
   * wireguard-tools
   * nftables (for wireguard server postup.nft)
-  * tomli\_w (aka python-tomli\_w )
   * netaddr (aka python-netaddr )
   * python-qrcode
+  * tomli_w (aka python-tomli_w )
   * If python < 3.11 : tomli (aka python-tomli)
 
-* Building Package:
+**Building Package**:
 
   * git
   * hatch (aka python-hatch)
