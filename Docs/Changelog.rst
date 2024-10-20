@@ -1,6 +1,13 @@
 Changelog
 =========
 
+**[7.1.0] ----- 2024-10-20** ::
+
+	    Use python 3 ipaddress in place of 3rd party netaddr module.
+	    Code reorg and some tidying
+	    update Docs/Changelog.rst Docs/wg_tool.pdf
+
+
 **[7.0.4] ----- 2024-09-07** ::
 
 	    more readme tweaks
