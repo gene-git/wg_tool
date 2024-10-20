@@ -7,7 +7,6 @@
 python >= 3.11
 wireguard-tools
 nftables
-netaddr
 qrcode
 pillow
 tomli_w

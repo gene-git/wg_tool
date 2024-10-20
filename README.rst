@@ -19,12 +19,12 @@ On Arch install using the PKGBUILD provided in packaging directory or from the A
 Key features
 ============
 
-* simplifies wireguard administration. ( server and user config )
-* guarantees server and user configs always remain synchronized.
+* simplifies wireguard administration. ( server and users )
+* guarantees server and user configs remain synchronized (public keys).
 * handles key creation when needed
-* users have multiple profiles (bob:laptop bob:phone etc)
+* users can have multiple profiles (bob:laptop bob:phone etc)
 * users and/or profiles can be marked active/inactive 
-* takes output of 'wg show' and displays connections by user:profile name.
+* 'wg show' output connections displayed by user:profile name.
 
   This solves a long standing annoyance in a simple way by showing names 
   instead of public keys as output by *wg show*.
@@ -35,38 +35,29 @@ Key features
 New
 ===
 
-* Split route - new option set allowed_ips in user configs. By default it has 
-  everything going via the VPN.  Split routing is useful. 
+ * Use python 3 ipaddress in place of 3rd party netaddr module.
+
+ * Code reorg
+
+ * Split route - new option set allowed_ips in user configs. By default it has 
+   everything going via the VPN.  Split routing is useful. 
    
-  For example you may want to route via the VPN only those networks on the LAN (inside) 
-  of the vpn server while allowing all other packets to go directly out.  
+   For example you may want to route via the VPN only those networks on the LAN (inside) 
+   of the vpn server while allowing all other packets to go directly out.  
    
-  This is also useful when setting up wireguard to join 2+ locations where each 
-  location's subnet is available to users at either location. 
+   This is also useful when setting up wireguard to join 2+ locations where each 
+   location's subnet is available to users at either location. 
    
-  This is done using "--allowed_ips" which sets the wireguard config "AllowedIPs". 
-  This option can be used when creating a new user:profile or when modifying 
-  an existing profile with *-mod*.  
+   This is done using "--allowed_ips" which sets the wireguard config "AllowedIPs". 
+   This option can be used when creating a new user:profile or when modifying 
+   an existing profile with *-mod*.  
    
-  See :ref:`options-section` section for more detail.
+   See :ref:`options-section` section for more detail.
 
-* Add missing contrib directory to installer scrript
+ * Require python 3.11 or later
 
-* Uses sha3-384 to detect file changes (using python-cryptography module
-  which wraps openssl)
-
-* Require python 3.11 or later
-
-* Restricted file permissions
-
-  New option, (*-fp, --fperms*), to ensure all files have appropriate permissions.
-  Earlier versions always did this. But it can be slow (esp over NFS) so its
-  now a separate option to run on demand.
-
-* general tidy ups
-
-* Adjust for upcoming python changes.
-  Some argparse options have been deprecated in 3.12 and will be removed in 3.14
+ * Adjust for upcoming python changes.
+   Some argparse options have been deprecated in 3.12 and will be removed in 3.14
 
 * New Feature: Multiple IP Address for user profiles.
 

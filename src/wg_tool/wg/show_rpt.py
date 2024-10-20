@@ -5,8 +5,7 @@ Takes output from 'wg show' and adds user:profile
 to any current connections.
 """
 import sys
-from .file_tools import open_file
-from .run_prog import run_prog
+from lib import (open_file, run_prog)
 from .cli_users import all_users_prof_names
 
 def _user_by_pubkey_address(wgtool):
@@ -25,6 +24,8 @@ def _user_by_pubkey_address(wgtool):
             prof = user.profile[prof_name]
             pub_key = prof.PublicKey
             address = prof.Address
+            if isinstance(address, list):
+                address = ', '.join(address)
             prof_act = user.is_profile_active(prof_name)
 
             user_by_key[pub_key] = {
@@ -110,31 +111,32 @@ def _parse_serv_users(_wgtool, report_in):
         if len(key_val) > 1:
             val = key_val[1].strip()
 
-        if key ==  'interface':
-            serv_rpt["interface"] = val
+        match key:
+            case 'interface':
+                serv_rpt["interface"] = val
 
-        elif key ==  'peer':
-            user_rpt = user_rpt_template.copy()
-            user_rpts.append(user_rpt)
-            user_rpt["pub_key"] = val
+            case 'peer':
+                user_rpt = user_rpt_template.copy()
+                user_rpts.append(user_rpt)
+                user_rpt["pub_key"] = val
 
-        elif key ==  'public key':
-            serv_rpt["pub_key"] = val
+            case 'public key':
+                serv_rpt["pub_key"] = val
 
-        elif key ==  'listening port':
-            serv_rpt["port"] = val
+            case 'listening port':
+                serv_rpt["port"] = val
 
-        elif key ==  'endpoint':
-            user_rpt["endpoint"] = val
+            case 'endpoint':
+                user_rpt["endpoint"] = val
 
-        elif key ==  'allowed ips':
-            user_rpt["address"] = val
+            case 'allowed ips':
+                user_rpt["address"] = val
 
-        elif key ==  'latest handshake':
-            user_rpt["handshake"] = val
+            case 'latest handshake':
+                user_rpt["handshake"] = val
 
-        elif key ==  'transfer':
-            user_rpt["transfer"] = val
+            case 'transfer':
+                user_rpt["transfer"] = val
 
     return (serv_rpt, user_rpts)
 
@@ -216,6 +218,7 @@ def _rpt_user(wgtool, user):
     """
     # pylint: disable=R0914
     msg = wgtool.msg
+    details = wgtool.opts.details
 
     pub_key = user['pub_key']
     address = user['address']
@@ -241,7 +244,8 @@ def _rpt_user(wgtool, user):
         if endpoint:
             msg(f'  {"endpoint":>14s} : {endpoint}')
         msg(f'  {"address":>14s} : {address}')
-        msg(f'  {"pub_key":>14s} : {pub_key}')
+        if details:
+            msg(f'  {"pub_key":>14s} : {pub_key}')
         if handshake:
             msg(f'  {"handshake":>14s} : {handshake}')
         if transfer:
@@ -330,6 +334,10 @@ def _show_rpt_from_output(wgtool, output):
     msg = wgtool.msg
     wmsg = wgtool.wmsg
 
+    if not output:
+        print(' Nothing to show')
+        return
+
     details = wgtool.opts.details
 
     (all_okay, serv, users) = _analyze_report(wgtool, output)
@@ -405,7 +413,6 @@ def run_show_rpt(wgtool):
 
     pargs = ['/usr/bin/wg', 'show']
     [retc, output, errors] = run_prog(pargs)
-
     if retc != 0:
         emsg('Failed running "wg show"')
         msg(errors)

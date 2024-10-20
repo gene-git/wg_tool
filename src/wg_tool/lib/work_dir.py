@@ -41,7 +41,6 @@ def find_work_dir(init, work_path, config_dir):
         return cwd
 
     dir_access = os.X_OK | os.R_OK | os.W_OK
-    #file_access = os.R_OK | os.W_OK
 
     work_dir = None
     wdir_list = work_path.split(':')

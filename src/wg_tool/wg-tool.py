@@ -1,16 +1,15 @@
 #!/usr/bin/python3
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
-"""
+'''
 wg-tool
-  Tool to help manage wireguard configs for server and users.
-  Guarantee that server and user config kept in sync.
-  Handles creating any keys.
+  Tool to manage wireguard server and users.
+  Guarantee server and user config kept in sync (public keys)
   See --help for options and README for details.
 gc 20221022
-"""
-# pylint: disable=C0103
-from lib import WgTool
+'''
+# pylint: disable=invalid-name
+from wg import WgTool
 
 def main():
     """

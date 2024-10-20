@@ -3,7 +3,6 @@
 """
 wg-tool support utils`
 """
-# pylint: disable=C0103
 import subprocess
 
 def run_prog(pargs,input_str=None,stdout=subprocess.PIPE,stderr=subprocess.PIPE):

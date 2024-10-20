@@ -6,8 +6,8 @@ This routine reads current file - strins header - and compares to the string abo
 written and returns true if they don't match
 """
 import os
+from crypto import message_digest
 from .utils import open_file
-from .digest import message_digest
 
 def files_match(fpath, header, data_new):
     """

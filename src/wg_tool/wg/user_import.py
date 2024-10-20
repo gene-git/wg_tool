@@ -19,11 +19,12 @@
     Access :  --import file.conf                -> user_name : file, config : main
               --import file.conf user_1:laptop  -> user_name : user_1, config : laptop
 """
+# pylint: disable=invalid-name
 import os
-from .file_tools import open_file
+from crypto import public_from_private_key
+from lib import open_file
 from .users import cli_user_prof_names
 from .find_user_ip import is_user_address_available
-from .keys import public_from_private_key
 
 def _clean_line(line):
     line = line.strip()
@@ -69,29 +70,33 @@ def _read_wg_user_config(wgtool, fname):
             key = row
 
         _section = None
-        if key == '[Interface]':
-            _section = 'Interface'
-        elif key == '[Peer]':
-            _section = 'Peer'
+        match(key):
+            case '[Interface]':
+                _section = 'Interface'
+            case '[Peer]':
+                _section = 'Peer'
 
             # only in Interface - could check but not necessary
-        elif key == 'PrivateKey':
-            PrivateKey = val
-        elif key == 'Address':
-            Address = val
-        elif key == 'DNS':
-            DNS.append(val)
+            case 'PrivateKey':
+                PrivateKey = val
+            case 'Address':
+                # can be cidr_str or cidr, cidr,  ...
+                Address = val
+                if ',' in Address:
+                    Address = [one.strip() for one in Address.split(',')]
+            case 'DNS':
+                DNS.append(val)
 
             # only in Peer - could check but not necessary
-        elif key == 'PublicKey':
-            PublicKey = val
-        elif key == 'PresharedKey':
-            PresharedKey = val
-        elif key == 'AllowedIPs':
-            AllowedIPs = val
-        elif key == 'Endpoint':
-            Endpoint = val
-            [Hostname, ListenPort] = Endpoint.split(':')
+            case 'PublicKey':
+                PublicKey = val
+            case 'PresharedKey':
+                PresharedKey = val
+            case 'AllowedIPs':
+                AllowedIPs = val
+            case 'Endpoint':
+                Endpoint = val
+                [Hostname, ListenPort] = Endpoint.split(':')
 
     conf_user = {
             'Address'       : Address,
@@ -117,7 +122,7 @@ def import_user(wgtool):
         --import file.conf                -> user_name : file, config : main
         --import file.conf user_1:laptop  -> user_name : user_1, config : laptop
     """
-    # pylint: disable=R0914
+    # pylint: disable=too-many-locals
     wmsg = wgtool.wmsg
     emsg = wgtool.emsg
 
@@ -142,6 +147,8 @@ def import_user(wgtool):
             if len(prof_names) > 1:
                 emsg(f'Import {conf_file} for user {user_name} must have max of 1 proile name')
                 return not okay
+        else:
+            prof_name = 'main'
     else:
         user_name = conf_file.replace('.conf','')
         prof_name = 'main'
@@ -184,7 +191,7 @@ def _check_user_fields(wgtool, conf_user):
 
     Address = conf_user['Address']
     if Address:
-        ip_avail = is_user_address_available(wgtool, Address)
+        ip_avail = is_user_address_available(wgtool.ipinfo, Address)
         if not ip_avail:
             okay = False
             wmsg('Import: Address already taken {Address}')

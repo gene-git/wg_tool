@@ -3,8 +3,8 @@
 """
 Project wg_tool
 """
-__version__ = "7.0.4"
-__date__ = "2024-09-07"
+__version__ = "7.1.0"
+__date__ = "2024-10-20"
 __reldev__ = "release"
 
 def version() -> str:
