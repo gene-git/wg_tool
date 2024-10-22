@@ -140,6 +140,8 @@ def sort_cidrs(cidrs:[str]) -> [str]:
     '''
     Sort the list of cidr strings
     '''
+    if not cidrs:
+        return []
     nets = cidrs_to_nets(cidrs)
     nets_sorted = sort_nets(nets)
     cidrs_sorted = nets_to_cidrs(nets_sorted)
@@ -149,6 +151,8 @@ def cidrs_to_nets(cidrs:[str], strict:bool=False) -> [IPv4Network | IPv6Network]
     '''
     For list of cidr strings return list if ip_network
     '''
+    if not cidrs:
+        return []
     nets = [ipaddress.ip_network(cidr, strict=strict) for cidr in cidrs]
     return nets
 
@@ -156,5 +160,7 @@ def nets_to_cidrs(nets:[IPv4Network | IPv6Network]) -> [str]:
     '''
     List of nets to list of cidr strings
     '''
+    if not nets:
+        return []
     cidrs = [str(net) for net in nets]
     return cidrs
