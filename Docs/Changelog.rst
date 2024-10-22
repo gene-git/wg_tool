@@ -1,6 +1,12 @@
 Changelog
 =========
 
+**[7.2.0] ----- 2024-10-22** ::
+
+	    Additional input protections in cidr utils
+	    update Docs/Changelog.rst Docs/wg_tool.pdf
+
+
 **[7.1.0] ----- 2024-10-20** ::
 
 	    Use python 3 ipaddress in place of 3rd party netaddr module.
