@@ -1,6 +1,14 @@
 Changelog
 =========
 
+**[7.3.0] ----- 2024-12-31** ::
+
+	    Git tags are now signed.
+	    Add git signing key to Arch Package
+	    Bump python vers
+	    update Docs/Changelog.rst Docs/wg_tool.pdf
+
+
 **[7.2.0] ----- 2024-10-22** ::
 
 	    Additional input protections in cidr utils
