@@ -35,6 +35,11 @@ Key features
 New
 ===
 
+ * All git tags are signed with arch@sapience.com key which is available via WKD
+   or download from https://www.sapience.com/tech. Add the key to your package builder gpg keyring.
+   The key is included in the Arch package and the source= line with *?signed* at the end can be used
+   to verify the git tag.  You can also manually verify the signature
+
  * Use python 3 ipaddress in place of 3rd party netaddr module.
 
  * Code reorg
@@ -54,7 +59,7 @@ New
    
    See :ref:`options-section` section for more detail.
 
- * Require python 3.11 or later
+ * Require python 3.13 or later
 
  * Adjust for upcoming python changes.
    Some argparse options have been deprecated in 3.12 and will be removed in 3.14
@@ -815,13 +820,12 @@ Dependencies
 
 **Run Time** :
 
-  * python (3.9 or later)
+  * python (3.13 or later)
   * wireguard-tools
   * nftables (for wireguard server postup.nft)
   * netaddr (aka python-netaddr )
   * python-qrcode
   * tomli_w (aka python-tomli_w )
-  * If python < 3.11 : tomli (aka python-tomli)
 
 **Building Package**:
 
