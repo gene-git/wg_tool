@@ -16,6 +16,11 @@ Available on
 
 On Arch install using the PKGBUILD provided in packaging directory or from the AUR.
 
+All git tags are signed with arch@sapience.com key which is available via WKD
+or download from https://www.sapience.com/tech. Add the key to your package builder gpg keyring.
+The key is included in the Arch package and the source= line with *?signed* at the end can be used
+to verify the git tag.  You can also manually verify the signature
+
 Key features
 ============
 
@@ -32,13 +37,11 @@ Key features
   restarted with new wg0.conf
 * supports importing existing user/profiles
 
-New
-===
+New / Interesting
+=================
 
- * All git tags are signed with arch@sapience.com key which is available via WKD
-   or download from https://www.sapience.com/tech. Add the key to your package builder gpg keyring.
-   The key is included in the Arch package and the source= line with *?signed* at the end can be used
-   to verify the git tag.  You can also manually verify the signature
+ * New option to set PersistentKeepalive for user profiles (defaults to 0 which is off)
+   See options *--upd_user_keepalive* and *--user_keepalive* below.
 
  * Use python 3 ipaddress in place of 3rd party netaddr module.
 
@@ -508,27 +511,17 @@ Summary of available options:
 
   Show this help message and exit
 
-* (*-i, --init*)
+* (*-act, --active*)
 
-  Initialize and creat server config template. 
-  Please edit to match your server settings.
-
-* (*wkd, --work_dir <dirname>*)
-
-  Set working directory.  
-  This is is the directory holding all configs.
-
-  By default: 
-
-  + when used with *--init*, work_dir will be */etc/wireguard/wg-tool* if the directory exists and 
-    with appropriate access permission (i.e. root), otherwise the current directory *./*.
-
-  + if not initializing, then, with access permission,  */etc/wireguard/wg-tool/* will be 
-    the work_dir if there is a *config* dir in it, otherwise it is set to current dir *./*.
+  Mark one or more users or user[:profile, profile...] active
 
 * (*-add, --add_users*)
 
   Add user(s) and/or user profiles user:prof1,prof2,...
+
+* (*-all, --all_users*)
+
+  Some opts (e.g. upd_user_keys) may apply to all users/profiles when this is turned on.
 
 * (*-aips, --allowed_ips*)
 
@@ -544,39 +537,12 @@ Summary of available options:
 
    wg-tool -l -det [user:prof]
 
+* (*-det, --details*)
 
-* (*-mod, --mod_users*)
-
-  Modify existing user:profile(s).  Use with *-dnsrch*, *-dnslin*, *-aips* and *upd*
-  Can apply to all users/profiles via the *-all* option.
-
-* (*-pfxlen_4, --prefixlen_4*)
-
-  User profiles now get IP Addresses(es) from each server network. Each address
-  is a block with cidr prefixlen_4. Defaults to 32 which means 1 IP address.
-  e.g. if set to 30 then would get a block of 4 x.x.x.x/30
-
-* (*-pfxlen_5, --prefixlen_5*)
-
-  Similar to --prefixlen_4 but for ipv6. Default is 128
-
-* (*upd, --upd_endpoint*)
-
-  Use with *-mod*
-  Ensure user/profile is using current server endpoint.  Add *-int*
-  if want to use internal hostname/port.
-
-  For example if the server IP changes, then you can update existing user/profiles with
-
-  wg-tool -mod -upd -all
-
-* (*-dnsrch, --dns_search*)
-
-  Use with *-mod*
-
-  Adds the list DNS_SEARCH from server config to client DNS search list.
-  DNS_SEARCH in server.conf should contain a list of dns domains for dns search and 
-  Use together with *-add* for new user:profile or with *-mod* with existing profile.
+  Adds more detail to *-l* and *-rrpt*.
+  For *-l* report will also include details about each profile.
+  For *-rrpt* report will show all user:profiles known to running server, not just
+  those for which it has a recent connection. 
 
 * (*-dnslin, --dns_linux*)
 
@@ -617,36 +583,52 @@ Summary of available options:
   package should be provided both the user-profile.conf as well as the supporting 
   script *wg-peer-updn*. 
 
-* (*-int, --int_serv*)
+* (*-dnsrch, --dns_search*)
 
-  With --add_users uses internal wireguard server
+  Use with *-mod*
 
-* (*-uuk, --upd_user_keys*)
+  Adds the list DNS_SEARCH from server config to client DNS search list.
+  DNS_SEARCH in server.conf should contain a list of dns domains for dns search and 
+  Use together with *-add* for new user:profile or with *-mod* with existing profile.
 
-  Generate new set of keys for existing user(s).
-  This is public and private key pair along with new pre-shared key.
+* (*-fp, --file_perms*)
 
-* (*-usk, --upd_serv_keys*)
-
-  Generate new pair of server keys.
-  NB This affects all users as they all use the server public key.
-
-* (*-all, --all_users*)
-
-  Some opts (e.g. upd_user_keys) may apply to all users/profiles when this is turned on.
-
-* (*-act, --active*)
-
-  Mark one or more users or user[:profile, profile...] active
-
-* (*-inact, --inactive*)
-
-  Mark one or more users or user[:profile, profile...] inactive
+  Ensure all files have appropriately restricted permissions
 
 * (*-imp, --import_user <file>*)
 
   Import a standard wg user conf file into the spcified user_name:profile_name
   This is for one single user:profile
+
+* (*-inact, --inactive*)
+
+  Mark one or more users or user[:profile, profile...] inactive
+
+* (*-i, --init*)
+
+  Initialize and creat server config template. 
+  Please edit to match your server settings.
+
+* (*wkd, --work_dir <dirname>*)
+
+  Set working directory.  
+  This is is the directory holding all configs.
+
+  By default: 
+
+  + when used with *--init*, work_dir will be */etc/wireguard/wg-tool* if the directory exists and 
+    with appropriate access permission (i.e. root), otherwise the current directory *./*.
+
+  + if not initializing, then, with access permission,  */etc/wireguard/wg-tool/* will be 
+    the work_dir if there is a *config* dir in it, otherwise it is set to current dir *./*.
+
+* (*-int, --int_serv*)
+
+  With --add_users uses internal wireguard server
+
+* (*-ips, --ips_refresh*)
+
+  Refresh profile IPs if needed
 
 * (*-keep, --keep_hist <num>*)
 
@@ -656,35 +638,69 @@ Summary of available options:
 
   How much wg-config history to keep (default 3)
 
-* (*-sop, --save_opts*)
+* (*-l, --list_users*)
 
-  Together with --keep_hist and/or --keep_hist_wg
-  to save these values as new defaults.
+  Summary of users/profiles - sorted by user.
 
-* (*-fp, --file_perms*)
+* (*-mod, --mod_users*)
 
-  Ensure all files have appropriately restricted permissions
+  Modify existing user:profile(s).  Use with *-dnsrch*, *-dnslin*, *-aips* and *upd*
+  Can apply to all users/profiles via the *-all* option.
+
+* (*-pfxlen_4, --prefixlen_4*)
+
+  User profiles now get IP Addresses(es) from each server network. Each address
+  is a block with cidr prefixlen_4. Defaults to 32 which means 1 IP address.
+  e.g. if set to 30 then would get a block of 4 x.x.x.x/30
+
+* (*-pfxlen_6, --prefixlen_6*)
+
+  Similar to --prefixlen_4 but for ipv6. Default is 128
 
 * (*-rrpt, --run_show_rpt*)
 
   Run "wg show" and generate report of users, profiles.
   Also checks for consistency with current settings.
 
+* (*-sop, --save_opts*)
+
+  Together with --keep_hist and/or --keep_hist_wg
+  to save these values as new defaults.
+
 * (*-rpt, --show_rpt <file>*)
 
   Same as *-rrpt* only reads file containing the output of *wg show*
   If file is name *stdin*, then it reads from stdin.
 
-* (*-l, --list_users*)
+* (*upd, --upd_endpoint*)
 
-  Summary of users/profiles - sorted by user.
+  Use with *-mod*
+  Ensure user/profile is using current server endpoint.  Add *-int*
+  if want to use internal hostname/port.
 
-* (*-det, --details*)
+  For example if the server IP changes, then you can update existing user/profiles with
 
-  Adds more detail to *-l* and *-rrpt*.
-  For *-l* report will also include details about each profile.
-  For *-rrpt* report will show all user:profiles known to running server, not just
-  those for which it has a recent connection. 
+  wg-tool -mod -upd -all
+
+* (*-usk, --upd_serv_keys*)
+
+  Generate new pair of server keys.
+  NB This affects all users as they all use the server public key.
+
+* (*-upd_uka, --upd_user_keepalive*)
+
+  Update client profile keepalive (see also --user_keepalive)
+
+* (*-uuk, --upd_user_keys*)
+
+  Generate new set of keys for existing user(s).
+  This is public and private key pair along with new pre-shared key.
+
+* (*-uka, --user_keepalive*)
+ 
+  Number of seconds to use for persistent keep-alive (-upd_user_keepalive for existing profiles) 
+  Default is 0 which disables keepalive.
+  Reasonable value is 25 seconds.
 
 * (*-v, --verb*)
 
@@ -693,6 +709,10 @@ Summary of available options:
 * (*-V, --version*)
 
   Display current version
+
+* (*-wkd, --work_dir*)
+
+  Set the working directory path to search. If unset, path : /etc/wireguard/wg-tool:./
 
 Note on MTU
 -----------

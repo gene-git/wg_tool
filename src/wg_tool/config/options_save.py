@@ -48,6 +48,7 @@ def write_saved_opts(wgtopt):
             'keep_hist_wg'  : wgtopt.keep_hist_wg,
             'prefixlen_4'   : wgtopt.prefixlen_4,
             'prefixlen_6'   : wgtopt.prefixlen_6,
+            'user_keepalive': wgtopt.user_keepalive,
             }
     opts_str = dict_to_toml_string(opts_dict)
 

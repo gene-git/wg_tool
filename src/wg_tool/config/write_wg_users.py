@@ -30,11 +30,12 @@ def _user_prof_str(wgtool, _user_name, _prof_name, profile):
     PresharedKey = profile.PresharedKey
     AllowedIPs = profile.AllowedIPs
     Endpoint = profile.Endpoint
+    PersistentKeepAlive = profile.keepalive
 
     prof = '\n'
     prof += '[Interface]\n'
-    prof += f'{"PrivateKey":15s} = {PrivateKey}\n'
-    prof += f'{"Address":15s} = {Address}\n'
+    prof += f'{"PrivateKey":20s} = {PrivateKey}\n'
+    prof += f'{"Address":20s} = {Address}\n'
 
     if profile.DnsLinux:
         # linux we manage resolv.conf
@@ -44,8 +45,8 @@ def _user_prof_str(wgtool, _user_name, _prof_name, profile):
             args += ' -dnsrch ' + ','.join(server.DNS_SEARCH)
         args += ' -dns ' + ','.join(server.DNS)
 
-        prof += f'{"Postup":15s} = {dns_updn_script} -u{args}\n'
-        prof += f'{"PostDown":15s} = {dns_updn_script} -d\n'
+        prof += f'{"Postup":20s} = {dns_updn_script} -u{args}\n'
+        prof += f'{"PostDown":20s} = {dns_updn_script} -d\n'
 
     else:
         # non-linux or linux with wg-quick/resolvconf
@@ -54,18 +55,20 @@ def _user_prof_str(wgtool, _user_name, _prof_name, profile):
         else:
             dns_items = server.DNS
         for dns in dns_items:
-            prof += f'{"DNS":15s} = {dns}\n'
+            prof += f'{"DNS":20s} = {dns}\n'
 
     prof += '\n'
     prof += '[Peer]\n'
 
-    prof += f'{"PublicKey":15s} = {serv_PublicKey}\n'
+    prof += f'{"PublicKey":20s} = {serv_PublicKey}\n'
     if PresharedKey:
-        prof += f'{"PresharedKey":15s} = {PresharedKey}\n'
+        prof += f'{"PresharedKey":20s} = {PresharedKey}\n'
 
-    prof += f'{"AllowedIPs":15s} = {AllowedIPs}\n'
+    prof += f'{"AllowedIPs":20s} = {AllowedIPs}\n'
+    prof += f'{"Endpoint":20s} = {Endpoint}\n'
+    if PersistentKeepAlive and PersistentKeepAlive > 0:
+        prof += f'{"PersistentKeepAlive":20s} = {PersistentKeepAlive}\n'
 
-    prof += f'{"Endpoint":15s} = {Endpoint}\n'
     prof += '\n'
     return prof
 

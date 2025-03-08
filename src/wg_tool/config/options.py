@@ -1,13 +1,14 @@
-# SPDX-License-Identifier: MIT
+# SPDX-25License-Identifier: MIT
 # SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
 """
 Options - command line options for WgTool
 """
 # pylint: disable=too-many-statements
+# from functools import cmp_to_key
 
 def available_options(work_path:str):
     """
-    Manage command line options
+    Manage command line options using argparse
     """
     opts = []
     act = 'action'
@@ -34,7 +35,7 @@ def available_options(work_path:str):
     opt = [('-add', '--add_users'), {'help' : ohelp, act : act_on}]
     opts.append(opt)
 
-    ohelp = 'Modify user(s) profiles (with -dnsrch, -dnslin, -upd, -ips, -aips)'
+    ohelp = 'Modify user(s) profiles (with -cka, -dnsrch, -dnslin, -upd, -ips, -aips)'
     opt = [('-mod', '--mod_users'), {'help' : ohelp, act : act_on}]
     opts.append(opt)
 
@@ -106,6 +107,15 @@ def available_options(work_path:str):
     opt = [('-l', '--list_users'), {'help' : ohelp, act : act_on}]
     opts.append(opt)
 
+    ohelp = 'User profile persistent keep-alive seconds (-uka for existing profiles) (0 disables)'
+    default = 0
+    opt = [('-uka', '--user_keepalive'), {'help' : ohelp, 'default' : default}]
+    opts.append(opt)
+
+    ohelp = 'Update client profile keepalive (see also -cka)'
+    opt = [('-upd_uka', '--upd_user_keepalive'), {'help' : ohelp, act : act_on}]
+    opts.append(opt)
+
     ohelp = 'Output of "wg show" (file, "stdin") -> connected users report'
     opt = [('-rpt',   '--show_rpt'), {'help' : ohelp}]
     opts.append(opt)
@@ -135,6 +145,15 @@ def available_options(work_path:str):
     opt = [('-V', '--version'), {'help' : ohelp, act : act_on}]
     opts.append(opt)
 
+    #
+    # Sort options alphabetically
+    #   - All option keys must be valid strings ("short", "long")
+    #
+    opts.sort(key = lambda item : item[0][1])
+
+    #
+    # Now append the positional args to end
+    #
     ohelp = 'user_1[:prof1,prof2,...] user_2[:prof_1,prof_2] ...'
     opt = [('users', None), {'help' : ohelp, 'nargs' : '*'}]
     opts.append(opt)

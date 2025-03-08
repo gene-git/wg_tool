@@ -57,6 +57,7 @@ def _make_new_profile_dict(wgtool):
     prof_dict['DnsSearch'] = DnsSearch
     prof_dict['DnsLinux'] = DnsLinux
     prof_dict['allowed_ips_own'] = allowed_ips_own
+    prof_dict['PersistentKeepalive'] = wgtool.opts.user_keepalive
 
     return prof_dict
 

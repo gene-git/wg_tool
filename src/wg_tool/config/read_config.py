@@ -15,19 +15,25 @@ def read_server_config(wgtool):
     conf_path = os.path.join(wgtool.conf_serv_dir, wgtool.conf_serv_file)
     conf = read_toml_file(conf_path)
 
-    if conf and not conf.get("mod_time"):
-        # use conf file mod time if older config
-        conf["mod_time"] = file_date_time_str(conf_path)
+    if conf and not conf.get("mod_date"):
+        # add mod date if missing (older config)
+        conf["mod_date"] = file_date_time_str(conf_path)
         conf["_changed"] = True
+
+    # remove unused mod_time:
+    if conf.get('mod_time'):
+        del conf['mod_time']
 
     return conf
 
-def _fix_profile_mod_times(user_conf, conf_file):
+def _fix_profile(user_conf, conf_file):
     """
-    If user conf missing mod_time set it to mod time of conf gile
-    If any profile missing mod_time, set it to user conf time
+    Fixup to update to current data:
+     - If user conf missing mod_time set it to mod time of conf gile
+     - If any profile missing mod_time, set it to user conf time
         - better than None
         - as things get updated this will updated
+     - If any profile missing PersistentKeepalive - add it
     """
     if not user_conf.get("mod_time"):
         user_conf["mod_time"] = file_date_time_str(conf_file)
@@ -38,6 +44,11 @@ def _fix_profile_mod_times(user_conf, conf_file):
         if isinstance(prof, dict):
             if not prof.get("mod_time"):
                 prof["mod_time"] = mod_time
+                prof["_changed"] = True
+
+            # keep alive added 20250307 - set to old default if not found
+            if not prof.get('PersistentKeepalive'):
+                prof['PersistentKeepalive'] = 0
                 prof["_changed"] = True
 
 def _read_one_user(wgtool, user_name, user_path, conf_dicts):
@@ -54,11 +65,12 @@ def _read_one_user(wgtool, user_name, user_path, conf_dicts):
                 continue
             if item.name.endswith('.conf'):
                 conf = read_toml_file(item.path)
+
                 if conf:
                     if not conf.get('name'):
                         conf['name'] = user_name
 
-                    _fix_profile_mod_times(conf, item.path)
+                    _fix_profile(conf, item.path)
 
                     conf_dicts.append(conf)
                 else:
@@ -80,6 +92,7 @@ def read_user_configs(wgtool):
     #
     conf_dicts = []
     top_dir_scan = os_scandir(user_dir)
+
     if top_dir_scan:
         for top_item in top_dir_scan:
             if top_item.is_dir():

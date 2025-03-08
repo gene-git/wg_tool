@@ -11,7 +11,8 @@ from .options_save import read_merge_saved_opts, write_saved_opts
 
 class WgtOpts:
     """
-    Manage command line options
+    Command line options
+     - some may be optionally saved to file in config dir
     """
     def __init__(self, work_path, save_dir):
         gh_url:str = 'https://github.com/gene-git/wg_tool'
@@ -55,6 +56,8 @@ class WgtOpts:
         self.verb = False
         self.version = False
 
+        self.user_keepalive = 0
+
         #
         # These can be overriden from cli or from saved options
         #
@@ -78,14 +81,12 @@ class WgtOpts:
 
         parsed = par.parse_args()
         if parsed:
-            #
-            # make each option an attribute
-            #
+            # map each option to it's attribute
             for (opt, val) in vars(parsed).items() :
                 setattr(self, opt, val)
 
         #
-        # 3.12 deprecated some argparse options such as 'type' : int
+        # python 3.12 deprecated some argparse options such as 'type' : int
         #
         if self.prefixlen_4:
             self.prefixlen_4 = int(self.prefixlen_4)
@@ -99,9 +100,11 @@ class WgtOpts:
         if self.keep_hist_wg:
             self.keep_hist_wg = int(self.keep_hist_wg)
 
+        if self.user_keepalive:
+            self.user_keepalive = int(self.user_keepalive)
 
         #
-        # for saved, prio is:  command line, saved file, default
+        # for saved options, priority is:  command line, saved file, default
         #
         read_merge_saved_opts(self)
 

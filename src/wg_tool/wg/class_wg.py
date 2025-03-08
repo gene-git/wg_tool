@@ -305,6 +305,8 @@ class WgTool:
         upd_endpoint = self.opts.upd_endpoint
         ips_refresh = self.opts.ips_refresh
         allowed_ips = self.opts.allowed_ips
+        upd_keepalive = self.opts.upd_user_keepalive
+        #keepalive = self.opts.user_keepalive
         user = self.users.get(user_name)
 
         if not user:
@@ -328,6 +330,11 @@ class WgTool:
 
         if ips_refresh:
             one_change = user.mod_profile_address(self.ipinfo, prof_name)
+            if one_change:
+                changed = True
+
+        if upd_keepalive:
+            one_change = user.mod_profile_keepalive(self, prof_name)
             if one_change:
                 changed = True
 
@@ -396,7 +403,7 @@ class WgTool:
         if self.opts.add_users:
             add_users(self)
 
-        if self.opts.mod_users:
+        if self.opts.mod_users or self.opts.upd_user_keepalive:
             mod_users(self)
 
         if self.opts.import_user:

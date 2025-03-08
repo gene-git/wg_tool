@@ -24,6 +24,7 @@ class WgtUserProfile:
         self.Endpoint = None
         self.DnsSearch = False
         self.DnsLinux = False
+        self.PersistentKeepalive = 0
 
         self.mod_time = current_date_time_str(fmt='%y%m%d-%H:%M')
         self._changed = None
@@ -59,6 +60,16 @@ class WgtUserProfile:
         if not self.allowed_ips_own :
             self.AllowedIPs = ipinfo.allowed_ips
 
+        return changed
+
+    def refresh_keepalive(self, keepalive:int):
+        '''
+        set keepalive if changed
+        '''
+        changed = False
+        if self.PersistentKeepalive != keepalive:
+            self.PersistentKeepalive = keepalive
+            changed = True
         return changed
 
     def set_allowed_ips_own(self, allowed_ips_def, allowed_ips:str):
@@ -272,6 +283,22 @@ class WgtUser:
             self._set_mod_time()
         return changed
 
+    def mod_profile_keepalive(self, wgt, prof_name):
+        '''
+        Update client keep alive from wgt.opts.client_keepalive
+        '''
+        changed = False
+        if self.profile_exists(prof_name):
+            profile = self.profile[prof_name]
+            if profile.refresh_keepalive(wgt.opts.user_keepalive):
+                changed = True
+        else:
+            warn_msg(f'mod_profile_keepalive: {prof_name} not found - ignored')
+        if changed:
+            self._set_mod_time()
+        return changed
+
+
     def mod_profile_address(self, ipinfo, prof_name):
         """
         refresh (server) address to ensure has IP(s) from each server network
@@ -291,7 +318,7 @@ class WgtUser:
 
     def mod_allowed_ips(self, allowed_ips_def:str, allowed_ips:str, prof_name:str):
         """
-        Modify the allowed_ips for this user profil
+        Modify the allowed_ips for this user profile
          - string with comma separated list actual cidrs
          - See class_wg where default is set to server provided '0.0.0.0/0, ::/0'
         """
