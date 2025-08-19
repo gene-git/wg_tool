@@ -21,7 +21,7 @@ def read_server_config(wgtool):
         conf["_changed"] = True
 
     # remove unused mod_time:
-    if conf.get('mod_time'):
+    if conf and conf.get('mod_time'):
         del conf['mod_time']
 
     return conf
