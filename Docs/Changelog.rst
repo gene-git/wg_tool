@@ -7,12 +7,19 @@ Tags
 
 ::
 
-	1.1.1 (2022-10-26) -> 7.5.0 (2025-08-19)
-	203 commits.
+	1.1.1 (2022-10-26) -> 7.5.1 (2025-08-19)
+	205 commits.
 
 Commits
 =======
 
+
+* 2025-08-19  : **7.5.1**
+
+::
+
+                update pyproject version
+                update Docs/Changelogs Docs/wg_tool.pdf
 
 * 2025-08-19  : **7.5.0**
 

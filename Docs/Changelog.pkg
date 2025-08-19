@@ -1,9 +1,13 @@
 -------------------------------------------------------
  Changelog    : wg_tool
- Tags         : 7.1.0 ➙ 7.5.0
-              : 2024-10-20 ➙ 2025-08-19
+ Tags         : 7.2.0 ➙ 7.5.1
+              : 2024-10-22 ➙ 2025-08-19
               : 6 tags. See Docs for full changelog
 -------------------------------------------------------
+
+ 2025-08-19   : 7.5.1
+                update pyproject version
+                update Docs/Changelogs Docs/wg_tool.pdf
 
  2025-08-19   : 7.5.0
                 update arch PKGBUILD to 7.5.0
@@ -27,8 +31,3 @@
  2024-10-22   : 7.2.0
                 Additional input protections in cidr utils
  2024-10-20     update Docs/Changelog.rst Docs/wg_tool.pdf
-
- 2024-10-20   : 7.1.0
-                Use python 3 ipaddress in place of 3rd party netaddr module.
-                Code reorg and some tidying
- 2024-09-07     update Docs/Changelog.rst Docs/wg_tool.pdf
