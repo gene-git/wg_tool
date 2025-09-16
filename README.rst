@@ -222,11 +222,10 @@ The second part of any peer config is one or more *Peer* sections. Each of these
 provides the information required to engage with that peer. 
 Each peer section has the public key of of the peer.
 
-It also provides the 
-list of networks that are acceptable to use in communicating with that peer.
-It as well as any networks that are usable. The available networks are typically internal LANs
-or internet access. These is the *AllowedIPs* variable. It can be a one network, a 
-comma separated list of networks, or it can be repeated for each network.
+It also provides the list of networks that are acceptable to use in communicating with that peer.
+The available networks are typically internal LANs or internet access. These is the 
+*AllowedIPs* variable. It can be one network, a 
+comma separated list of networks, and it can be repeated.
 
 Each pair of peers may also share a secret known as a *pre-shared-key* or PSK.
 Wireguard's author, Jason Donenfeld, opines that using this provides an additional
@@ -244,8 +243,9 @@ A Note About Shared Networks
 ----------------------------
 
 Wireguard denotes networks available to each peer using *AllowedIPs*.
-That variable tells waireguard to permit packets to from the those networks.
-Wireguard uses that to create appropriate routes which it all work.
+That variable tells wireguard to permit packets to from the those networks.
+
+Wireguard uses that to create appropriate routes which all work.
 This means that if a gateway, for example, offers LAN access to it's clients
 then every client has its *AllowedIPs* with that LAN network listed.
 
@@ -260,7 +260,8 @@ Instead, the tool updates all peers with access to that network.
 For example, if the Office A gateway offers LAN-A access 
 to clients, then *wg-tool* simply has the gateway designate LAN-A 
 available to other peers. When it generates the wireguard configs,
-each peer will have access permitted via it's *AllowedIPs*.
+each peer that asks for access to that network will have access 
+permitted via it's *AllowedIPs*.
 
 *wg-tool* expects each peer to list those networks it offers to 
 other peers using the *nets_offerered* variable. Of course, this is entirely
@@ -272,8 +273,11 @@ that it will pass traffic to and from the internet on behalf of
 it's clients. Clients, in turn, request such access using 
 the *internet_wanted* flag.
 
-Based on all that information, *wg-tool* can generates
-the appropriate *AllowedIPs* for every peer.
+Similarly, peers may request access to one or more networks
+by setting *nets_wanted*. 
+
+Based on all that information, *wg-tool* generates
+the appropriate *AllowedIPs* in the wireguard configs.
 
 Peer to Peer
 ------------
