@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Editing and Making Changes &#8212; wg_tool 8.0.rc2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=e043c39a" />
+    <script src="../_static/documentation_options.js?v=321254cf"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Command Line Options" href="Options.html" />
+    <link rel="prev" title="Working Examples" href="../Examples.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="editing-and-making-changes">
+<span id="editing"></span><h1>Editing and Making Changes<a class="headerlink" href="#editing-and-making-changes" title="Link to this heading">¶</a></h1>
+<p>There are 2 classes of things that can be modified: the vpn information itself and any profile.
+Changes are made by using <em>–edit</em> option which writes a file. After any changes
+to that file they can be merged back using <em>–merge</em> option.</p>
+<p>Files to be edited are written into files in the <em>Edits</em> directory. <em>Edits</em> is located
+in the working directory. Files use TOML format.</p>
+<p>TOML, loosely speaking, has <em>key = value</em> pairs. Value can be an array
+which is simply comma separated list of items inside square brackets <em>x = [item1, item2, … ]</em>.
+It can also have named sections which are started with [name]. Everythin following
+a named section belongs to that section until a new section is encountered. For additional
+infomation please see TOML documentation <a class="reference external" href="https://toml.io/en">https://toml.io/en</a>.</p>
+<p>Each peer is identified by it’s <em>ID</em> which is 3 tuple : <em>&lt;vpn-name&gt;.&lt;account-name&gt;.&lt;profile-name&gt;</em>.
+When editing the vpn itself, the <em>ID</em> is just the <em>&lt;vpn-name&gt;</em>.</p>
+<p>Note that in order to rename something, then please see the <em>–rename</em> command line option
+which handles this.</p>
+<section id="modifying-vpn-information">
+<h2>Modifying Vpn Information<a class="headerlink" href="#modifying-vpn-information" title="Link to this heading">¶</a></h2>
+<p>For example, to modify a vpn named <em>vpn-test</em>.</p>
+<p>The first step is to make the edit request:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wg-tool<span class="w"> </span>--edit<span class="w"> </span>vpn-test
+</pre></div>
+</div>
+<p>This creates a file under the <em>Edits</em> directory and the filename is displayed.
+In this example the file will be <em>Edits/vpn-test-info.mods</em>.
+The file is in standard TOML format.</p>
+<p>You can then edit the contents of the file that contains the following
+items:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>name = &quot;vpn-test&quot;
+tag = &quot;... do not change this ... &quot;
+dns = [
+     &quot;dns.exmple.com&quot;,
+     &quot;dns.example.net&quot;,
+ ]
+ dns_search = []
+ peer_to_peer = false
+ networks = [
+     &quot;10.77.77.0/24&quot;,
+     &quot;fc00:77:77::/64&quot;,
+ ]
+</pre></div>
+</div>
+<p>Never modify the <em>tag</em> as it is a unique identifier that determines where to merge any changes.</p>
+<p>Most fields are self explanatory. If this is a new vpn then it is fine to change the networks
+but be cautious touching this once peers have been added. The code will refuse to remove
+a network if there are existing profiles with IP address assigned from it.</p>
+<p>The peer_to_peer flag is discussed in a little more detail below.</p>
+<p>After any changes are made the file they can be merged back using:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wg</span><span class="o">-</span><span class="n">tool</span> <span class="o">-</span><span class="n">merge</span> <span class="o">&lt;</span><span class="n">filename</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>The will update the config files with support for peer to peer communications.</p>
+<section id="note-on-dns">
+<span id="dns-note"></span><h3>Note On DNS<a class="headerlink" href="#note-on-dns" title="Link to this heading">¶</a></h3>
+<p>We use two variables to capture dns information. <em>dns</em> which is the list of
+dns servers and <em>dns_search</em> is the list of dns search domains.</p>
+<p>Each host in <em>dns</em> may be an IP address or a hostname. Any hostname will
+use local DNS to resolve this to an IP address before they are output
+to the wireguard configs.</p>
+<p>This applies not only to the vpn info, but equally to
+dns information used in profiles.</p>
+<p>The reason for this, is that wireguard uses it’s <em>DNS</em> variable for both
+dns servers as well as search dommains. It distinguises between them
+by recognizing IP addresses.</p>
+<p>In a wireguard config, each element of <em>DNS</em> will is treated as a dns server only
+if it is a valid IP address (IPv4 or IPv6). Everything else is treated
+as a search domain.</p>
+</section>
+<section id="peer-to-peer">
+<h3>Peer to Peer<a class="headerlink" href="#peer-to-peer" title="Link to this heading">¶</a></h3>
+<p>If the <em>peer_to_peer</em> flag set to <em>true</em> then peers are permitted to communicate with
+one another using tunnel IP addresses. By default this is turned off and peers can only
+communicate with gateways. This can be changed at any time.</p>
+<p>The gateway will need to have IP forwarding turned on.
+Standard way to do this in linux:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># /etc/sysctl.d/20-wireguard.conf</span>
+<span class="n">net</span><span class="o">.</span><span class="n">ipv4</span><span class="o">.</span><span class="n">ip_forward</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">net</span><span class="o">.</span><span class="n">ipv6</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">forwarding</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="c1"># manually turn on if not already</span>
+<span class="n">echo</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">proc</span><span class="o">/</span><span class="n">sys</span><span class="o">/</span><span class="n">net</span><span class="o">/</span><span class="n">ipv4</span><span class="o">/</span><span class="n">ip_forward</span>
+<span class="n">echo</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">proc</span><span class="o">/</span><span class="n">sys</span><span class="o">/</span><span class="n">net</span><span class="o">/</span><span class="n">ipv6</span><span class="o">/</span><span class="n">conf</span><span class="o">/</span><span class="nb">all</span><span class="o">.</span><span class="n">forwarding</span>
+</pre></div>
+</div>
+<p>Peer to peer can be turned off at any time, simply edit as above and set
+<em>peer_to_peer = false</em> and <em>merge</em> the change as usual.</p>
+</section>
+</section>
+<section id="modifying-profile-information">
+<h2>Modifying Profile Information<a class="headerlink" href="#modifying-profile-information" title="Link to this heading">¶</a></h2>
+<p>Any profile, gateway or client can be modified by edting it’s ID.
+The process is the same as for the vpn above using <em>edit/merge</em> but
+now using the profile ID.</p>
+<p>We illustrate for the peer <em>vpn-test.user-3.laptop</em>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wg-tool<span class="w"> </span>--edit<span class="w"> </span>vpn-test.user-3.laptop
+</pre></div>
+</div>
+<p>Again, a file is created which you can edit and merge. In this example the file is
+<em>Edits/vpn-test.user-3.laptop.mods</em> which contains, aside from some comments at the top:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>PersistentKeepalive = 0
+MTU = &quot;&quot;
+post_up = []
+post_down = []
+nets_offered = []
+nets_wanted = []
+internet_offered = false
+internet_wanted = false
+Endpoint = &quot;&quot;
+Endpoint_alt = &quot;&quot;
+dns = [ &quot;dns.example.com&quot;, ]
+dns_search = []
+dns_linux = false
+use_vpn_dns = true
+active = true
+hidden = false
+
+# change to tag = xxx
+# keep id_str ??
+[ident]
+tag = &quot;af4f6d5e-ae66-4bd1-afec-a7037cdd1d9e&quot;
+</pre></div>
+</div>
+<p>Once again, do not modify the tag. It is a unique identifier used to ensure edits go to
+the correct place.</p>
+<p>If you need to rename an account or profile, then the <em>–rename</em> option should be used.</p>
+<p>Most of the other items can be modified and are largely self-explanatory. Where appropriate
+we quote from the wireguard documentation.</p>
+<ul>
+<li><p>no_psk_tags</p>
+<p>This is a legacy tag used as part of migration only. It allows old migrated
+profiles that were not using pre-shared keys. Leave this one alone.</p>
+</li>
+<li><p>PersistentKeepalive</p>
+<p>Per the wg docs: it is the seconds interval, between 1 and 65535, indicating how often to
+send an authenticated empty packet to the peer for the purpose of keeping a stateful
+firewall or NAT mapping valid persistently.</p>
+<p>Usually not needed, but if set 25 seconds is a sensible value.</p>
+<p>A good rule of thumb is if this peer only connects to other peers then this is unncessary.
+However when the peer needs to be available to be connected to, then it can be helpful
+to set this. For example, if this peer starts wireguard and sits behind one or more NAT
+routers, and is available for ssh to login, then setting keep alive will ensure
+there is a viable pathway from this peer to the gateway. This will make sure
+that you can ssh in to this peer.</p>
+<p>See <em>man wg</em> for more information.</p>
+</li>
+<li><p>MTU</p>
+<p>If not specified, the MTU is automatically determined from the endpoint addresses or
+the system default route, which is usually a sane choice. However, to manually specify
+an MTU to override this automatic discovery, this value may be specified explicitly.</p>
+</li>
+<li><p>post_up / post_down</p>
+<p>List of scripts to be run after setting up to tearing down the vpn interface.</p>
+<p>Gateway example:</p>
+</li>
+</ul>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>post_up = [&#39;/usr/bin/nft -f /etc/wireguard/scripts/postup.nft&#39;]
+post_down = [&#39;/usr/bin/nft flush ruleset&#39;]
+</pre></div>
+</div>
+<ul>
+<li><p>nets_offered / nets_wanted</p>
+<p>If this peer offers access to one or more networks, aside from internet, they can be listed here.</p>
+<p>Example providing access to a local network:</p>
+<p>nets_offered = [‘192.168.1.0/24’]</p>
+<p>Similarly if a peer wants to gain access they it lists the networks in net_wanted.</p>
+</li>
+<li><p>internet_offered / internet_wanted</p>
+<p>Gateways may allow clients to have their internet traffic flow via the gateway.
+If that is allowed, then set <em>internet_offfered = true</em>.</p>
+<p>If a client wants use a gateway for all it’s internet traffic, then it sets
+<em>internet_wanted = true</em></p>
+<p>These are mutually exclusive, and gatways ignore internet_wanted, while clients ignore
+internet_offered.</p>
+</li>
+<li><p>Endpoint</p>
+<p>Gatways use this to provide their host:ip. For example:</p>
+<p>Endpoint = “vpn.example.com:51820”</p>
+</li>
+<li><p>Endpoint_alt</p>
+<p>A gateway may be available on and alternate endpoint. Typically this
+is an internal host or IP and this is directed at admin wishing to test
+the server on the internal network. With this added, you may then
+mark a profile with <em>alternate_wanted = true</em> and an separate wireguard
+config will written to the “Alt” subdirectory. e.g. If a user has a
+desktop profile so marked, then 2 configs will now be written instead of one.
+The only difference is the Endpoint used for the gateway.</p>
+</li>
+</ul>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Data-wg/vpn-test/user-1/desktop.conf
+Data-wg/vpn-test/user-1/Alt/desktop.conf
+</pre></div>
+</div>
+<ul>
+<li><p>dns / use_vpn_dns / dns_linux/ dns_search</p>
+<p>Dns servers, list of hosts or IPs, can be provided in 3 places:</p>
+<ul class="simple">
+<li><p>vpn info : DNS variable</p></li>
+<li><p>gateways : DNS variable.</p></li>
+<li><p>client’s own DNS variable.</p></li>
+</ul>
+<p>Dns servers are listed in order:</p>
+<blockquote>
+<div><p>current profile -&gt; gateways -&gt; vpn info</p>
+</div></blockquote>
+<p>Client profiles may toggle the flag <em>use_vpn_dns = false</em>, in which case
+they do not use dns servers provided by gateways or vpn info.</p>
+<p>dns = [“dns.example.com”,]</p>
+<p>When <em>dns_linux</em> is not set, then the list of dns servers will be
+written to wireguard config [Interface] section.</p>
+<p>If a linux client has <em>dns_linux = false</em>, then the resolv.conf will be managed
+by resolvconf (See man wg-quick for more info).</p>
+<p>Use <em>dns_linux = true</em> to activate the DNS helper scripts for linux clients.</p>
+<p>These use the dns servers together with any dns search domains as arguments to the
+helper script which is written to the
+postup/postdown variables.</p>
+<p><em>dns_search</em> follows the same inclusion logic as dns servers: profile -&gt; gateways -&gt; vpn info.
+Note that <em>dns_search</em> is only available for linux clients using the dns helper script.</p>
+<p>The dns script should be installed in <em>/etc/wireguard/scripts/wg-peer-updn</em>.</p>
+<p>Please see <a class="reference internal" href="Helper-scripts.html#dns-script"><span class="std std-ref">Linux Client DNS Script</span></a> for more details.</p>
+<p>Any linux client using the script will have the dns servers and dns domain search
+set as arguments and written to the resulting wireguard config <em>postup / postdown</em>
+variable.</p>
+<p>The DNS servers and domain search list are specified in vpn info and
+may be modified with <em>wg-tool –edit &lt;vpn-name&gt;</em>.</p>
+</li>
+<li><p>active / hidden</p>
+<p>Profile may be marked active, inactive or hidden. Inactive profiles remain in the database
+and visible with <em>–list</em> but they are excluded from generating wireguard configs (<em>Data-wg</em>).
+hidden are treated as inactive but do not show with <em>–list</em> option unless <em>-verb</em> is also used.
+These states may be set during editing of a profile, or using the commmand line options.
+Command line options are helpful for quick changes or for changes to more than one profile.</p>
+<p>See <a class="reference internal" href="Options.html#options-section"><span class="std std-ref">Command Line Options</span></a>.</p>
+</li>
+<li><p>[ident]</p>
+<p>Dont touch this section which only contains a <em>tag</em>. This is a unique identifier
+and is used to ensure that any modifications go to the correct place.</p>
+<p>ID names can be changed using the <em>–rename</em> option and copies of profiles can be
+made with the <em>–copy-from</em> options.</p>
+<p>See the <a class="reference internal" href="Options.html#options-section"><span class="std std-ref">Command Line Options</span></a> for more details.</p>
+</li>
+</ul>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">wg_tool</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../README.html">wg-tool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#documentation">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#getting-started">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../License/License.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Examples.html">Working Examples</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Editing and Making Changes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#modifying-vpn-information">Modifying Vpn Information</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#note-on-dns">Note On DNS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#peer-to-peer">Peer to Peer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#modifying-profile-information">Modifying Profile Information</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Options.html">Command Line Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Reports.html">Reports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Key-rollover.html">Key Rollover</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Helper-scripts.html">Convenience Scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Migrating.html">Migrating from Earlier Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Import.html">Importing From Standard Wireguard Configs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Directory-structure.html">Directory and File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Appendix.html">Appendix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Contrib/ubuntu.html">Contrib</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../Examples.html" title="previous chapter">Working Examples</a></li>
+      <li>Next: <a href="Options.html" title="next chapter">Command Line Options</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2022-2025, Gene C.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/Sections/Editing.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

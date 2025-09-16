@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Command Line Options &#8212; wg_tool 8.0.rc2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=e043c39a" />
+    <script src="../_static/documentation_options.js?v=321254cf"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Reports" href="Reports.html" />
+    <link rel="prev" title="Editing and Making Changes" href="Editing.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="command-line-options">
+<span id="options-section"></span><h1>Command Line Options<a class="headerlink" href="#command-line-options" title="Link to this heading">¶</a></h1>
+<p>As usual the help message is available via:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wg</span><span class="o">-</span><span class="n">tool</span> <span class="o">--</span><span class="n">help</span>
+</pre></div>
+</div>
+<p>Which prints a list of available options.</p>
+<p>Some items may be modified using <em>–edit</em> and some, like <em>–rename</em> have not
+edit counterpart.</p>
+<p>Sometimes it may be more convenient to use an option rather than edit.</p>
+<section id="current-help">
+<h2>Current Help<a class="headerlink" href="#current-help" title="Link to this heading">¶</a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: wg-tool [-h]
+               [-wkd DIR]
+               [-migrate]
+               [-import-configs &lt;vpn-name&gt;]
+               [-edit]
+               [-copy]
+               [-rename]
+               [-ident vpn.account.prof]
+               [-to-ident vpn.account.prof]
+               [-merge FILE]
+               [-nets-wanted-add NETS_WANTED_ADD]
+               [-nets-wanted-del NETS_WANTED_DEL]
+               [-nets-offered-add NETS_OFFERED_ADD]
+               [-nets-offered-del NETS_OFFERED_DEL]
+               [-new]
+               [-roll]
+               [-active]
+               [-not-active]
+               [-hidden]
+               [-not-hidden]
+               [-l]
+               [-rpt RPTFILE]
+               [-rrpt]
+               [-b]
+               [-r]
+               [-fp]
+               [-v]
+               [-V]
+               [-hist NUM]
+               [-hist-wg NUM]
+               [id_names ...]
+
+wg-tool: Manage wireguard config files
+
+options:
+  -h, --help            show this help message and exit
+  -wkd, --work-dir DIR  Set the working directory path (./)
+
+:*--------------------*:
+: Positional Arguments :
+:*--------------------*:
+  One or more identity names ID(s)
+
+  id_names              &lt;vpn&gt;.&lt;account&gt;.&lt;profile&gt; ...
+                        e.g. client :       vpn1.bob.laptop
+                        e.g. gateway:       vpn1.servers:gateway-1
+                        NB Some options may take &lt;vpn&gt;.&lt;account&gt; or just &lt;vpn&gt;
+
+:*------------------------*:
+: Migrate &amp; Import Options :
+:*------------------------*:
+  Migrating from versions prior to 8.0.
+
+  -migrate, --migrate   Migrate database from pre v8.0 version:
+                        configs -&gt; Data, wg-configs -&gt; Data-wg
+                        Legacy directories are unchanged
+  -import-configs, --import-configs &lt;vpn-name&gt;
+                        Import standard wireguard configs.
+                         The vpn must exist with matching and networks
+                         All configs should be in the work dir and
+                         the path to each config file should be:
+                             &lt;vpn-name&gt;/&lt;account-name&gt;/&lt;profile-name&gt;.conf
+
+:*---------------------*:
+: Edit / Modify Options :
+:*---------------------*:
+  Add, edit or modify identities.
+
+  -edit, --edit         Edit one item.
+                        Requires --ident &quot;vpn.account.profile&quot;
+  -copy, --copy         Copy one identity to another.
+                        Requires --ident &lt;from&gt; --to-ident &lt;to&gt;
+  -rename, --rename     Rename an identity.
+                        Requires --ident and --to-ident
+  -ident, --ident vpn.account.prof
+                        Specify an identity.
+                        Use with --edit, --copy and --rename)
+  -to-ident, --to-ident vpn.account.prof
+                        Specify target identity,
+                        Use with: --copy and --rename)
+  -merge, --merge FILE  Merge edits from a file.
+  -nets-wanted-add, --nets-wanted-add NETS_WANTED_ADD
+                        Add wanted network(s) to IDs (See positional parameters)
+                        Multiple networks use comma separated list
+                        Special network &quot;internet&quot; is same as internet_wanted = true
+  -nets-wanted-del, --nets-wanted-del NETS_WANTED_DEL
+                        Delete wanted network(s) from IDs (See positional parameters)
+                        Multiple networks as comma separated list
+                        Special network &quot;internet&quot; is same as internet_wanted = false
+  -nets-offered-add, --nets-offered-add NETS_OFFERED_ADD
+                        Add offered network(s) to IDs (See positional parameters)
+                        Multiple networks use comma separated list
+                        Special network &quot;internet&quot; is same as internet_offered = true
+  -nets-offered-del, --nets-offered-del NETS_OFFERED_DEL
+                        Delete offered network(s) from IDs (See positional parameters)
+                        Multiple networks as comma separated list
+                        Special network &quot;internet&quot; is same as internet_offered = false
+  -new, --new           Create new item (See positional parameters))]
+                        Each can be one of: vpn, vpn.account or vpn.account.prof
+  -roll, --roll-keys    Generate new keys for IDs (See positional parameters)
+  -active, --active     Mark some IDs active. (Use positional parameters)
+  -not-active, --not-active
+                        Mark some IDs not active. (See positional parameters)
+  -hidden, --hidden     Hidden are not shown unless double verb -vv is used.
+  -not-hidden, --not-hidden
+                        Mark some IDs not hidden. (See positional parameters)
+
+:*-----------------*:
+: Reporting Options :
+:*-----------------*:
+  Peer info and reports from wg server report
+
+  -l, --list            List vpns, accounts &amp; profiles. May filter by providing IDs
+                        profile names may comma separated list
+                        e.g.
+                          all : -l
+                          all accounts and profiles of &quot;vpn1&quot;: -l vpn1
+                          all profiles of &quot;vpn1.bob&quot;: -l vpn1.bob
+                          2 profiles of &quot;vpn1.bob&quot;: -l vpn1.bob.prof-1,prof-2
+  -rpt, --show-rpt RPTFILE
+                        Generate report from &quot;wg show&quot; output (file or &quot;stdin&quot;) (See also --run-show-report)
+  -rrpt, --run-show-rpt
+                        Run &quot;wg show&quot; (must be on wireguard server) and generate report. (See also --show-rpt)
+  -b, --brief           Simplified outputs. Opposite of -det
+
+:*---------------*:
+: General Options :
+:*---------------*:
+  Miscellaneous options.
+
+  -r, --refresh         Force a refresh and write all wireguard configs.
+                        This is automatic and is not needed normally.
+  -fp, --file-perms     Redo restricted file permissions on all data files. Not normally needed.
+  -v, --verb            Verbose output. Repeat for even more verbosity.
+                        -vv works with -l and -rpt. Use -vvv for very verbose output
+  -V, --version         Version info
+
+:*--------------*:
+: Stored Options :
+:*--------------*:
+  These are saved as new default values.
+
+  -hist, --hist NUM     Number of previous data configs to retain (5)
+  -hist-wg, --hist-wg NUM
+                        Number of previous wireguard configs to retain (3)
+</pre></div>
+</div>
+</section>
+<section id="compacting-networks">
+<span id="compacting"></span><h2>Compacting Networks<a class="headerlink" href="#compacting-networks" title="Link to this heading">¶</a></h2>
+<p>Note on networks. The wireguard config <em>AllowedIPs</em> variable compacts
+networks to  the minimal list of CIDRs. For convenience, the
+pre-compacted list of networks is provided as a comment.</p>
+<p>For example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[10.77.77.1/32, 0.0.0.0/0, 192.168.1.0/24, ::/0, fc00:77:77::1/128]
+
+gets compacted to →
+
+[0.0.0.0/0, ::/0]
+</pre></div>
+</div>
+<p>since <em>192.168.1.0/24</em> is a subnet of <em>0.0.0.0/0</em> and similarly for the IPv6 net.</p>
+<p>A comment is added to the config file which shows all the <em>AllowedIPs</em>
+networks prior to compacting. This can be helpful when looking them over for
+testing or checking purposes.</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">wg_tool</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../README.html">wg-tool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#documentation">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#getting-started">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../License/License.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Examples.html">Working Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Editing.html">Editing and Making Changes</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Command Line Options</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#current-help">Current Help</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compacting-networks">Compacting Networks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Reports.html">Reports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Key-rollover.html">Key Rollover</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Helper-scripts.html">Convenience Scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Migrating.html">Migrating from Earlier Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Import.html">Importing From Standard Wireguard Configs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Directory-structure.html">Directory and File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Appendix.html">Appendix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Contrib/ubuntu.html">Contrib</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="Editing.html" title="previous chapter">Editing and Making Changes</a></li>
+      <li>Next: <a href="Reports.html" title="next chapter">Reports</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2022-2025, Gene C.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/Sections/Options.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

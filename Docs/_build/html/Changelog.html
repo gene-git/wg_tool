@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Changelog &#8212; wg_tool 8.0.rc2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=e043c39a" />
+    <script src="_static/documentation_options.js?v=321254cf"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="changelog">
+<h1>Changelog<a class="headerlink" href="#changelog" title="Link to this heading">¶</a></h1>
+<section id="tags">
+<h2>Tags<a class="headerlink" href="#tags" title="Link to this heading">¶</a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>1.1.1 (2022-10-26) -&gt; 8.0.rc2 (2025-09-16)
+207 commits.
+</pre></div>
+</div>
+</section>
+<section id="commits">
+<h2>Commits<a class="headerlink" href="#commits" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>2025-09-16  : <strong>8.0.rc2</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - **Major Version 8.0.0**
+
+               * Re-write pretty much from scratch. New design and fresh start.
+               * Modern coding standards: PEP-8, PEP-257 and PEP-484 style and type annotations
+               * Can now manage multiple VPNs
+               * Each VPN has a number of *accounts* and each account may have multiple profiles.
+                 Some profiles may be gateways (can be connected to) while others are clients
+                 (connect to one or more gateways).
+               * Support more use cases than earlier versions.
+               * Provide walk through working examples of 3 common use cases
+               * The enhancements require significant data format changes.
+
+                 To make the upgrade as simple and easy as possble,
+                 existing data from earlier versions can be auto migrated to
+                 the new format with the *-migrate* option.
+
+               * Network manipulations are now built on the *py-cidr* module.
+
+               * New way to modify profiles.
+
+                 The *--edit* option creates a text file. The file
+                 uses standard TOML (key = value) format. Simply edit the file and then
+                 use the *--merge* option to incorporate those changes.
+
+                 This is simple and clean and makes it easy to modify whatever may be needed
+                 in one quick edit and merge.
+
+                 There are still many command line options which can be particularly helpful
+                 making bulk changes.
+
+               * Improved command line help.
+
+                 Command line option help is now organized by category:
+
+                   migrate, edit/merge, reporting, general and stored options.
+
+               * Document most features including migration, importing, and
+                 making modifications.
+2025-08-19
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update Docs/Changelogs Docs/wg_tool.pdf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2025-08-19  : <strong>7.5.1</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update pyproject version
+- update Docs/Changelogs Docs/wg_tool.pdf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2025-08-19  : <strong>7.5.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - update arch PKGBUILD to 7.5.0
+             - Fix bug for --init. Issue #18 Reported by @Crisp-Casper
+2025-03-08
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update Docs/Changelog.rst Docs/wg_tool.pdf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2025-03-08  : <strong>7.4.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - New option to set PersistentKeepAlive for user profiles.
+               Sort options list printed by --help
+               Update README
+               Add user_keepalive (seconds) to saved options
+               Server config : drop unused mod_time
+2024-12-31
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update Docs/Changelog.rst Docs/wg_tool.pdf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2024-12-31  : <strong>7.3.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - Git tags are now signed.
+               Add git signing key to Arch Package
+               Bump python vers
+2024-10-22
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update Docs/Changelog.rst Docs/wg_tool.pdf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2024-10-22  : <strong>7.2.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - Additional input protections in cidr utils
+2024-10-20
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update Docs/Changelog.rst Docs/wg_tool.pdf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2024-10-20  : <strong>7.1.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - Use python 3 ipaddress in place of 3rd party netaddr module.
+               Code reorg and some tidying
+2024-09-07
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update Docs/Changelog.rst Docs/wg_tool.pdf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2024-09-07  : <strong>7.0.4</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- more readme tweaks
+- update Docs/Changelog.rst Docs/wg_tool.pdf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2024-09-07  : <strong>7.0.3</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - tweak RST formatting in readme
+2024-06-29
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update Docs/Changelog.rst Docs/wg_tool.pdf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2024-06-29  : <strong>7.0.2</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - bug: -V,--version didnt print anything - fixed
+2024-06-28
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update Docs/Changelog.rst Docs/wg_tool.pdf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2024-06-28  : <strong>7.0.1</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- Remove stray character from PKGBUILD; Add nftables dependency
+- update Docs/Changelog.rst Docs/wg_tool.pdf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2024-06-28  : <strong>7.0.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - - Split routing support via *--allowed_ips*
+                   Gives ability to specify which networks use the vpn tunnel
+
+                   New option: -aips, --allowed_ips
+
+                   Applies to wireguard config *AllowedIps*
+
+                   This is a string of comma separated cidr blocks or can be the word *default*.
+                   Default is all packets use vpn - i.e. 0.0.0.0/0,::/0
+
+                   Option can be used with new user profile or to modify an existing profile together
+                   with *-mod* option.
+
+               - general tidy ups
+
+               - add missing contrib directory to installer scrript
+
+               - Now uses sha3-384 to detect file changes (using python-cryptography module)
+                 which wraps openssl
+
+               - Update to require python 3.11 or greater
+
+               - Restricted file permissions - new option, (*-fp, --fperms*), to ensure all files have appropriate
+                 permissions.
+                 Previous version this was always done - but it can be slow (esp. over NFS) so
+                 now its an option to run if needed.
+2024-04-30
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update Docs/Changelog.rst Docs/wg_tool.pdf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2024-04-30  : <strong>6.7.7</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- fresh tag
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2024-04-30  : <strong>6.7.6</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - update Docs/Changelog.rst Docs/wg_tool.pdf
+             - Take Changelog &quot;hack&quot; out of PKGBUILD ... was a bad idea
+2024-04-29
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update Docs/Changelog.rst Docs/wg_tool.pdf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2024-04-29  : <strong>6.7.5</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- one of those days ... another typo!
+- update Docs/Changelog.rst Docs/wg_tool.pdf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2024-04-29  : <strong>6.7.4</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- typo
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2024-04-29  : <strong>6.7.3</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update Docs/Changelog.rst Docs/wg_tool.pdf
+- Improve pulling latest Changelog so pacman -Qc shows it
+- update Docs/Changelog.rst Docs/wg_tool.pdf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2024-04-29  : <strong>6.7.2</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- PKGBUILD change to get latest Changelog
+- update Docs/Changelog.rst Docs/wg_tool.pdf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2024-04-29  : <strong>6.7.1</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - Update version.py as our package tooling was updated
+2024-04-23
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update Docs/Changelog.rst Docs/wg_tool.pdf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2024-04-23  : <strong>6.7.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - Adjust for upcoming python changes.
+               Some argparse options have been deprecated in 3.12 and will be removed in 3.14
+2024-04-17
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update Docs/Changelog.rst Docs/wg_tool.pdf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2024-04-17  : <strong>6.6.1</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - Package update: &quot;pacman -Qc wg_tool&quot; now shows the Changelog
+2024-01-19
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update Docs/Changelog.rst Docs/wg_tool.pdf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2024-01-19  : <strong>6.6.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- version now includes released vs development
+- update Docs/Changelog.rst Docs/wg_tool.pdf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2024-01-19  : <strong>6.5.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- Remove githash from version
+- Closed github issue #17.
+  update Docs/Changelog.rst Docs/wg_tool.pdf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2024-01-19  : <strong>6.4.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - Add --version option
+2024-01-17
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update Docs/Changelog.rst Docs/wg_tool.pdf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2024-01-17  : <strong>6.3.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- Simplify ip address manipulations a few lines to original now bug is fixed
+- update Docs/Changelog.rst Docs/wg_tool.pdf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2024-01-17  : <strong>6.2.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- Bugfix : generating IPs was skipping too many available blocks
+- update Docs/Changelog.rst Docs/wg_tool.pdf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2024-01-17  : <strong>6.1.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- Fix: update AllowedIPs with --ips_refresh
+- update Docs/Changelog.rst Docs/wg_tool.pdf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2024-01-17  : <strong>6.0.1</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- bump patch version for readme change
+- readme tweak
+- update Docs/Changelog.rst Docs/wg_tool.pdf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2024-01-17  : <strong>6.0.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>                 - Add support for multiple IP addresses in user profiles.
+                   Addresses will now be taken from whichever networks are in server config.
+                   cidr address for each network will have prefixlen_4 for IPv4 and prefixlen_6 for IPv6 networks.
+                   prefixlen are settable with new options.
+                   Existing user:profile (or -all) can have their IPs refreshed to pick up their new IPs from
+                   server config. If you already have multiple networks or simply added them to Address variable in
+                   configs/server/server.conf - then can refresh using:
+                      wg-tool -mod -ips user_name:profile_name
+                   or
+                      wg-tool -mod -ips -all
+2024-01-13
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update Docs/Changelog.rst Docs/wg_tool.pdf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2024-01-13  : <strong>5.7.2</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - Add ubuntu notes provided by Jack Duan (@jduan00 via github #13)
+2024-01-12
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update Docs/Changelog.rst Docs/wg_tool.pdf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2024-01-12  : <strong>5.7.1</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - update Docs/Changelog.rst Docs/wg_tool.pdf
+             - lint picking
+2024-01-11
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update Docs/Changelog.rst Docs/wg_tool.pdf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2024-01-11  : <strong>5.7.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - Add -upd option to update user/profile endpoint when server config changes.
+                 (closes GH issue #11)
+               -mod option can now be used with -all
+2024-01-07
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update Docs/Changelog.rst Docs/wg_tool.pdf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2024-01-07  : <strong>5.6.3</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- rst fix in readme
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2024-01-07  : <strong>5.6.2</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- fix readme typo
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2024-01-07  : <strong>5.6.1</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - small readme update
+2023-12-07
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update Docs/Changelog.rst Docs/wg_tool.pdf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2023-12-07  : <strong>5.6.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - wg-peer-updn now saves additional copy of wg resolv.conf in resolv.conf.wg.
+               Can be used by client when resume causes network restart to overwrites the wg resolv.conf.
+               Used by wg-client package to &quot;fix&quot; dns after sleep/resume.
+2023-11-23
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update Docs/Changelog.rst Docs/wg_tool.pdf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2023-11-23  : <strong>5.5.1</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- Improve description
+- update Docs/Changelog.rst Docs/wg_tool.pdf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2023-11-23  : <strong>5.5.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - Change python build from poetry to hatch.
+                 It is cleaner and simpler.
+               Switch copyright lines to SPDX format
+2023-11-12
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update Docs/Changelog.rst Docs/wg_tool.pdf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2023-11-12  : <strong>5.4.1</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - Minor readme rst format change.
+               Add wg_tool.pdf
+2023-09-30
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update Docs/Changelog.rst
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2023-09-30  : <strong>5.3.4</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- Add sample output of server report to README
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2023-09-30  : <strong>5.3.3</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - Improve README
+2023-09-27
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update Docs/Changelog.rst
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2023-09-27  : <strong>5.3.2</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - update Docs/Changelog.rst
+             - Fix links in readme.
+               Remove doc build dependency on myst-parser since no more mardown
+2023-09-26
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update Docs/Changelog.rst
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2023-09-26  : <strong>5.3.1</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- Release as 5.3.1
+- fix rst list items in Changelog
+- update Docs/Changelog.rst
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2023-09-26  : <strong>5.3.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - Reorg docs - add Docs/dir with sphinx support
+               update PKGBUILD for optional doc builds
+               Migrate to rst from markdown
+2023-09-25
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2023-09-25  : <strong>5.1.1</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - README - replace markdown url links with rst link notation
+2023-08-02
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2023-08-02  : <strong>5.1.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - Improve code finding available client IPs to properly support IPv6.
+               Client IPs are chosen from the server Address list in natural order. If you prefer clients
+               get IPv6 addresses, those should be listed first. Similarly, if IPv4 is preferred, then put that first.
+               Tidy to keep pylint clean
+2023-07-28
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2023-07-28  : <strong>4.7.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - Fix import open_file buglet
+2023-05-18
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2023-05-18  : <strong>4.6.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- install: switch from pip to python installer package. This adds optimized bytecode
+- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2023-05-18  : <strong>4.5.3</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - PKGBUILD: build wheel back to using python -m build instead of poetry
+2023-05-17
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2023-05-17  : <strong>4.5.2</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - Simplify Arch PKGBUILD and more closely follow arch guidelines
+2023-05-08
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2023-05-08  : <strong>4.5.1</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - Add comment to README about linux using wg and ssh and MTU
+2023-05-02
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- typo
+- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2023-05-02  : <strong>4.5.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- Add comment on philosophy of living at the head commit.
+  Change README from markdown to restructured text
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2023-04-15  : <strong>4.4.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - update CHANGELOG.md
+             - Only show user public key for &quot;-rpt&quot; when also using &quot;-det&quot;.
+                 Since we show user and profile name, the user key is not really needed
+2023-04-11
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2023-04-11  : <strong>4.3.6</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - postup.nft script add extra line: ct status dnat accept - I saw a martial packat at firewall from vpn which was unexpected
+               minor readme edit
+               update project version
+2023-01-06
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2023-01-06  : <strong>4.3.5</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - Add SPDX licensing lines
+2022-12-29
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-12-29  : <strong>4.3.4</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - Add reminder in README to allow ip forwarding on wireguard server
+2022-12-28
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-12-28  : <strong>4.3.3</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - Add brief networking note
+2022-12-26
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-12-26  : <strong>4.3.2</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - Change default python interpreter location to /usr/bin/python3 (remove env).
+                   This is also recommended by e.g. debian packaging guidelines (https://www.debian.org/doc/packaging-manuals/python-policy). While many distros (Arch, Fedora etc.) recommend /usr/bin/python - we keep python3 which will work on those and on debian until debian provides python (and not just python3).
+2022-12-25
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-12-25  : <strong>4.3.1</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - Move archlinux dir to packaging.
+               Add packaging/requirements.txt
+               Update build dependencies in PKGBUILD
+               Tweak README
+2022-12-20
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- tweak README
+- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-12-20  : <strong>4.3.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - Change python to python3 (as per GH issue #5 on ubuntu/debian.
+               Remove pip option from installer (--root-user-action=ignore)
+             - indent fix
+             - To help with older pre 3.9 python versions, provide files without match().
+               They are in lib38. Copy to lib38/*.py lib/
+2022-12-14
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-12-14  : <strong>4.2.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - update CHANGELOG.md
+             - Installer now uses pip install
+               PKGBUILD now uses poetry to build wheel
+2022-12-08
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-12-08  : <strong>4.1.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - Server show_rpt was not treating inactive users/profiles properly - fixed
+2022-12-04
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-12-04  : <strong>4.0.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - Stronger file access permissions to protect private data in configs.
+               Changes to work_dir:
+                   Backward compatible with previous version.
+                   Now prefers to use */etc/wireguard/wg-tool* if possible, otherwise falls back to current directory.
+                   Thanks to Yann Cardon
+             - Improve comments in postup.nft including reference to alternate postup from Yann Cardon
+             - Merge pull request #3 from ycardon/master
+
+               Create postup-alternate.nft
+             - Create postup-alternate.nft
+
+               provides an other example of postup script with useful comments
+2022-12-03
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-12-03  : <strong>3.7.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - bug: --list if username(s) given without profile. Now we list all profiles
+2022-12-01
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - update CHANGELOG.md
+             - Typo in README fixed by @ycardon
+             - Merge pull request #2 from ycardon/master
+
+               small typo in the readme
+             - small typo
+
+               --add-users &gt; --add_users
+2022-11-30
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-11-30  : <strong>3.6.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - bug fix for --init
+               Thanks to @ycardon - this fixes issue #1 : https://github.com/gene-git/wg_tool/issues/1
+2022-11-29
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-11-29  : <strong>3.5.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- turn off test mode
+- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-11-29  : <strong>3.4.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- Improve wg-peer-updn
+   - Rename existing resolv.conf when saving
+   - Add timestamp to wireguard resolv.conf
+- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-11-29  : <strong>3.3.1</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- Small add to README
+- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-11-29  : <strong>3.3.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - Improve README
+2022-11-28
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-11-28  : <strong>3.2.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- typo
+- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-11-28  : <strong>3.1.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- fix typo creating new user profile with -dnssrc/-dnslin
+- tweak readme
+- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-11-28  : <strong>3.0.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>                 - Adds 3 new options:
+                    - --mod_users : modify existing user profile (with --dns_search and --dns_linux)
+                    - --dns_search : adds support for dns search domain list
+                    - --dns_linux : adds support for managing resolv.conf instead of relying on qg-quick/resolconf
+2022-11-24
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-11-24  : <strong>2.1.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>              - - improve error msg
+                - Check conf before using it - added when auto updating older configs using mtime of config
+                - minor tweak to bash variable check in install script
+2022-11-11
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-11-11  : <strong>2.0.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - list users report now sorts by user name
+               Add support for tracking config modification date-time. mod_time displayed in list user report
+2022-11-08
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-11-08  : <strong>1.7.5</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - Improve handling of booelan False vs None in pre-file-write dictionary cleaner
+2022-11-07
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-11-07  : <strong>1.7.4</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - tweak readme
+2022-11-04
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-11-04  : <strong>1.7.3</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- add poetry back to PKGBUILD makedepends
+- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-11-04  : <strong>1.7.2</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - change installer to use bash array for app list (even tho we onlly have 1 here)
+               tweak readme
+2022-10-31
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-10-31  : <strong>1.7.1</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- Change build from poetry/pip to python -m build/installer
+- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-10-31  : <strong>1.7.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - Add support for python 3.11 tomllib
+2022-10-30
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-10-30  : <strong>1.6.1</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update readme
+- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-10-30  : <strong>1.6.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- -rpt now lists missing users/profiles from running server
+- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-10-30  : <strong>1.5.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - Add --details
+               Modifes -l, -rpt and -rrpt to provide detailed information in addition to the summary.
+2022-10-29
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-10-29  : <strong>1.4.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- report: handle cases where running server has old user key and other edge cases
+- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-10-29  : <strong>1.3.2</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- add --run_show_rpt. Similar to --show_rpt, but runs wg-tool
+- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-10-29  : <strong>1.3.1</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- bug fix: -inact user:prof made user inactive not just prof
+- update CHANGELOG.md
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-10-29  : <strong>1.3.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - Add new option --work_dir
+               Refactor and tidy code up some
+2022-10-28
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - upd changelog
+             - tweak readme
+2022-10-27
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- tweak readme and sync PKGBUILD
+- upd changelog
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-10-27  : <strong>1.2.3</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- Add mising packages to PKGBUILD depends (thank you @figue on aur)
+- upd changelog
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-10-27  : <strong>1.2.2</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>             - duh - turn off debugger .. sorry
+             - markdown newline fix
+             - word smith readme
+2022-10-26
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update changelog
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-10-26  : <strong>1.2.1</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- update project vers
+- actually add the code to make wg_show report :)
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-10-26  : <strong>1.2.0</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- Adds support to parse output of wg show and provide user/profile names
+- Add new/coming soon section to readme
+- readme - aur package now avail
+- update changelog
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>2022-10-26  : <strong>1.1.1</strong></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>- proj vers update
+- installer: share archlinux into /usr/share/wg_tool
+- Ready to share
+</pre></div>
+</div>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">wg_tool</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="README.html">wg-tool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="README.html#documentation">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="README.html#getting-started">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="License/License.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">Working Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sections/Editing.html">Editing and Making Changes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sections/Options.html">Command Line Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sections/Reports.html">Reports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sections/Key-rollover.html">Key Rollover</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sections/Helper-scripts.html">Convenience Scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sections/Migrating.html">Migrating from Earlier Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sections/Import.html">Importing From Standard Wireguard Configs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sections/Directory-structure.html">Directory and File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sections/Appendix.html">Appendix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Contrib/ubuntu.html">Contrib</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2022-2025, Gene C.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/Changelog.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

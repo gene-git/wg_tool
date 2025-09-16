@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Migrating from Earlier Version &#8212; wg_tool 8.0.rc2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=e043c39a" />
+    <script src="../_static/documentation_options.js?v=321254cf"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Importing From Standard Wireguard Configs" href="Import.html" />
+    <link rel="prev" title="Convenience Scripts" href="Helper-scripts.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="migrating-from-earlier-version">
+<span id="migrating"></span><h1>Migrating from Earlier Version<a class="headerlink" href="#migrating-from-earlier-version" title="Link to this heading">¶</a></h1>
+<p>Version <em>8.x</em> introduces significant changes including with the
+database file formats. This section discusses migration
+from earlier versions of <em>wg-tool</em> to the current version.</p>
+<p>If you have not used <em>wg-tool</em> and would like to import existing
+standard wireguard configs, then see <a class="reference internal" href="Import.html#wg-import"><span class="std std-ref">Importing From Standard Wireguard Configs</span></a> instead.</p>
+<p>Migration from an earlier version is pretty much automatic.</p>
+<p>In the earlier versions gateways were known as servers and accounts
+were called users.</p>
+<p>In current version each item has an identity comprised of 3 parts:</p>
+<ul class="simple">
+<li><p>vpn name</p></li>
+<li><p>account name</p></li>
+<li><p>profile name</p></li>
+</ul>
+<p>And would be denoted by, for example: <em>vpn1.alice.laptop</em>.
+The directory file hierarchy follows this.</p>
+<p>N.B.</p>
+<ul class="simple">
+<li><p>All existing data is untouched.</p></li>
+<li><p>New data lives in different directories.</p></li>
+</ul>
+<p>After migration, the older (pre <em>8.x</em>) directories (<em>configs</em> and <em>wg-configs</em>) may be deleted
+when convenient.</p>
+<p>All tool data now resides under <em>Data</em> and standard wireguard configs are output
+under <em>Data-wg</em>.</p>
+<p>To migrate existing data, run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wg-tool<span class="w"> </span>--migrate
+</pre></div>
+</div>
+<p>All being well this should populate both <em>Data</em> and <em>Data-wg</em>. You can examine the
+wireguard configs under <em>Data-wg</em> and you can see a list of all
+accounts and their profiles using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wg-tool<span class="w"> </span>--list
+</pre></div>
+</div>
+<section id="gateway-with-alternate-endpoint">
+<h2>Gateway with Alternate Endpoint<a class="headerlink" href="#gateway-with-alternate-endpoint" title="Link to this heading">¶</a></h2>
+<p>If you had an alternate endpoint in the gateway profile it will be now be in the
+the <em>Endpoint_alt</em> field.</p>
+<p>If you had any clients using the alternate endpoint then you can now mark a profile
+using <em>alternate_wanted = true</em>. When this is set for some profile, then a second
+wireguard config will be created using the alternate endpoint. That config is identical
+to other than the Endpoint.</p>
+<p>For any such profiles you’ll need to do this step manually after the migration.
+In order to change a profile this way you use the <em>–edit</em> option.</p>
+<p>For more detail please see <a class="reference internal" href="Editing.html#editing"><span class="std std-ref">Editing and Making Changes</span></a>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wg-tool<span class="w"> </span>--edit<span class="w"> </span>vpn1.alice.laptop
+</pre></div>
+</div>
+<p>Which creates a regular file and displays the filename. In this example it would be</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Edits/vpn1.alice.laptop.mods
+</pre></div>
+</div>
+<p>You then edit the file with any text editor and change</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>*alternate_wanted = true*.
+</pre></div>
+</div>
+<p>The change is merged back using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wg-tool<span class="w"> </span>--merge<span class="w"> </span>Edits/vpn1.alice.laptop.mods
+</pre></div>
+</div>
+<p>At this point any profile with <em>alternate_wanted = true</em> will have a new
+config saved in the “Alt” subdirectory where the profile is.</p>
+<p>For example, here we would find:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Data-wg/vpnt/alice/laptop.conf
+Data-wg/vpnt/alice/Alt/laptop-alt.conf
+</pre></div>
+</div>
+<p>and the associated QR code image file under <em>qr</em> directory.</p>
+<p>After this is done, you may want to mark any older profiles using this
+altenate Endpoint as <em>hidden</em>, since they are no longer needed.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>wg-tool --hidden vpn1.alice.&lt;no-longer-needed&gt;
+</pre></div>
+</div>
+<p>Where the <em>&lt;no-longer-needed&gt;</em> would be replaced by whatever profile name
+is not needed.</p>
+<section id="using-dns-instead">
+<h3>Using DNS Instead<a class="headerlink" href="#using-dns-instead" title="Link to this heading">¶</a></h3>
+<p>If an alternate endpoint uses a domain name, then the best approach is to
+have the local DNS server map that host name to it’s internal IP address
+when seen on the internal network, and the usual public IP when on the outside.</p>
+<p>This way there is no need for any additional client configs at all.
+Having clients use <em>alternate_wanted</em> is really only useful when the
+local DNS option is not available.</p>
+</section>
+</section>
+<section id="hiding-unused-profiles">
+<h2>Hiding Unused Profiles<a class="headerlink" href="#hiding-unused-profiles" title="Link to this heading">¶</a></h2>
+<p>For all available options run <em>wg-tool –help</em> or see the section <a class="reference internal" href="Options.html#options-section"><span class="std std-ref">Command Line Options</span></a>.</p>
+<p>Since this may come up after migrating, a brief mention of this functionality may
+be useful.</p>
+<p>If you you have profiles that are no longer needed they can be marked <em>not-active</em>
+or <em>hidden</em>. In both cases, wireguard configs are no longer generated
+and all data is retained in case of need in the future.</p>
+<p>If a profile is marked hidden then it remains hidden with <em>–list</em> unless <em>–verb</em>
+is also used.
+If it’s marked not active, then it will always be visible when listing profiles <em>–list</em>.
+Profiles that are not active or hidden do not get a wireguard config generated.</p>
+<p>for example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wg-tool<span class="w"> </span>--hidden<span class="w"> </span>vpn1.alice.laptop
+</pre></div>
+</div>
+<p>The active/hidden states may also be changed when <em>editing</em> a profile.</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">wg_tool</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../README.html">wg-tool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#documentation">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#getting-started">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../License/License.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Examples.html">Working Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Editing.html">Editing and Making Changes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Options.html">Command Line Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Reports.html">Reports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Key-rollover.html">Key Rollover</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Helper-scripts.html">Convenience Scripts</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Migrating from Earlier Version</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#gateway-with-alternate-endpoint">Gateway with Alternate Endpoint</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#using-dns-instead">Using DNS Instead</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#hiding-unused-profiles">Hiding Unused Profiles</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Import.html">Importing From Standard Wireguard Configs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Directory-structure.html">Directory and File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Appendix.html">Appendix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Contrib/ubuntu.html">Contrib</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="Helper-scripts.html" title="previous chapter">Convenience Scripts</a></li>
+      <li>Next: <a href="Import.html" title="next chapter">Importing From Standard Wireguard Configs</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2022-2025, Gene C.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/Sections/Migrating.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

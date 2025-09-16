@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Appendix &#8212; wg_tool 8.0.rc2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=e043c39a" />
+    <script src="../_static/documentation_options.js?v=321254cf"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Contrib" href="../Contrib/ubuntu.html" />
+    <link rel="prev" title="Directory and File Structure" href="Directory-structure.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="appendix">
+<h1>Appendix<a class="headerlink" href="#appendix" title="Link to this heading">¶</a></h1>
+<section id="mtu-observation">
+<h2>MTU Observation<a class="headerlink" href="#mtu-observation" title="Link to this heading">¶</a></h2>
+<p>I came across one hotel wifi where the vpn worked providing internet access, but using
+ssh was problematic.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh<span class="w"> </span>-v<span class="w"> </span>internal-host
+</pre></div>
+</div>
+<p>would hang right after it logged:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">expecting</span> <span class="n">SSH2_MSG_KEX_ECDH_REPLY</span>
+</pre></div>
+</div>
+<p>The <em>fix/work around</em> was changing the MTU setting from 1500 down to 1400 on my laptop
+while at that hotel.</p>
+<p>With that change everything worked normally again.</p>
+<p>I have only ever had to modify the MTU at this one location, but I mention it in case
+someone else has a similar issue.</p>
+</section>
+<section id="install">
+<span id="id1"></span><h2>Install<a class="headerlink" href="#install" title="Link to this heading">¶</a></h2>
+<p>While it is simplest to install from a package manager, manual
+installs are done as folllow:</p>
+<p>First clone the repo :</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/gene-git/wg_tool
+</pre></div>
+</div>
+<p>Then install to local directory.
+When running as non-root then set root_dest to a user writable directory.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rm<span class="w"> </span>-f<span class="w"> </span>dist/*
+/usr/bin/python<span class="w"> </span>-m<span class="w"> </span>build<span class="w"> </span>--wheel<span class="w"> </span>--no-isolation
+<span class="nv">root_dest</span><span class="o">=</span><span class="s2">&quot;/&quot;</span>
+./scripts/do-install<span class="w"> </span><span class="nv">$root_dest</span>
+</pre></div>
+</div>
+<section id="dependencies">
+<h3>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading">¶</a></h3>
+<p><strong>Run Time</strong> :</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>python (3.13 or later)</p></li>
+<li><p>wireguard-tools</p></li>
+<li><p>nftables (for wireguard server postup.nft)</p></li>
+<li><p>py-cidr</p></li>
+<li><p>python-qrcode</p></li>
+<li><p>tomli_w (aka python-tomli_w )</p></li>
+</ul>
+</div></blockquote>
+<p><strong>Building Package</strong>:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>git</p></li>
+<li><p>hatch (aka python-hatch)</p></li>
+<li><p>wheel (aka python-wheel)</p></li>
+<li><p>build (aka python-build)</p></li>
+<li><p>installer (aka python-installer)</p></li>
+<li><p>sphinx</p></li>
+<li><p>myst-parser</p></li>
+<li><p>texlive-latexextra  (texlive tools, this is archlinux package)</p></li>
+<li><p>rsync</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="philosophy">
+<h3>Philosophy<a class="headerlink" href="#philosophy" title="Link to this heading">¶</a></h3>
+<p>While we follow PEP-8, PEP-257, PEP-484 and PEP-561, we prefer to allow
+max line length of 100 rather than 79 in some situations.</p>
+<p>We follow the <em>live at head commit</em> philosophy as recommended by
+Google’s Abseil team <a class="footnote-reference brackets" href="#id3" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.  This means we recommend using the
+latest commit on git master branch.</p>
+</section>
+</section>
+<section id="license">
+<h2>License<a class="headerlink" href="#license" title="Link to this heading">¶</a></h2>
+<p>Created by Gene C. and licensed under the terms of the GPL-2.0-or-later license.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>SPDX-License-Identifier: MIT</p></li>
+<li><p>SPDX-FileCopyrightText: © 2022-present  Gene C &lt;<a class="reference external" href="mailto:arch&#37;&#52;&#48;sapience&#46;com">arch<span>&#64;</span>sapience<span>&#46;</span>com</a>&gt;</p></li>
+</ul>
+</div></blockquote>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id3" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">1</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://abseil.io/about/philosophy#upgrade-support">https://abseil.io/about/philosophy#upgrade-support</a></p>
+</aside>
+</aside>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">wg_tool</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../README.html">wg-tool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#documentation">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#getting-started">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../License/License.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Examples.html">Working Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Editing.html">Editing and Making Changes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Options.html">Command Line Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Reports.html">Reports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Key-rollover.html">Key Rollover</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Helper-scripts.html">Convenience Scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Migrating.html">Migrating from Earlier Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Import.html">Importing From Standard Wireguard Configs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Directory-structure.html">Directory and File Structure</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Appendix</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#mtu-observation">MTU Observation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#install">Install</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dependencies">Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#philosophy">Philosophy</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#license">License</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../Contrib/ubuntu.html">Contrib</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="Directory-structure.html" title="previous chapter">Directory and File Structure</a></li>
+      <li>Next: <a href="../Contrib/ubuntu.html" title="next chapter">Contrib</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2022-2025, Gene C.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/Sections/Appendix.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
