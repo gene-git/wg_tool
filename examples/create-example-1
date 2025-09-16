@@ -1,0 +1,52 @@
+#!/usr/bin/bash
+#
+# Script will create example 1 from the documentation.
+#
+
+echo "Example -1"
+
+./wg-tool -wkd ./
+
+echo "creating vpn-test:"
+./wg-tool -new vpn-test
+
+sed -e s'/^dns = .*/dns = ["10.10.10.10"]/' -i ./Edits/vpn-test-info.mods
+./wg-tool --merge Edits/vpn-test-info.mods
+
+echo "creating vpn-test.servers.wg-A"
+./wg-tool --new vpn-test.servers.wg-A
+./wg-tool --edit vpn-test.servers.wg-A
+
+sed -e s'/^Endpoint = .*/Endpoint = "vpn_A.example.com:51820"/' \
+    -e s'/^internet_offered = .*/internet_offered = true/' \
+    -e s'/^internet_wanted =.*/internet_wanted = false/' \
+    -e s'/^post_up = .*/post_up = \["\/usr\/bin\/nft -f \/etc\/wireguard\/scripts\/postup.nft"\]/' \
+    -e s'/post_down = .*/post_down = \["\/usr\/bin\/nft flush ruleset"\]/' \
+    -i Edits/vpn-test.servers.wg-A.mods
+
+./wg-tool --merge Edits/vpn-test.servers.wg-A.mods
+
+echo "creating 3 user accounts"
+./wg-tool -new vpn-test.user-1.laptop vpn-test.user-2.laptop vpn-test.user-3.laptop
+
+#
+# Networks
+#
+echo "wg-A offers LAN"
+./wg-tool --nets-offered-add "192.168.1.0/24" vpn-test.servers.wg-A
+
+echo "Add networks to user profiles"
+./wg-tool --nets-wanted-add "192.168.1.0/24" vpn-test.user-1.laptop vpn-test.user-2.laptop
+./wg-tool --nets-wanted-add "192.168.1.32/28" vpn-test.user-3.laptop
+
+echo "split routing for user 3"
+./wg-tool --edit vpn-test.user-3.laptop
+
+sed -e s'/^internet_wanted =.*/internet_wanted = false/' \
+    -i Edits/vpn-test.user-3.laptop.mods
+
+./wg-tool --merge Edits/vpn-test.user-3.laptop.mods
+
+
+echo "Example 1 done"
+

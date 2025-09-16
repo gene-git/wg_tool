@@ -10,10 +10,10 @@
 dest="$1"
 self="wg_tool"
 
-info="README.rst contrib Docs scripts packaging"
+info="README.rst contrib Docs scripts examples packaging"
 infodir="/usr/share/${self}"
 
-license="Docs/License.rst"
+license="Docs/License/License.rst"
 licensedir="/usr/share/licenses/${self}"
 
 etcwg='/etc/wireguard/'

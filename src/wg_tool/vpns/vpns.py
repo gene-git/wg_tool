@@ -1,0 +1,363 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+"""
+Handles 1 "vpn".
+"""
+# pylint: disable=too-many-return-statements
+from config import Opts
+from utils import Msg
+from utils import state_marker
+from data import get_vpn_names
+from rpt import GwReport
+from rpt import AcctProfile
+from vpn import Vpn
+from ids import Identity
+from ids import Identities
+from wg_import import import_all_wg_configs
+
+from .vpns_base import VpnsBase
+from .modify_state import modify_state
+from .modify_new import modify_new
+from .modify_copy import modify_copy
+from .modify_edit import modify_edit
+from .modify_rename import modify_rename
+from .modify_merge import modify_merge
+from .modify_nets import modify_nets
+
+
+class Vpns(VpnsBase):
+    """
+    Class for all VPNCs.
+
+    List of vpns where each vpn contains:
+    - vpninfo
+    - peers (gateways & clients)
+    """
+    def __init__(self, opts: Opts):
+
+        super().__init__(opts)
+
+        self.read()
+        self.check_for_gateways()
+
+    def read(self):
+        """
+        Load existing vpns.
+         - vpn.finfo
+         - gateway and client
+        """
+        opts = self.opts
+        vpn_names = get_vpn_names(opts.work_dir)
+        if not vpn_names:
+            return
+        for vpn_name in vpn_names:
+            vpn = Vpn(opts, vpn_name)
+            vpn.read()
+            self.vpn[vpn_name] = vpn
+
+    def write(self):
+        """
+        Write any that need it (i.e. have changed).
+        """
+        if not self.opts.brief:
+            Msg.info('Checking if changes need to be saved\n')
+        for vpn in list(self.vpn.values()):
+            vpn.write()
+
+    def write_wireguard(self):
+        """
+        Write any wireguard configs that need it
+        """
+        for vpn in list(self.vpn.values()):
+            vpn.write_wireguard()
+
+    def get_names(self) -> list[str]:
+        """
+        list of vpn names
+        """
+        names: list[str] = []
+        if not self.vpn:
+            return names
+        names = list(self.vpn.keys())
+        return names
+
+    def get_vpn(self, vpn_name: str) -> tuple[bool, Vpn | None]:
+        """
+        Return Vpn either existing or new
+        """
+        if not vpn_name:
+            return (False, None)
+
+        vpn = self.vpn.get(vpn_name)
+        if not vpn:
+            self.vpn[vpn_name] = Vpn(self.opts, vpn_name)
+            vpn = self.vpn[vpn_name]
+
+        return (True, vpn)
+
+    def new_vpn(self, vpn_name: str) -> tuple[bool, Vpn | None]:
+        """
+        Create a new vpn 'vpn_name'
+        """
+        if vpn_name in self.vpn:
+            Msg.err(f'{vpn_name} already exists\n')
+            return (False, None)
+        self.vpn[vpn_name] = Vpn(self.opts, vpn_name)
+        return (True, self.vpn[vpn_name])
+
+    def show_list(self):
+        """
+        Print list of vpn/accts
+        """
+        if not self.vpn:
+            return
+
+        opts = self.opts
+        idents = opts.idents
+
+        #
+        # names on command line
+        #
+        vpns: list[Vpn] = []
+        vpn_names = idents.vpn_names()
+        if len(vpn_names) > 0:
+            vpn_names = sorted(vpn_names)
+            for name in vpn_names:
+                vpn = self.vpn.get(name)
+                if vpn:
+                    vpns.append(vpn)
+                else:
+                    Msg.warn(f'No such vpn {name}\n')
+        else:
+            #
+            # all vpns
+            #
+            vsorted = dict(sorted(self.vpn.items()))
+            vpns = list(vsorted.values())
+
+        for vpn in vpns:
+            vpn.show_list()
+
+    def vpn_acct_prof_from_pubkey(self, pubkey_str: str
+                                  ) -> tuple[Vpn | None, AcctProfile]:
+        """
+        Given public key string, return it's associated ident
+        (Vpn, Peer and Profile names).
+
+        If there are duplicate gatways using same keys, then return the
+        first.
+        Should we mark duplicates as 'duplicate' so always return primary?
+        """
+        for vpn in list(self.vpn.values()):
+            acct_prof = vpn.acct_prof_from_pubkey(pubkey_str)
+            if acct_prof.valid:
+                return (vpn, acct_prof)
+
+        # not found vpp.valid is False
+        acct_prof = AcctProfile()
+        return (None, acct_prof)
+
+    def acct_exists(self, ident: Identity) -> bool:
+        """
+        Check if ident exists
+        """
+        if ident.vpn_name not in self.vpn:
+            return False
+
+        vpn = self.vpn[ident.vpn_name]
+        if vpn.acct_exists(ident):
+            return True
+        return False
+
+    def show_rpt(self) -> bool:
+        """
+        Display report from wireguard
+        'wg show' output.
+        Output to parse/disaply can be:
+        - from a file
+        - from stdin
+        - generated by running 'wg show' (if on same server)
+        """
+        opts = self.opts
+
+        # get output and then server public key
+        rpt_from: str = ''
+        if opts.run_show_rpt:
+            rpt_from = 'run'
+        else:
+            rpt_from = opts.show_rpt
+
+        #
+        # Read and parse 'wg show' data
+        #
+        gw_rpt = GwReport(rpt_from)
+        if not gw_rpt.okay:
+            return False
+
+        #
+        # Gateway:
+        #
+        # Find the vpn-acct-profile of the reporting gateway.
+        # i.e. pubkey -> vpn, acct, profile
+        # If there are "duplicate" gateways they will still be
+        # same vpn - so used the first
+        #
+        pubkey = gw_rpt.gateway.pubkey
+        (vpn, gw_acct_prof) = self.vpn_acct_prof_from_pubkey(pubkey)
+        if not (vpn and gw_acct_prof.valid):
+            Msg.warn('Warn: no record of this gateway ')
+            Msg.plain(f'pubkey: {pubkey}\n')
+            return False
+
+        #
+        # gateway report
+        #
+        verb_level = opts.verb
+        gw_rpt.gateway.acct_prof = gw_acct_prof
+        vpninfo = vpn.vpninfo
+
+        vpn_state_mark = state_marker(vpninfo.hidden, vpninfo.active)
+        vpn_name = vpn.name
+        Msg.info(f'vpn: {vpn_name} {vpn_state_mark}\n')
+
+        gw_rpt.gateway.display(verb_level)
+
+        #
+        # Peers
+        #
+        # Identify reported peers.
+        # i.e. pubkey -> acct, profile
+        #
+        Msg.hdr('\nPeers using the gateway\n')
+
+        for wg_peer in gw_rpt.wg_peer:
+            pubkey = wg_peer.pubkey
+            acct_prof = vpn.acct_prof_from_pubkey(pubkey)
+            if not acct_prof.valid:
+                Msg.warn('Warn: no record of peer')
+                Msg.plain(f' pubkey: {pubkey}\n')
+                continue
+            wg_peer.acct_prof = acct_prof
+            if wg_peer.endpoint:
+                wg_peer.display(verb_level)
+
+        if verb_level > 1:
+            Msg.hdr('\nPeers reported but not active on gateway\n')
+            for wg_peer in gw_rpt.wg_peer:
+                if not wg_peer.endpoint:
+                    wg_peer.display(verb_level)
+        return True
+
+    def refresh(self):
+        """
+        Run a refresh on everything
+        """
+        Msg.plain('Refresh:\n')
+        for (vpn_name, vpn) in self.vpn.items():
+            Msg.plain(f'  {vpn_name}\n')
+            vpn.refresh()
+
+    def new_key_pairs(self) -> bool:
+        """
+        Generate new key pairs for IDs on command line
+        """
+        Msg.info('New key pairs')
+        opts = self.opts
+
+        idents: Identities = Identities()
+        for ident in opts.idents.ids:
+            if ident.vpn_name in self.vpn:
+                idents.ids.append(ident)
+            else:
+                Msg.err(f'new keys - vpn {ident.vpn_name} not found\n')
+                return False
+
+        if not idents.ids:
+            # nothing to do
+            return True
+
+        #
+        # Ask each vpn to update its matching acct/profile keys
+        #
+        vpn_idents: Identities = Identities()
+        for (vpn_name, vpn) in self.vpn.items():
+            # get list of idents for this vpn
+            vpn_idents.ids = []
+            for ident in idents.ids:
+                if ident.vpn_name == vpn_name:
+                    vpn_idents.ids.append(ident)
+
+            if not vpn_idents.ids:
+                continue
+
+            if not vpn.new_key_pairs(vpn_idents):
+                return False
+        return True
+
+    def check_for_gateways(self):
+        """
+        Check each VPN has one or more gateways
+        """
+        for (name, vpn) in self.vpn.items():
+            gw_ids = vpn.gateway_ids()
+            if not gw_ids or len(gw_ids) < 1:
+                Msg.warn(f'vpn {name} has no gateways')
+                Msg.warn(' Please add one\n')
+
+    def import_configs(self, vpn_name: str) -> bool:
+        """
+        Import standard wireguard configs into existinv
+        vpn (vpn_name)
+        """
+        (ok, vpn) = self.get_vpn(vpn_name)
+        if not ok or not vpn:
+            return False
+        ok = import_all_wg_configs(vpn)
+        return ok
+
+    def modify(self) -> bool:
+        """
+        Handle edit/new/copy
+        We guarantee vpn_from (and vpn_to if relevant)
+        will be created if needed before calling mod.do_changes()
+        Hanele these cases:
+            new
+            edit, merge
+            rename
+            copy
+        """
+        opts = self.opts
+
+        # set active state
+        mod_state = bool(opts.not_active or opts.active)
+        mod_state |= bool(opts.hidden or opts.not_hidden)
+        if mod_state:
+            return modify_state(self)
+
+        # New
+        if opts.new:
+            return modify_new(self)
+
+        # nets wanted/offered add/remove
+        mod_nets = bool(opts.nets_wanted_add or opts.nets_wanted_del)
+        mod_nets |= bool(opts.nets_offered_add or opts.nets_offered_del)
+        if mod_nets:
+            return modify_nets(self)
+
+        # copy
+        if opts.copy:
+            return modify_copy(self)
+
+        # Edit
+        if opts.edit:
+            return modify_edit(self)
+
+        # Edit
+        if opts.rename:
+            return modify_rename(self)
+
+        # Merge
+        if opts.merge:
+            return modify_merge(self)
+
+        return True

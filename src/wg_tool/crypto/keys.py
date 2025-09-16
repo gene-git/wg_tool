@@ -1,41 +1,72 @@
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: GPL-2.0-or-later
 # SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
 """
 make private, public and preshared keys using wg genkey/pubkey/genpsk
 """
-from lib.run_prog import (run_prog)
+from utils.msg import (Msg)
+from utils.run_prog_copy import (run_prog)
 
-def gen_keys():
-    """ use wg to generate public private and preshared keys """
-    key_prv = None
-    key_pub = None
-    key_psk = None
 
+def gen_key_pair() -> tuple[str, str]:
+    """
+    Use /usr/bin/wg from wireguard tools to generate the public private
+    and preshared keys.
+
+    While we could generate directly, using the tools from wireguard ensures
+    that we are consistent with what wireguard uses.
+
+    Note, that time to generate keys is irrelevant.
+    """
+    key_prv: str = ''
+    key_pub: str = ''
+
+    #
     # private key
-    wg = '/usr/bin/wg'
-    pargs = [wg, 'genkey']
-    [_ret, key_prv, _errors] = run_prog(pargs)
+    #
+    pargs = ['/usr/bin/wg', 'genkey']
+    (ret, key_prv, errors) = run_prog(pargs)
+    if ret != 0:
+        Msg.err(f'Error generating key: {errors}')
+        return ('', '')
 
+    #
     # pub key
+    #
     key_pub = public_from_private_key(key_prv)
-
-    # psk
-    pargs = [wg, 'genpsk']
-    [_ret, key_psk, _errors] = run_prog(pargs)
 
     key_prv = key_prv.strip()
     key_pub = key_pub.strip()
-    key_psk = key_psk.strip()
 
-    return key_prv, key_pub, key_psk
+    return (key_prv, key_pub)
 
-def public_from_private_key(key_prv):
+
+def gen_psk() -> str:
+    """
+    Generate a WG pre shared key (PSK)
+    """
+    wg = '/usr/bin/wg'
+    pargs = [wg, 'genpsk']
+
+    (ret, psk, errors) = run_prog(pargs)
+    if ret != 0:
+        Msg.err(f'Error generating psk: {errors}')
+        return ''
+    psk = psk.strip()
+    return psk
+
+
+def public_from_private_key(key_prv: str) -> str:
     """
     Extract public key from private key
     """
     wg = '/usr/bin/wg'
     pargs = [wg, 'pubkey']
-    [_ret, key_pub, _errors] = run_prog(pargs, input_str=key_prv)
+
+    (ret, key_pub, errors) = run_prog(pargs, input_str=key_prv)
+    if ret != 0:
+        Msg.err(f'Error generating psk: {errors}')
+        return ''
+
     key_pub = key_pub.strip()
 
     return key_pub

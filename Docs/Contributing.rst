@@ -1,10 +1,10 @@
-.. SPDX-License-Identifier: MIT
+.. SPDX-License-Identifier: GPL-2.0-or-later
 
 How to help with this project
 =============================
 
 Thank you for your interest in improving this project.
-This project is open-source under the MIT license.
+This project is open-source under the GPL-2.0-or-later license.
 
 Important resources
 ~~~~~~~~~~~~~~~~~~~

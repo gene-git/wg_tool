@@ -3,24 +3,28 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-wg_tool documentation
-=============================================================
+#####################
+wg_tool Documentation
+#####################
 
 .. toctree::
    README
-   Network-Notes
+   License/License.rst
+   Examples
+   Sections/Editing
+   Sections/Options
+   Sections/Reports
+   Sections/Key-rollover
+   Sections/Helper-scripts
+   Sections/Migrating
+   Sections/Import
+   Sections/Directory-structure
+   Sections/Appendix
    Contrib/ubuntu
-   Changelog
-   License
-   Contributing
-   Code-of-conduct
-   :maxdepth: 2
-   :caption: Contents:
 
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. unused
+   # Changelog
+   # Contributing
+   # Code-of-conduct
+   # :maxdepth: 2
+   # :caption: Contents:

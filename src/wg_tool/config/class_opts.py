@@ -1,124 +1,189 @@
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: GPL-2.0-or-later
 # SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
 """
-WgOpts  - command line options for WgTool
+Opts  - command line options for WgTool
 """
-# pylint: disable=too-many-instance-attributes
-# pylint: disable=too-many-statements
-import argparse
-from .options import available_options
-from .options_save import read_merge_saved_opts, write_saved_opts
+# pylint disable=too-many-instance-attributes
+# pylint disable=too-many-statements
+# pylint: disable=too-few-public-methods
+import os
+import sys
 
-class WgtOpts:
+from utils import (Msg, version)
+
+from ._opts_base import OptsBase
+from .options import parse_args
+
+
+class Opts(OptsBase):
     """
     Command line options
      - some may be optionally saved to file in config dir
     """
-    def __init__(self, work_path, save_dir):
-        gh_url:str = 'https://github.com/gene-git/wg_tool'
-        desc: str = 'wg-tool : Manage wireguard Server & User/Profile configs'
-        desc += f'\n{" ":10s}Detailed docs available at {gh_url}'
+    def __init__(self):
 
-        self.work_dir = None
-        self.init = False
-        self.add_users = False
-        self.mod_users = False
-
-        self.save_dir: str = save_dir
-        self.save_file : str= 'saved_options'
+        super().__init__()
 
         #
-        # User ips
+        # Map Command line options to attributes.
+        # Note: may change work_dir.
         #
-        self.default_prefixlen_4 = 32
-        self.default_prefixlen_6 = 128
-        self.prefixlen_4 = self.default_prefixlen_4
-        self.prefixlen_6 = self.default_prefixlen_6
-
-        self.ips_refresh = False
-        self.allowed_ips = None
-        self.upd_endpoint = False
-        self.dns_search = False
-        self.dns_linux = False
-        self.int_serv = False
-        self.upd_user_keys = False
-        self.upd_serv_keys = False
-        self.all_users = False
-        self.active = False
-        self.import_user = None
-        self.list_users = False
-        self.show_rpt = False
-        self.run_show_rpt = False
-        self.details = False
-        self.save_opts = False
-
-        self.file_perms = False
-        self.verb = False
-        self.version = False
-
-        self.user_keepalive = 0
+        option_dict = parse_args(self.work_dir, self.data_dir)
+        if option_dict:
+            for (key, val) in option_dict.items():
+                setattr(self, key, val)
+        if not self.work_dir:
+            self.okay = False
+            return
 
         #
-        # These can be overriden from cli or from saved options
+        # Modify
         #
-        self.default_keep_hist = 5
-        self.default_keep_hist_wg = 3
+        if not _modify_check(self):
+            self.okay = False
+            return
 
-        self.keep_hist = self.default_keep_hist
-        self.keep_hist_wg = self.default_keep_hist_wg
-
-        opts = available_options(work_path)
-
-        # provide opts to argparse
-        par = argparse.ArgumentParser(description=desc,
-                                      formatter_class=argparse.RawDescriptionHelpFormatter)
-        for opt in opts:
-            (opt_s, opt_l), kwargs = opt
-            if opt_l :
-                par.add_argument(opt_s, opt_l, **kwargs)
-            else:
-                par.add_argument(opt_s, **kwargs)
-
-        parsed = par.parse_args()
-        if parsed:
-            # map each option to it's attribute
-            for (opt, val) in vars(parsed).items() :
-                setattr(self, opt, val)
+        self.modify = bool(self.edit or self.merge or self.copy)
+        self.modify |= bool(self.rename or self.new)
+        self.modify |= bool(self.active or self.not_active)
+        self.modify |= bool(self.hidden or self.not_hidden)
+        self.modify |= bool(self.nets_wanted_add or self.nets_wanted_del)
+        self.modify |= bool(self.nets_offered_add or self.nets_offered_del)
 
         #
-        # python 3.12 deprecated some argparse options such as 'type' : int
+        # ident_names is list of Identity names given on command line.
+        # Command line must be of the form:
+        #  vpn or vpn.acct or vpn.acct.prof where prof is a
+        #  profile name or a comma separated list of profile names.
         #
-        if self.prefixlen_4:
-            self.prefixlen_4 = int(self.prefixlen_4)
-
-        if self.prefixlen_6:
-            self.prefixlen_6 = int(self.prefixlen_6)
-
-        if self.keep_hist:
-            self.keep_hist = int(self.keep_hist)
-
-        if self.keep_hist_wg:
-            self.keep_hist_wg = int(self.keep_hist_wg)
-
-        if self.user_keepalive:
-            self.user_keepalive = int(self.user_keepalive)
-
+        if self.ident_names:
+            if not self.idents.parse_ids(self.ident_names):
+                self.okay = False
+                return
         #
-        # for saved options, priority is:  command line, saved file, default
+        # validation checks
         #
-        read_merge_saved_opts(self)
-
-        if self.save_opts:
-            write_saved_opts(self)
-
-    def __getattr__(self, name):
-        """ non-set items simply return None makes it easy to check existence"""
-        return None
+        if not input_validation(self):
+            self.okay = False
+            return
+        #
+        # When requested, print version and exit
+        #
+        if self.version:
+            vers = version() + '\n'
+            Msg.plain(vers)
+            sys.exit(0)
 
     def check(self):
         """
         consistency checks
-          - one we had is no longer needed - keep method in case of future need?
         """
-        okay = True
-        return okay
+        if not self.work_dir:
+            Msg.err('No work dir found. Unable to continue')
+            return False
+
+        if not os.path.isdir(self.work_dir):
+            txt = f'({self.work_dir}). Unable to continue'
+            Msg.err(f'work dir not a directory: {txt}')
+            return False
+
+        if not self.data_dir:
+            Msg.err('No data dir found. Unable to continue')
+            return False
+
+        if not os.path.isdir(self.data_dir):
+            txt = f'({self.data_dir}). Unable to continue'
+            Msg.err(f'data dir not a directory: {txt}')
+            return False
+
+        return True
+
+
+def input_validation(opts: OptsBase) -> bool:
+    """
+    Basic input validation checks
+    - edit, copy, rename, require --ident
+    - new: requires idents.ids
+    """
+    need_ident = bool(opts.edit or opts.copy or opts.rename)
+
+    need_ids = bool(opts.new or opts.active or opts.not_active)
+    need_ids |= bool(opts.roll_keys)
+    need_ids |= bool(opts.hidden or opts.not_hidden)
+    need_ids |= bool(opts.nets_wanted_add or opts.nets_wanted_del)
+    need_ids |= bool(opts.nets_offered_add or opts.nets_offered_del)
+
+    num_cl_parms = 0
+    cl_parm = ''
+    if opts.idents.ids:
+        num_cl_parms = len(opts.idents.ids)
+        cl_parm = opts.idents.ids[0].id_str
+
+    if need_ident:
+        if not opts.ident:
+            Msg.warn('Missing --ident\n')
+            if num_cl_parms == 1:
+                Msg.plain(f'Using the positional ID instead {cl_parm}\n')
+                opts.ident = cl_parm
+            else:
+                return False
+
+    if need_ids:
+        if num_cl_parms < 1:
+            Msg.err('Missing command line ID(s) to create\n')
+            return False
+
+    # if self.nets_add and self.nets_del:
+    #     txt = 'Error - cannot do both Add and Remove nets'
+    #     Msg.err(f'Invalid options: {txt}\n')
+    #     return False
+
+    return True
+
+
+def _modify_check(opts: Opts) -> bool:
+    """
+    Chack only 1 modify action requested at a time.
+    """
+    # bitfields
+    flag: int = 1
+    action_bits: dict[str, int] = {
+            'edit': flag,
+            'copy': flag << 1,
+            'rename': flag << 2,
+            'merge': flag << 3,
+            'new': flag << 4,
+            'nets_wanted_add': flag << 5,
+            'nets_wanted_del': flag << 6,
+            'nets_offered_add': flag << 7,
+            'nets_offered_del': flag << 8
+            }
+    action: int = 0
+    actions: int = 0
+
+    #
+    # Which action
+    #
+    for (act, bits) in action_bits.items():
+        if getattr(opts, act):
+            action = bits
+            actions |= bits
+
+    if actions == 0:
+        # no actions.
+        return True
+
+    #
+    # Check one action at a time.
+    #
+    if action & actions != action:
+        ops = 'edit/merge/copy/rename/new/nets_wanted_add/nets_wanted_del'
+        ops += '/nets_offered_add/nets_offered_del'
+        Msg.err(f'Error: one of {ops}\n')
+        Msg.plain(' Found:')
+        for (act, bits) in action_bits.items():
+            if bits & actions:
+                Msg.plain(f' {act}')
+        Msg.plain('\n')
+        return False
+    return True

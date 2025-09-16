@@ -5,9 +5,9 @@ build-backend = "hatchling.build"
 [project]
 name = "wg_tool"
 dynamic = ["version"]
-description = "Tool to administer wireguard VPN (server and user configs)"
+description = "Wireguard configuration tool that simplifies all aspects of VPN setups"
 authors = [{ name = "Gene C", email = "arch@sapience.com" }]
-license = "MIT"
+license = "GPL-2.0-or-later"
 readme = "README.rst"
 keywords = []
 classifiers = [
@@ -17,13 +17,20 @@ classifiers = [
 ]
 dependencies = []
 
+[tool.hatch.build.targets.wheel]
+packages = ["src/wg_tool"]
+include = [
+    "src/wg_tool",
+]
+
+
 [project.urls]
 Documentation = "https://github.com/gene-git/wg_tool/Docs"
 Issues = "https://github.com/gene-git/wg_tool/issues"
 Source = "https://github.com/gene-git/wg_tool"
 
 [tool.hatch.version]
-path = "src/wg_tool/lib/version.py"
+path = "src/wg_tool/utils/version.py"
 
 [tool.hatch.envs.default]
 # dependencies = [
@@ -41,3 +48,8 @@ dependencies = [
   #"mypy>=1.0.0",
   #"ruff>=0.0.243",
 ]
+
+[tool.mypy]
+check_untyped_defs = true
+# follow_untyped_imports = true
+

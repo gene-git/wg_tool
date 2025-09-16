@@ -2,4 +2,4 @@ To build docs requires sphinx:
 
    make html
 or
-   make latexpdf        (requires latex)
+   make latexpdf; make latexpdf        (requires latex)

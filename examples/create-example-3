@@ -1,0 +1,20 @@
+#!/usr/bin/bash
+#
+# Script will create examples 2 from the documentation.
+# run after example 1 is created
+
+echo "Example 3"
+
+echo "Modifying vpn-test.servers.wg-B gateway -> client:"
+./wg-tool --edit vpn-test.servers.wg-B
+
+sed -e s'/^Endpoint = .*/Endpoint = ""/' \
+    -e s'/^internet_offered = .*/internet_offered = false/' \
+    -i Edits/vpn-test.servers.wg-B.mods
+
+./wg-tool --merge Edits/vpn-test.servers.wg-B.mods
+
+
+echo "Example 3 done"
+
+

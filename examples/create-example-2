@@ -1,0 +1,40 @@
+#!/usr/bin/bash
+#
+# Script will create examples 2 from the documentation.
+# run after example 1 is created
+
+echo "Example 2"
+
+echo "creating vpn-test.servers.wg-B:"
+./wg-tool --new vpn-test.servers.wg-B
+./wg-tool --edit vpn-test.servers.wg-B
+
+sed -e s'/^Endpoint = .*/Endpoint = "vpn_B.example.com:51820"/' \
+    -e s'/^internet_offered = .*/internet_offered = true/' \
+    -e s'/^internet_wanted =.*/internet_wanted = false/' \
+    -e s'/^post_up = .*/post_up = \["\/usr\/bin\/nft -f \/etc\/wireguard\/scripts\/postup.nft"\]/' \
+    -e s'/^post_down = .*/post_down = \["\/usr\/bin\/nft flush ruleset"\]/' \
+    -i Edits/vpn-test.servers.wg-B.mods
+
+./wg-tool --merge Edits/vpn-test.servers.wg-B.mods
+
+# Add net for users
+#
+# Networks
+#
+echo "Add networks for wg-B and wg-A"
+./wg-tool --nets-offered-add "192.168.2.0/24" vpn-test.servers.wg-B
+
+./wg-tool --nets-wanted-add "192.168.1.0/24" vpn-test.servers.wg-B 
+./wg-tool --nets-wanted-add "192.168.2.0/24" vpn-test.servers.wg-A
+
+#
+# user 1/2/3 have 182.168.2.0/24 added
+#
+#
+echo "Add this network to user profiles, and to wg-A"
+./wg-tool --nets-wanted-add "192.168.2.0/24" vpn-test.user-1 vpn-test.user-2 vpn-test.user-3
+
+echo "Example 2 Done"
+
+

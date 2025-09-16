@@ -1,0 +1,7 @@
+ .centered-table-text th,
+    .centered-table-text td {
+        text-align: center;
+}
+.rst-content table.docutils td {
+        text-align: center;
+}

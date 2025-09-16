@@ -1,881 +1,348 @@
-.. SPDX-License-Identifier: MIT
+.. SPDX-License-Identifier: GPL-2.0-or-later
 
-#######
+*******
 wg-tool
-#######
+*******
 
 Overview
 ========
 
-Manage wireguard server and user configs. Ensures server and user configs remain consistent.
+`Wireguard <https://www.wireguard.com>`_ is a superb vpn built in to the linux kernel.
+It is robust and super fast.
+While the majority of wireguard servers run on linux, they are found on other
+operating systems as well. Most platforms, from desktops to mobile phones, 
+have wireguard clients available. We found wireguard to be more robust
+and faster than many legacy types of vpns.
 
-Available on 
+A wireguard network is a collection of *peers* that are able to securely
+communicate with one another. Some peers, known as gateways, allow other peers
+to connect to them. Peers that are not gateways are called clients.
 
-* `Github`_
-* `Archlinux AUR`_
+A basic vpn has a wireguard gateway and several clients that can use the gateway. 
+The gateway may provide access to internel networks.
+It may also allow clients to have all their internet traffic flow via the gateway.
 
-On Arch install using the PKGBUILD provided in packaging directory or from the AUR.
+Since traffic between the client and the gateway is encrypted, this provides
+privacy and security. Wireguard crypto mechanisms include pre-shared keys
+(*PSKs*) that provide additional resistance against post quantum attacks.
+For maximum security a *PSK* should be unique to each pair of peers that
+communicate with one another.
 
-All git tags are signed with arch@sapience.com key which is available via WKD
-or download from https://www.sapience.com/tech. Add the key to your package builder gpg keyring.
+*wg-tool* is a wireguard configuration tool that 
+simplifies managing all aspects of wireguard vpn setups.
+
+It handles multiple gateways (e.g. office locations), sharing
+of internal networks as well as split tunneling (internet via vpn or not).
+
+It guarantees that all gateway and client configs remain
+consistent with one another. Two peers that communicate with one another use
+encryption and therefore they share key information. By consistent we  
+mean that both of those peers always use the same public and pre-shared keys.
+
+While *PSKs* are not mandatory in wireguard, they do enhance security.
+There can be many pairs of *peers* with each pair sharing a unique *PSK*. 
+*wg-tool* quietly takes care of all of them for you.
+
+Wireguard gateway reports (created by running *wg show*) identify peers by their public key.
+The tool can display these reports using their corresponding user friendly names. 
+Solving a long standing, if minor, *annoyance*.
+
+We built *wg-tool* to make our own VPN administration simple and robust. 
+
+Where to Get wg-tool
+--------------------
+
+Available at:
+
+* :Github:`wg_tool`
+* :AUR:`wg_tool`
+
+On Archlinux it can be installed from the AUR or using the 
+PKGBUILD provided in packaging directory.
+
+All git tags are signed with an arch@sapience.com key available via WKD
+or from the `sapience.com <https://www.sapience.com/tech>`_ website. Add the key to your package builder gpg keyring.
 The key is included in the Arch package and the source= line with *?signed* at the end can be used
-to verify the git tag.  You can also manually verify the signature
+to verify the git tag. You can also manually verify the signature as usual with 
+*git tag -v <tag>*.
+
+For those with linux road warriers, there is a :Github:`wg-client` companion package. 
+This is a linux client command line tool packaged with a graphical 
+program that makes it very simple to start and stop a wireguard client for any user.
+
+We offer three working examples. In each example the goals are explained
+followed by a walk through using *wg-tool*. The resulting standard wireguard configs 
+are then provided .
+
+See :ref:`Examples` section. 
+
+Documentation source along with pre-generated PDF and html versions 
+are in the *Docs* directory. All documentation is written using restructured text.
 
 Key features
 ============
 
-* simplifies wireguard administration. ( server and users )
-* guarantees server and user configs remain synchronized (public keys).
-* handles key creation when needed
-* users can have multiple profiles (bob:laptop bob:phone etc)
-* users and/or profiles can be marked active/inactive 
-* 'wg show' output connections displayed by user:profile name.
+* Simplifies wireguard administration.
+* Guarantees gateway and peer configs remain synchronized (public/preshared keys).
+* Handles key generation and updates.
+* Each *account* can have multiple profiles (vpn1.alice.laptop vpn1.alice.phone etc.)
+* Accounts and/or profiles can be marked (in)active.
+* Wireguard's standard 'wg show'report has public keys transformed into 
+  user friendly acccount.profile names.
 
-  This solves a long standing annoyance in a simple way by showing names 
-  instead of public keys as output by *wg show*.
-  Also provides check that server config is up to date and if it needs to be
-  restarted with new wg0.conf
-* supports importing existing user/profiles
+  This feature solves a long standing wireguard annoyance in a simple way 
+  by showing names instead of public keys output by *wg show*.
+  Also provides check on server config status being current and if it needs to be
+  restarted with new config.
+
+* Supports importing from existing wireguard config files.
 
 New / Interesting
 =================
 
- * New option to set PersistentKeepalive for user profiles (defaults to 0 which is off)
-   See options *--upd_user_keepalive* and *--user_keepalive* below.
+**Major Version 8.0.0**
 
- * Use python 3 ipaddress in place of 3rd party netaddr module.
+* Re-write pretty much from scratch. New design and fresh start.
+* Modern coding standards: PEP-8, PEP-257 and PEP-484 style and type annotations
+* Can now manage multiple VPN's
+* Each VPN has a number of *accounts* and each account may have multiple profiles.
+  Some profiles may be gateways (can be connected to) while others are clients
+  (connect to one or more gateways).
+* Support more use cases than earlier versions.
+* Provide walk through :ref:`Examples` for 3 common use cases
+* The enhancements require significant data format changes. 
 
- * Code reorg
+  To make the upgrade as simple and easy as possble,
+  existing data from earlier versions can be auto migrated to 
+  the new format with the *-migrate* option.
 
- * Split route - new option set allowed_ips in user configs. By default it has 
-   everything going via the VPN.  Split routing is useful. 
-   
-   For example you may want to route via the VPN only those networks on the LAN (inside) 
-   of the vpn server while allowing all other packets to go directly out.  
-   
-   This is also useful when setting up wireguard to join 2+ locations where each 
-   location's subnet is available to users at either location. 
-   
-   This is done using "--allowed_ips" which sets the wireguard config "AllowedIPs". 
-   This option can be used when creating a new user:profile or when modifying 
-   an existing profile with *-mod*.  
-   
-   See :ref:`options-section` section for more detail.
+  Please see :ref:`migrating` for more details.
 
- * Require python 3.13 or later
+* Network manipulations are now built on the *py-cidr* module.
+  Available at :Github:`py-cidr` and :AUR:`py-cidr AUR`.
 
- * Adjust for upcoming python changes.
-   Some argparse options have been deprecated in 3.12 and will be removed in 3.14
+* New way to modify profiles. 
+  
+  The *--edit* option creates a text file. The file 
+  uses standard TOML (key = value) format. Simply edit the file and then 
+  use the *--merge* option to incorporate those changes.
 
-* New Feature: Multiple IP Address for user profiles.
+  This is simple and clean and makes it easy to modify whatever may be needed
+  in one quick edit and merge.
 
-  See new options *--prefixlen_4* and *--prefixlen_6*.
+  There are still many command line options which can be particularly helpful
+  making bulk changes. 
 
-  I'd appreciate testing and feedback (see Issue #14)
+* Improved command line help. 
+  
+  Command line option help is now organized by category:
 
-  New user profiles now get ip(s) from each server network. 
-  CIDR address for each network will have prefixlen_4 or IPv4 and prefixlen_6 for IPv6 networks.
-  prefixlen are settable with new options.
-   
-  Existing user profile (or -all) can have their IPs refreshed to pick up their new IPs from
-  server config. If you already have multiple networks or simply added them to the 
-  server *Address* variable in *configs/server/server.conf* - and then refresh using:
+.. code-block:: text
+
+    migrate, edit/merge, reporting, general and stored options.
+
+See *wg-tool --help* for more info or :ref:`Options-section`.
+
+* Document most features including migration, importing, and
+  making modifications.
+
+*************
+Documentation
+*************
+
+PDF and HTML
+============
+
+The complete documentation is available in *Docs/wg_tool.pdf* as well
+an html version - just point a browser at *Docs/html*.
+
+The document source is also available to build your own:
 
 .. code-block:: bash
 
-   wg-tool -mod -ips <user>:<profile>
+   make latexpdf; make latexpdf
+   make html
 
-or
+This requires some sphinx packages being available (see :ref:`Install`)
 
-.. code-block:: bash
-
-   wg-tool -mod -ips -all
-.. 
-
-* New option *-upd, --upd_endpoint* used with *-mod* to update existing user profiles when server
-  IP/Port is changed.
-
-* *-mod* now supports *-all* to apply to all users.
-
-* `wg-client`_ companion package now available. A linux client tool and separate graphical 
-  program to launch wireguard client. Simplify using wg for all users.
-
-* wg-peer-updn now saves additional copy of dns file as resolv.conf.wg
-  Helpful for clients which sleep and on resume network restart overwrites resolv.conf
-  This makes it simple to put back the vpn resolv.conf file by
-  copying resolv.conf.wg to resolv.conf.  Used by wg-client package.
-  Postdown will still restore original resolv.conf.save as usual.
-
-* Change python build from poetry to hatch
-
-* Can now generate html and pdf docs using sphinx
-  Pre-built wg_tool.pdf provided in repo
-  See *Howto-Build* in the *Docs* directory
-
-Interesting
-===========
-
-The Wireguard server report shows users by user:profile names
-instead of by public key fingerprint.
-
-Can get human readable server report based on output of *wg show*.
-Can do this either by running on the wg server (*-rrpt, *--run_show_rpt*) 
-or from saved report file *(*-rpt*, *--show_rpt*).
-
-This report shows users and profiles in nice human readable form.
-
-It also indicates whether each user and profile are marked active 
-(by showing (+) or (-) beside the name. If an inactive user 
-is connected, it may be time ensure the server is running the latest wg0.config.
-
-This feature solves a long standing problem with native wireguard reports which 
-burden the administrator with mapping IPs or public keys to a user profile. 
-The report does it for you and shows actual user and profile names.
-
-Because of this feature, this tool eliminates any need for schemes, 
-such as Vanity keys, attempting to map public keys to something more palatable.
-
-It will also advise if the current server config being used is out of 
-sync with current tool config and therefore needs updating and/or restarting
-
-Sample output of *wg-tool -rrpt* ::
-
-    wg server:
-       interface : wg0
-            port : nnnnn
-         pub_key : <x>
-
-       susan (+) : phone (+)
-        endpoint : xxx.xxx.xxx.xxx:yyyyy
-         address : xxx.xxx.xxx.xxx/32
-       handshake : 2 hours, 4 minutes, 15 seconds ago
-        transfer : 102.62 MiB received, 320.29 MiB sent
-
-More background
-===============
-
-The tool manages wireguard server configs and the user configs.
-
-It also guarantees that server and user configs are kept properly synchronized.
-This ensures that any information that is shared between the server and clients,
-such as public keys, are always consistent.
-
-It handles key creation whenever needed, such as when adding user/profiles or 
-when doing key rollovers.
-
-A wireguard server and user configs share several common variables, such as public keys, 
-hostname and listening ports, and therefore it's crucial they are consistent.
-
-wg-tool uses a single source of data which is used to populate the actual 
-configs wireguard needs; this approach  guarantees they are always consistent
-with one another. It also simplifies managment significantly. Common tasks are
-handled by the tool in a convenient way. For example, It is very 
-straightforward to add users or user profiles, roll keys or make users or profiles
-active or inactive.
-
-In a nutshell to setup and use wireguard vpn one needs a server and each client 
-gets a configuration, either in the form of a text based *.conf* file or
-a QR code. QR codes work nicely for wireguard phone app, for example, where the 
-app uses on board camera to read the the QR code. For computer clients, the conf file 
-is the simplest. The server and client keys share common information which must be kept
-synchronized. This includes shared public keys, pre-shared keys for added security
-along with network information (IPs, Ports and DNS).
-
-wg-tool uses a file based configuration database kept under the *config* directory.
-This provides all the inputs the tool needs to generate the server and client configs.
-The latter are saved into the *wg-config/server* and *wg-config/users* directories 
-for the server and clients respectively.
-
-For convenience, previous configs are saved with *.prev* extension making it easy
-to compare with a prior version. It can be useful after making changes to
-diff the two configs.
-
-The wg server config, *wg-config/server/wg0.conf* should be installed, as usual, 
-in /etc/wireguard. 
-
-Each user can have 1 or more profiles. For example bob may have *bob:phone* and 
-*bob:laptop*.  The configs to share with each profile is saved into, in this example,
-*wg-config/users/bob* as bob-phone.conf, bob-phone-qr.png, bob-laptop.conf and bob-laptop-qr.png.
-These are provided to the user - bob in this case.
-
-For wireguard clients running Linux, there are a couple of approches the client DNS. Client DNS should
-always be through the wireguard tunnel.
-
-* **preferred approach**:
-
-  * Activated by the *--dns_linux* option. 
-    
-  When using this option, wg-quick uses the provided *wg-peer-updn* script via PostUp/PostDown setting. 
-    
-  This scipt saves the current dns resolv.conf file when VPN is brought up using *wg-quick up*, 
-  installs the VPN dns into /etc/resolv.conf and then restores the prior resolv.conf when VPN is 
-  deactivated (wg-quick down).
-
-* **alternative approach**:
-
-  * DNS information in config is used by wg-quick. wg-quick, in turn, relies on resolvconf.
-
-Directory and File Structure
-============================
-
-*wg-tool* uses 2 kinds of config files:
-
-* **configs** :  *inputs* to *wg-tool* 
-* **wg-configs** : *outputs* from *wg-tool* which are then used by wireguard server or clients.
-
-
-For example, the wireguard server config file, wg0.conf, will be located 
-in ::
-
-    wg-configs/server/wg0.conf
-
-And the user QR codes and *.conf* files will be under ::
-
-    wg-configs/users/
-
-Laying out this directory structure in a bit more detail.
-
-*wg-tool* input configs ::
-
-    configs/
-           server/
-               server.conf
-           users/
-               user-1/
-                   user-1.conf
-               user-2/
-                   user-2.conf
-               ... 
-
-*wireguard* configs will be saved to ::
-
-    wg-configs/
-              server/
-                    wg0.conf
-              users/
-                    user-1/
-                        user-1-profile-1.conf
-                        user-1-profile-1.png
-  
-                        user-1-profile-2.conf
-                        user-1-profile-2.png
-                        ...
-                    user-2/
-                        user-2-profile-1.conf
-                        user-2-profile-1.png
-  
-                        user-2-profile-2.conf
-                        user-2-profile-2.png
-                    
-
-Each of the files is actually a symlink to the real file which is kept under 
-a *db* directory at the same level as the symlinks. 
-
-This allows us to keep history of every config as far back as we choose. There are options
-to choose the amount of history to keep for configs and separately for wg-configs. 
-The default, in addition to current values, is to keep 5 additional configs 
-and 3 wg-configs.
-
-Whenever a config file is changed the previous version is made available 
-as a symlink named *xxx.prev*. This allows for straightforward comparisons and makes it easy
-to revert if that were ever needed; though it is pretty unlikely to ever be
-the case. 
-
-Each user can have multiple profiles - each profile provides separate
-access to the vpn. As an example, user *jane* may have a *phone* profile and 
-a *laptop* profile. Each profile will provide the wireguard .conf file along 
-with an image file of its QR code. These 2 files provide the 
-standard wireguard configs for users.
-
-Aside from the QR image files, all text files are in standard TOML format.
-
-###############
+***************
 Getting Started
-###############
+***************
 
-Using wg-tool for first time
-============================
+Brief Wireguard Background
+==========================
 
-There are 2 ways to get started; either create a new suite of users/profiles or 
-import existing wireguard user.conf files.  You can add users or new profiles for existing users
-at any time. This is very easy and explained below using the *--add_user* option.
-You can also import a user at any time, though it's primarily useful when first
-setting up wg-tool.
+It may be useful to review the wireguard documentation https://www.wireguard.com/.
+The key section on *Cryptokey Routing* describes how peers communicate securely with 
+one another. In addition, the man pages for *wg-quick* and *wg* offer a lot of useful
+information.
 
-If you already have wireguard running then importing is the simplest and best way to proceed.
-If you're starting from scratch then wg-tool will create new users and profiles for you.
+Here, we simply highlight a few relevant items to set the stage.
 
-Either way it's pretty straightforward.
+Every entity in wireguard is a *peer*. And *peers* interact with each other.
+The way they interact is determined by the config files.
 
-Step 1 - Create Server Config
------------------------------
+Some peers allow others to connect to them at a known hostname or IP address 
+and on a specific port. The *endpoint* for this connection is given by
+*host:port*.  Any such peer that listens on a known *endpoint* is called a **gateway**. 
 
-In either case the first step is to create a valid server config file.
-The best way to do that is to run::
+Other peers only connect to peer gateways and we refer to these as **clients**. 
 
-        wg-tool --init
- or
-        wg-tool --work_dir=xxx --init
+Of course gateways may connect with other gateways too. They are still gateways.
+So, a gateway is simply a peer that listens on some IP address and port.
 
-By default, when initializing,  work_dir will be */etc/wireguard/wg-tool* if it exists and with 
-appropriate access permission (i.e. root), otherwise the current directory *./*.
+Wireguard Config: Interface Section
+-----------------------------------
 
-This creates a template in: *configs/server/server.conf*.
+This section is about configs used by wireguard itself.
 
-This file must be edited and changed to reflect your own network settings etc.
-These are all wireguard standard fields. 
+Each wireguard peer config consists of 2 kinds of components. 
 
-The key fields to edit are:
+The first part of any peer config is the *Interface* section. 
+This specifes the crypto keys and one or more IP addresses 
+used by the vpn tunnel.  It may also have a list of DNS servers.
 
-* Address  
+It also has *PostUp* and *PostDown*. Together, these provide a way to have 
+a program run when the vpn is brought up and some other program run 
+when the vpn is taken down.
 
-  This is the internal wg cidr mask on the server IP addresses (IPv4 and IPv6).  
-  N.B. If you prefer user:profile get IPv6 then put it first in the list.
+These are typically used to set up firewall rules (nftables) and are used
+primarily for gateway servers and linux clients. 
+We provide more information on these later in the documentation. 
 
-* Hostname and ListenPort  
+We also provide a sample nftables firewall script which will suffice for 
+many/most typical gateway servers. We also provide a linux client program 
+which is a DNS helper tool, changing DNS resolution while the vpn is running
+and restoring it to it's original state when the vpn is stopped.
 
-  wg server hostname as seen from internet and port chosen 
+Wireguard Config: Peer Section(s)
+---------------------------------
 
-* Hostname_Int ListenPort_Int  
+The second part of any peer config is one or more *Peer* sections. Each of these
+provides the information required to engage with that peer. 
+Each peer section has the public key of of the peer.
 
-  wg server hostname and port as seen on internal network.   
-  Useful for testing wg while inside the network.
-  Client configs created with the *-int* option of **wg-tool** will use this internal server:port.
+It also provides the 
+list of networks that are acceptable to use in communicating with that peer.
+It as well as any networks that are usable. The available networks are typically internal LANs
+or internet access. These is the *AllowedIPs* variable. It can be a one network, a 
+comma separated list of networks, or it can be repeated for each network.
 
-* PrivateKey, PublicKey  
+Each pair of peers may also share a secret known as a *pre-shared-key* or PSK.
+Wireguard's author, Jason Donenfeld, opines that using this provides an additional
+security layer facilitating post-quantum resistance. *wg-tool* automatically generates
+a unique PSK for each pair of peers that communicate with one another.
 
-  If you have exsiting wg server, change these to your current keys.  
-  If not they are freshly generated by --init. and can be safely used.
+The peer section also includes the Endpoint, if that peer is a gateway. 
 
-* PostUp PostDown  
+A client may send all it's traffic to the the gateway it
+is using or it may choose to send only the internal LAN traffic to the gateway 
+and direcly connect to the internet for the remaining traffic. When the client 
+separates the packets like this, it is known as split tunnelling or split routing.
 
-  If you want to use the nftables provided by wg-tool - just copy postup.nft from the scripts directory.
-  Change the 3 network variables at top for your setup.
+A Note About Shared Networks
+----------------------------
 
-* DNS   
+Wireguard denotes networks available to each peer using *AllowedIPs*.
+That variable tells waireguard to permit packets to from the those networks.
+Wireguard uses that to create appropriate routes which it all work.
+This means that if a gateway, for example, offers LAN access to it's clients
+then every client has its *AllowedIPs* with that LAN network listed.
 
-  List of dns servers to be used by wg - typical VPN setup uses internal network DNS 
+*wg-tool* generates those *AllowedIPs* that wireguard needs. 
+We designed it to minimize user input and to keep those inputs
+aligned with physical reality. 
 
-postup.nft
-^^^^^^^^^^
+If some gateway offers access to an internal network, 
+there should be no need to edit every peer to add that network. 
+Instead, the tool updates all peers with access to that network.
 
-The nftables sample script, scripts/postup.nft, should be copied to 
-/etc/wireguard/scripts.
+For example, if the Office A gateway offers LAN-A access 
+to clients, then *wg-tool* simply has the gateway designate LAN-A 
+available to other peers. When it generates the wireguard configs,
+each peer will have access permitted via it's *AllowedIPs*.
 
-Remember to edit the network variables at the top of the *postup.nft* script to match your network.
-One common case  is to provide users with access to internet as well as to the internal network. 
-The system border firewall must forward vpn traffic to the wireguard server which running on 
-inside protected by the firewall.
+*wg-tool* expects each peer to list those networks it offers to 
+other peers using the *nets_offerered* variable. Of course, this is entirely
+optional, and only needs to be used by peers that wish to share one or more networks.
+This applies to both gateways and clients.
 
-The *postup.nft* script provides access to the internet and lan provided the wireguard server 
-host has that access.  
-If the wg server is in the DMZ then it probably only has access to DMZ net and internet. 
-
-Before deploying the *postup.nft* script, edit the 3 variables at the top for your own 
-server setup:
-
-* vpn_net  
-
-  this cidr block must match whats in the server config
-
-* lan_ip lan_iface  
-
-  IP and interface of wireguard server
-
-Remember to allow forwarding on the wireguard server, to ensure VPN traffic 
-is permitted to go to the LAN::
-
-        sysctl -w net.ipv4.ip_forward=1
-
-to keep this on reboot add to */etc/sysctl.d/sysctl.conf* (or other filename)::
-
-        net.ipv4.ip_forward = 1
-
-The list of active users is managed in the *server.conf* file.
-This is generated and updated by wg-tool. The tool provides options to add and remove
-users from the active list. If a user is markewd inactive, none of their profiles will be in server
-wg0.conf. If a user is active then only their active profiles will be provided to wg0.conf
-
-Each user config has its own list active profiles.  It too is managed by the tool. 
-
-N.B. the active users and active profiles lists, only affect whether they are included
-in the server wg0.conf file. No user or profile is removed when a user and/or profile
-is marked inactive.
-
-Step 2 - import and/or add users and profiles
----------------------------------------------
-
-Now that the server config is ready, we can add users and their profiles.
-
-Each user can have 1 or more profiles.  Each user's data, including all
-their profile info, in kept in a single config file.
-It also tracks the list of active profiles.
-
-If a profile is active, it will be put in wireguards wg0.conf server config,
-otherwise it won't.
-
-Wireguard QR codes and .conf files are always created for every user/profile
-regardless of whether it is active or not.
-
-Since each user has their own namespace, profile names can be same for different users.
-
-Adding new users and profiles
-=============================
-
-Users and profiles can be created at any time. They can be created in bulk 
-or one user at a time. For example this command::
-
-        wg-tool --add_user bob:phone,desk,ipad jane:phone,laptop
-
-creates 2 users. *bob* gets 3 profiles : phone, desk and ipad while 
-*jane* gets 2 profiles: phone and laptop.
-
-If you don't provide a profile name, the default profile name is *main*.
-
-At this point you should now have server config supporting these 5 user profiles
-and the corresponding wireguard QR codes and .conf files under wg-configs/users
-
-You can get list of all users and their profiles ::
-
-        wg-tool --list_users
-
-The (+) or (-) after a user or profile name indicates active or inactive.
-
-Importing existing users and profiles
-
-The tool can import 1 user:profile at a time. This is done using::
-
-        wg-tool --import_user <user.conf> user_name:profile_name
-
-where <user.conf> is the standard wireguard conf file (the text version of the
-QR code). And the user_name and profile_name are what you want them to be known 
-as now.  
-
-What worked for me was to copy all those existing wireguard user.conf files 
-into ./old/ and then make a little shell script like the sample scripts/import_users.
-Script just imports each profile 1 at a time.
-
-Then run the shell script. End result should be working wg0.conf
-functionally identical to what you currently have. In addition
-a new set of user-profile.conf and associated qr codes. All found in
-*wg-configs/*
-
-As above you may want to see a list of users/profiles::
-
-        wg-tool --list_users
-
-And compare a user profile conf or 2 with existing ones - QR codes will be different, but contain the
-same information. You can check this for bob's laptop QR by doing this::
-
-    zbarimg wg-configs/users/bob/bob-laptop-qr.png
-
-which is available in the zbar package. It should match the corresponding user.conf file 
-in *wg-configs/users/bob/bob-laptop.conf*
-
-
-Managing Users/Profiles 
-=======================
-
-I recommend avoiding manually editing any config files, but if you do for some reason, 
-then run *wg-tool* with no arguments. It will detect the changes and update *wg-configs*.
-
-Pretty much everything you need to do should be available using wg-tool::
-
-        wg-tool --help
-
-gives list of options.
-
- .. _options-section:
-
-Options
--------
-
-Many options take user/profiles as additional input. 
-users/profiles are to be given on command line ::
-
-    user
- or
-    user:prof
- or
-    user_1:prof_1,prof_2 user2 user_3:laptop,tablet
-
-Summary of available options:
-
-**Positional arguments**:  
-
-* users  : user_1[:prof1,prof2,...] user_2[:prof_1,prof_2]
-
-**Options**:
-
-* (*-h, --help*)
-
-  Show this help message and exit
-
-* (*-act, --active*)
-
-  Mark one or more users or user[:profile, profile...] active
-
-* (*-add, --add_users*)
-
-  Add user(s) and/or user profiles user:prof1,prof2,...
-
-* (*-all, --all_users*)
-
-  Some opts (e.g. upd_user_keys) may apply to all users/profiles when this is turned on.
-
-* (*-aips, --allowed_ips*)
-
-   Set the cidr blocks which will be routed through the vpn. The default is all ips
-   given by:
-
-   *0.0.0.0/0,::/0*
-
-   Provide a comma separated list of CIDRs or the string *default* to use the 
-   default value where all ips are routed through wireguard.
-
-   The current setting can be viewed by detailed user listing:
-
-   wg-tool -l -det [user:prof]
-
-* (*-det, --details*)
-
-  Adds more detail to *-l* and *-rrpt*.
-  For *-l* report will also include details about each profile.
-  For *-rrpt* report will show all user:profiles known to running server, not just
-  those for which it has a recent connection. 
-
-* (*-dnslin, --dns_linux*)
-
-  Use with *-mod*
-
-  For a Linux client, provide support for managing the dns resolv.conf file.
-  What this does is save existing one, install the wireguard dns version and 
-  then restore original on exit.
-  Use together with *-add* for new user:profile or with *-mod* with existing profile.
-
-  To bring up wireguard as a linux client one uses ::
-
-        wg-quick up <user-prof.conf> 
-        wg-quick down <user-prof.conf> 
-
-  This will then use the wireguard DNS while running and restore previous dns on exit.
-
-  To add dns search and use dns_linux on existing user profile. First update the 
-  server config by editing *configs/server/server.conf* and add list of seach domains ::
-
-        DNS_SEARCH = ['sales.example.com', 'example.com']
-
-  then ::
-
-        wg-tool -mod -dnsrch -dns_linux bob:laptop
-
-  By default wg-quick uses resolvconf to manage dns resolv.conf.  If you prefer, or dont use resolvconf
-  then use this option. But only with Linux - it will not work for other clients (Android, iOS, etc)
-
-  With this option the usual DNS rows in in the conf file are replaced with PostUp and PostDown.  
-  PostUp saves existing resolv.conf, and installs the one needed by wireguard.
-  PostDown restores the original saved resolv.conf.
-
-  To use this the script *wg-peer-updn*, available in the *scripts* directory must be
-  in /etc/wireguard/scripts for the client. 
-
-  The installer for the wg_tool package installs the script - but clients without this
-  package should be provided both the user-profile.conf as well as the supporting 
-  script *wg-peer-updn*. 
-
-* (*-dnsrch, --dns_search*)
-
-  Use with *-mod*
-
-  Adds the list DNS_SEARCH from server config to client DNS search list.
-  DNS_SEARCH in server.conf should contain a list of dns domains for dns search and 
-  Use together with *-add* for new user:profile or with *-mod* with existing profile.
-
-* (*-fp, --file_perms*)
-
-  Ensure all files have appropriately restricted permissions
-
-* (*-imp, --import_user <file>*)
-
-  Import a standard wg user conf file into the spcified user_name:profile_name
-  This is for one single user:profile
-
-* (*-inact, --inactive*)
-
-  Mark one or more users or user[:profile, profile...] inactive
-
-* (*-i, --init*)
-
-  Initialize and creat server config template. 
-  Please edit to match your server settings.
-
-* (*wkd, --work_dir <dirname>*)
-
-  Set working directory.  
-  This is is the directory holding all configs.
-
-  By default: 
-
-  + when used with *--init*, work_dir will be */etc/wireguard/wg-tool* if the directory exists and 
-    with appropriate access permission (i.e. root), otherwise the current directory *./*.
-
-  + if not initializing, then, with access permission,  */etc/wireguard/wg-tool/* will be 
-    the work_dir if there is a *config* dir in it, otherwise it is set to current dir *./*.
-
-* (*-int, --int_serv*)
-
-  With --add_users uses internal wireguard server
-
-* (*-ips, --ips_refresh*)
-
-  Refresh profile IPs if needed
-
-* (*-keep, --keep_hist <num>*)
-
-  How much config history to keep (default 5)
-
-* (*-keep_wg, --keep_hist_wg <num>*)
-
-  How much wg-config history to keep (default 3)
-
-* (*-l, --list_users*)
-
-  Summary of users/profiles - sorted by user.
-
-* (*-mod, --mod_users*)
-
-  Modify existing user:profile(s).  Use with *-dnsrch*, *-dnslin*, *-aips* and *upd*
-  Can apply to all users/profiles via the *-all* option.
-
-* (*-pfxlen_4, --prefixlen_4*)
-
-  User profiles now get IP Addresses(es) from each server network. Each address
-  is a block with cidr prefixlen_4. Defaults to 32 which means 1 IP address.
-  e.g. if set to 30 then would get a block of 4 x.x.x.x/30
-
-* (*-pfxlen_6, --prefixlen_6*)
-
-  Similar to --prefixlen_4 but for ipv6. Default is 128
-
-* (*-rrpt, --run_show_rpt*)
-
-  Run "wg show" and generate report of users, profiles.
-  Also checks for consistency with current settings.
-
-* (*-sop, --save_opts*)
-
-  Together with --keep_hist and/or --keep_hist_wg
-  to save these values as new defaults.
-
-* (*-rpt, --show_rpt <file>*)
-
-  Same as *-rrpt* only reads file containing the output of *wg show*
-  If file is name *stdin*, then it reads from stdin.
-
-* (*upd, --upd_endpoint*)
-
-  Use with *-mod*
-  Ensure user/profile is using current server endpoint.  Add *-int*
-  if want to use internal hostname/port.
-
-  For example if the server IP changes, then you can update existing user/profiles with
-
-  wg-tool -mod -upd -all
-
-* (*-usk, --upd_serv_keys*)
-
-  Generate new pair of server keys.
-  NB This affects all users as they all use the server public key.
-
-* (*-upd_uka, --upd_user_keepalive*)
-
-  Update client profile keepalive (see also --user_keepalive)
-
-* (*-uuk, --upd_user_keys*)
-
-  Generate new set of keys for existing user(s).
-  This is public and private key pair along with new pre-shared key.
-
-* (*-uka, --user_keepalive*)
- 
-  Number of seconds to use for persistent keep-alive (-upd_user_keepalive for existing profiles) 
-  Default is 0 which disables keepalive.
-  Reasonable value is 25 seconds.
-
-* (*-v, --verb*)
-
-  Adds more verbose output.
-
-* (*-V, --version*)
-
-  Display current version
-
-* (*-wkd, --work_dir*)
-
-  Set the working directory path to search. If unset, path : /etc/wireguard/wg-tool:./
-
-Note on MTU
------------
-
-I came across one hotel wifi, that while the vpn worked fine to provide internet access, I found
-that for my laptop to be able to also 'ssh internal-host' it would hang::
-
-  ssh -v <host> 
-
-hangs right after this is logged::
-
-    expecting SSH2_MSG_KEX_ECDH_REPLY
-
-The *fix* was to set the MTU from 1500 down to 1400 on my laptop while at that hotel. 
-The internet access continued to work fine, but this fixed whatever was a problem for ssh;
-so now 'ssh internal-host' worked as usual. 
-  
-I have only had to change MTU setting at one location, but I mention it here in case 
-anyone else comes across this.
-
-
-Key Rollover
-==============
-
-wg-tool makes key rollover particularly simple - at least as far as updating keys
-and regenerating user and/or server configs with the new keys. 
-
-Distribution of the updated config/QR code to each user is not addressed by the tool.
-Continue to use existing methods - encyrpted email, in person display of QR code etc. ...
-
-Its equally simple to update keys on a per user basis as well - just specify them on
-command line. 
-
-To roll the server keys run:
-
-.. code-block:: bash
-
-        wg-tool --upd_serv_keys
-
-This will also update all user profiles with the server's new public key.
-
-To roll all user keys run:
-
-.. code-block:: bash
-
-        wg-tool --upd_user_keys
-
-or as usual you can specify which profiles to generate the new keys for.
-
-.. code-block:: bash
-
-        wg-tool --upd_user_keys  [user:prof1,prof2 user2 ..]
-
-As usual, a change to any user profiles will generate new server wg0.conf file
-reflecting whaterver change was made.
-
-
-########
-Appendix
-########
-
-Notes
-=====
-
-* Config changes are tracked by modification times.  
-
-  For existing user/profiles without a saved value of *mod_time*, 
-  the last change date-time of the config file is used and saved.
-  These mod times are displayed when using *-l* and *-l -det* options.
-
-2022-12
--------
-
-* Stronger file access permissions to protect private data in configs.
-
-* Changes to work_dir.
-
-  Backward compatible with previous version.
-  Now prefers to use */etc/wireguard/wg-tool* if possible, otherwise 
-  falls back to current directory.
-
-2022-11
--------
-
-See `Options`_ or for more detail.
-
-* (*-dnsrch, --dns_search*)  
-
-  Adds the list DNS_SEARCH from server config to client DNS search list.  
-  DNS_SEARCH in server.conf should contain a list of dns domains for dns search.  
-  Use together with *-add* for new user:profile or with *-mod* with existing profile.
-
-* (*-dnslin, --dns_linux*)  
-
-  For a Linux client, provide support for managing the dns resolv.conf file.
-  What this does is save existing one, install the wireguard dns version and 
-  then restore original on exit.
-  Use together with *-add* for new user:profile or with *-mod* with existing profile.
-
-
-Install
-=======
-
-While it is simplest to install from a package manager, manual 
-installs are done as folllow:
-
-First clone the repo :
-
-.. code-block:: bash
-
-   git clone https://github.com/gene-git/wg_tool
-
-Then install to local directory.
-When running as non-root then set root_dest to a user writable directory.
-
-.. code:: bash
-
-    rm -f dist/*
-    /usr/bin/python -m build --wheel --no-isolation
-    root_dest="/"
-    ./scripts/do-install $root_dest
-
-Dependencies
+In addition, gateways may set the *internet_offered* flag to indicate
+that it will pass traffic to and from the internet on behalf of
+it's clients. Clients, in turn, request such access using 
+the *internet_wanted* flag.
+
+Based on all that information, *wg-tool* can generates
+the appropriate *AllowedIPs* for every peer.
+
+Peer to Peer
 ------------
 
-**Run Time** :
+By default peers are only permitted to communcicate with gateways. If it 
+is desirable to allow peers to communicate with one another then this is easily
+achieved. Please see the *peer_to_peer* vpn info variable 
+in the :ref:`Editing` section for more detail.
 
-  * python (3.13 or later)
-  * wireguard-tools
-  * nftables (for wireguard server postup.nft)
-  * netaddr (aka python-netaddr )
-  * python-qrcode
-  * tomli_w (aka python-tomli_w )
 
-**Building Package**:
+Migrating from earlier versions
+===============================
 
-  * git
-  * hatch (aka python-hatch)
-  * wheel (aka python-wheel)
-  * build (aka python-build)
-  * installer (aka python-installer)
-  * rsync
+Versions prior to the **8.0** can be migrated to the new format with 
+*wg-tool --migrate*.
 
-Philosophy
-----------
+The migration leaves all earlier data files, including the output wireguard configs, untouched.
+The current version uses different directories (*Data* and *Date-wg*) to guarantee this.
 
-We follow the *live at head commit* philosophy. This means we recommend using the
-latest commit on git master branch. 
+Importing from standard wireguard configs
+=========================================
 
-This approach is also taken by Google [1]_ [2]_.
+For those with existing wireguard setup, 
+*wg-tool* can import standard wireguard configs. 
+Once imported then *wg-tool* can be used to manage things going forward. 
 
-License
-========
+For more info please see :ref:`wg-import`.
 
-Created by Gene C. and licensed under the terms of the MIT license.
+After all the configs are imported, its helpful to compare
+the resulting generated configs (in *Data-wg*) with those that were imported.
 
- * SPDX-License-Identifier: MIT
- * SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+.. _Simple-example:
 
-.. _Github: https://github.com/gene-git/wg_tool
-.. _Archlinux AUR: https://aur.archlinux.org/packages/wg_tool
-.. _wg-client: https://github.com/gene-git/wg-client
+Simple Example
+==============
 
-.. [1] https://github.com/google/googletest  
-.. [2] https://abseil.io/about/philosophy#upgrade-support
+Lets do a really little example that illustrates how easy it is
+to generate wireguard configs. The goal here is to:
 
+* Create a vpn called *vpn-test*
+* Add an account called servers with a gateway called *wg-A* 
+* Add an account called *alice* with a laptop profile.
+* Add an account called *bob* with a laptop profile.
+* Do this in the current directory.
+
+.. code-block:: bash
+
+   wg-tool -wkd ./
+   wg-tool -new vpn-test
+   wg-tool -new vpn-test.servers.wg-A
+   wg-tool -new vpn-test.alice.laptop vpn-test.bob.laptop
+
+Add the endpoint the gateway server will be available on:
+
+.. code-block:: bash
+
+   wg-too --edit vpn-test.servers.wg-A
+
+Edit the file (name will be displayed) and change the Endpoint to something like:
+
+.. code-block:: none
+
+   Endpoint = "vpn.example.com:51820"
+
+Then merge the change:
+
+.. code-block:: bash
+
+    wg-tool --merge <filename>
+
+All the wireguard configs will be found under the *Data-wg* directory.
+This has the gateway server config along with both users' laptop configs.

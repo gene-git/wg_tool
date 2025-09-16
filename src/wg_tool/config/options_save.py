@@ -1,104 +1,83 @@
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: GPL-2.0-or-later
 # SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
 """
 save/restore some command line options
-  - support function for class WgtOptions
+  - support function for WgtOptBase
 """
+from typing import (Any)
 import os
-from lib import err_msg
-from lib import (make_dir_path, open_file)
-from lib import (dict_to_toml_string, read_toml_file)
 
-def _get_save_file(wgtopt):
-    """ returns the path to save file """
-    work_dir = wgtopt.work_dir
-    save_dir = wgtopt.save_dir
-    save_file = wgtopt.save_file
+from utils import Msg
+from utils import make_dir_path
+from utils import dict_to_toml_string
+from utils import read_toml_file
+from utils import write_path_atomic
 
-    if not save_dir or not save_file:
-        return None
+from data import restrict_file_mode
 
-    if not work_dir:
-        work_dir = './'
 
-    save_dir_path = os.path.join(work_dir, save_dir)
-    save_file_path = os.path.join(save_dir_path, save_file)
-    return (save_dir_path, save_file_path)
-
-def write_saved_opts(wgtopt):
+def write_saved_options(opts: dict[str, Any], fpath: str) -> bool:
     """
-    save options:
+    save options in TOML format:
       - keep_hist
       - keep_hist_wg
+
+    Returns:
+        bool:
+        Success or fail.
     """
-    is_okay = True
+    if not fpath:
+        return False
 
-    (save_dir_path, save_file_path) = _get_save_file(wgtopt)
-    if not save_dir_path or not save_file_path:
-        is_okay = False
-        return is_okay
+    save_dir = os.path.dirname(fpath)
+    if not make_dir_path(save_dir):
+        Msg.err(f'Save Options: Error creating {save_dir}\n')
+        return False
 
-    is_okay = make_dir_path(save_dir_path)
-    if not is_okay:
-        err_msg(f'Save Options: Error creating {save_dir_path}')
-        return is_okay
+    opts_save: dict[str, Any] = {}
 
-    opts_dict = {
-            'keep_hist'     : wgtopt.keep_hist,
-            'keep_hist_wg'  : wgtopt.keep_hist_wg,
-            'prefixlen_4'   : wgtopt.prefixlen_4,
-            'prefixlen_6'   : wgtopt.prefixlen_6,
-            'user_keepalive': wgtopt.user_keepalive,
-            }
-    opts_str = dict_to_toml_string(opts_dict)
+    keys = ('hist', 'hist_wg')  # , 'net_compact')
+    for key in keys:
+        if opts.get(key) is not None:
+            opts_save[key] = opts.get(key)
 
-    fobj = open_file(save_file_path, 'w')
-    if fobj:
-        fobj.write(opts_str)
-        fobj.close()
-    else:
-        err_msg(f'Error saveing options file : {save_file_path}')
-        is_okay = False
+    if not opts_save:
+        return True
 
-    return is_okay
+    #
+    # write it out (we dont need history files here)
+    #
+    opts_str = dict_to_toml_string(opts_save)
+    fmode = restrict_file_mode()
+    if not write_path_atomic(opts_str, fpath, fmode):
+        Msg.err(f'Error saveing options file: {fpath}\n')
+        return False
 
-def _set_value(wgtopt, opts_dict, key):
+    return True
+
+
+def read_saved_options(fpath: str) -> dict[str, Any]:
     """
-    Sets the option key
-     - command line (already set wgtopt.key)
-     - save file
-     - default
+    read saved options file and return a dictionary.
     """
-    if getattr(wgtopt, key):
-        return
+    #
+    # Allow more general values than str/int
+    #
+    opts_dict: dict[str, Any] = {}
 
-    if opts_dict:
-        value = opts_dict.get(key)
-        if value:
-            setattr(wgtopt, key, value)
-            return
+    if not (fpath and os.path.isfile(fpath)):
+        return opts_dict
 
-    def_key = f'default_{key}'
-    value = getattr(wgtopt, def_key)
-    setattr(wgtopt, key, value)
+    from_file = read_toml_file(fpath)
 
-def read_merge_saved_opts(wgtopt):
-    """
-    read and merge saved options, priority:
-       - cli (attribute set by caller)
-       - saved (from file)
-       - default (from default_xxx)
-    """
-    opts_dict = None
+    #
+    # backward compat: change older option names to current ones.
+    #
+    for (k, v) in from_file.items():
+        if k == 'keep_hist':
+            k = 'hist'
+        elif k == 'keep_hist_wg':
+            k = 'hist_wg'
+        opts_dict[k] = v
 
-    (_save_dir_path, save_file_path) = _get_save_file(wgtopt)
-    if not save_file_path:
-        return
-
-    opts_dict = read_toml_file(save_file_path)
-
-    _set_value(wgtopt, opts_dict, 'keep_hist')
-    _set_value(wgtopt, opts_dict, 'keep_hist_wg')
-
-    _set_value(wgtopt, opts_dict, 'prefixlen_4')
-    _set_value(wgtopt, opts_dict, 'prefixlen_6')
+    return opts_dict
