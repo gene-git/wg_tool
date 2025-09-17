@@ -206,7 +206,7 @@ def _parse_data(wg_rpt: GwReport, rows: list[str]):
             'listening port': 'listening_port',
             'endpoint': 'endpoint',
             'allowed ips': 'allowed_ips',
-            'latest handshake': ' latest_handshake',
+            'latest handshake': 'latest_handshake',
             'transfer': 'transfer',
             'peer': 'pubkey',
             }

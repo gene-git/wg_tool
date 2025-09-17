@@ -8,6 +8,7 @@ OptsBase
 import os
 
 from data import mod_time_now
+from data import get_data_dir
 from utils.debug import pprint
 from ids import Identities
 
@@ -32,7 +33,7 @@ class OptsBase:
         # self.mod_users: bool = False
 
         self.paths: str = '/etc/wireguard/wg-tool:./'
-        self.data_dir: str = 'Data'
+        self.data_dir: str = get_data_dir()
 
         # Default - may be changed on command line
         self.work_dir: str = find_work_dir(self.paths, self.data_dir)

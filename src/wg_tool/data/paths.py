@@ -68,6 +68,13 @@ def get_top_dir(work_dir: str) -> str:
     return topdir
 
 
+def get_data_dir() -> str:
+    """
+    Returns the name of data directory
+    """
+    return DATA_DIR
+
+
 def get_top_wg_dir(work_dir: str) -> str:
     """
     The top level data dir.

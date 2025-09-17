@@ -10,6 +10,7 @@ import os
 import sys
 
 from utils import (Msg, version)
+from data import get_top_dir
 
 from ._opts_base import OptsBase
 from .options import parse_args
@@ -87,13 +88,14 @@ class Opts(OptsBase):
             Msg.err(f'work dir not a directory: {txt}')
             return False
 
-        if not self.data_dir:
-            Msg.err('No data dir found. Unable to continue')
+        topdir = get_top_dir(self.work_dir)
+        if not topdir:
+            Msg.err(f'Top level dir not found {topdir}. Unable to continue')
             return False
 
-        if not os.path.isdir(self.data_dir):
-            txt = f'({self.data_dir}). Unable to continue'
-            Msg.err(f'data dir not a directory: {txt}')
+        if not os.path.isdir(topdir):
+            txt = f'({topdir}). Unable to continue'
+            Msg.err(f'Top level dir not a directory: {txt}')
             return False
 
         return True

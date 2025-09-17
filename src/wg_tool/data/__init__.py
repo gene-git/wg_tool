@@ -12,6 +12,7 @@ from .paths import get_vpninfo_file
 from .paths import get_vpnpsk_file
 from .paths import (get_vpn_names, get_wg_vpn_dir)
 from .paths import (get_top_dir, get_top_wg_dir, get_vpn_dir)
+from .paths import get_data_dir
 from .paths import get_db_name
 from .paths import get_edit_dir
 
