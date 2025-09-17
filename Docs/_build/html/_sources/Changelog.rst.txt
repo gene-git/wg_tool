@@ -7,12 +7,30 @@ Tags
 
 .. code-block:: text
 
-	1.1.1 (2022-10-26) -> 8.0.rc2 (2025-09-16)
-	207 commits.
+	1.1.1 (2022-10-26) -> 8.0.0 (2025-09-17)
+	211 commits.
 
 Commits
 =======
 
+
+* 2025-09-17  : **8.0.0**
+
+.. code-block:: text
+
+              - Release 8.0.0
+                New vpn info variable: dns_lookup_ipv6
+                  When true, hostnames listed in "dns" lists are now queried for
+                  IPv6 as well as IPv4 address(es). These are used in the wireguard configs.
+                  Defaults to false.
+ 2025-09-16
+
+.. code-block:: text
+
+              - fix couple typos
+              - Add html link in Docs pointing to pre-build html docs.
+                Remove old license file
+              - update Docs/wg_tool.pdf Docs/Changelogs
 
 * 2025-09-16  : **8.0.rc2**
 

@@ -5,12 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Editing and Making Changes &#8212; wg_tool 8.0.rc2 documentation</title>
+    <title>Editing and Making Changes &#8212; wg_tool 8.0.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=e043c39a" />
-    <script src="../_static/documentation_options.js?v=321254cf"></script>
+    <script src="../_static/documentation_options.js?v=f663eb4a"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -145,6 +145,7 @@ Endpoint = &quot;&quot;
 Endpoint_alt = &quot;&quot;
 dns = [ &quot;dns.example.com&quot;, ]
 dns_search = []
+dns_lookup_ipv6 = false
 dns_linux = false
 use_vpn_dns = true
 active = true
@@ -227,17 +228,30 @@ Data-wg/vpn-test/user-1/Alt/desktop.conf
 </pre></div>
 </div>
 <ul>
-<li><p>dns / use_vpn_dns / dns_linux/ dns_search</p>
-<p>Dns servers, list of hosts or IPs, can be provided in 3 places:</p>
+<li><p>dns / use_vpn_dns / dns_lookup_ipv6 / dns_linux / dns_search</p>
+<p>DNS servers are set using <em>dns</em> variable and search domains using <em>dns_search</em>.
+DNS servers list may contain hostanmes or IP addresses (IPv4 or IPv6). They can
+be set in:</p>
 <ul class="simple">
-<li><p>vpn info : DNS variable</p></li>
-<li><p>gateways : DNS variable.</p></li>
-<li><p>client’s own DNS variable.</p></li>
+<li><p>vpn info : <em>dns</em> variable</p></li>
+<li><p>gateways : <em>dns</em> variable.</p></li>
+<li><p>client’s own <em>dns</em> variable.</p></li>
 </ul>
 <p>Dns servers are listed in order:</p>
 <blockquote>
 <div><p>current profile -&gt; gateways -&gt; vpn info</p>
 </div></blockquote>
+<p>DNS servers given has hostnames use DNS query to find their associated IP
+address(es) which are written the the wireguard configs.</p>
+<p>The reason is that Wireguard overloads it’s <em>DNS</em> variable for both servers
+and search domains. Any item that is a valid IP is treated as DNS server
+and any that are not are used for DNS search domains.</p>
+<p>When <em>wg-tool</em> does a DNS query to find the IP address(es) for
+a hostname it uses all IPv4 addresses returned from the query.</p>
+<p>If the <em>dns_lookup_ipv6</em> is <em>true</em> then it attemps to lookup any IPv6
+addresses in addition. By default dns_lookup_ipv6 is <em>false</em>.
+While turning this on is benign on an IPV4 only machine, it can
+add delay in dns resolution due to IPv6 failure followed by IPv4 success.</p>
 <p>Client profiles may toggle the flag <em>use_vpn_dns = false</em>, in which case
 they do not use dns servers provided by gateways or vpn info.</p>
 <p>dns = [“dns.example.com”,]</p>

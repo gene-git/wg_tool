@@ -5,12 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>wg-tool &#8212; wg_tool 8.0.rc2 documentation</title>
+    <title>wg-tool &#8212; wg_tool 8.0.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
     <link rel="stylesheet" type="text/css" href="_static/custom.css?v=e043c39a" />
-    <script src="_static/documentation_options.js?v=321254cf"></script>
+    <script src="_static/documentation_options.js?v=f663eb4a"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -210,11 +210,10 @@ and restoring it to it’s original state when the vpn is stopped.</p>
 <p>The second part of any peer config is one or more <em>Peer</em> sections. Each of these
 provides the information required to engage with that peer.
 Each peer section has the public key of of the peer.</p>
-<p>It also provides the
-list of networks that are acceptable to use in communicating with that peer.
-It as well as any networks that are usable. The available networks are typically internal LANs
-or internet access. These is the <em>AllowedIPs</em> variable. It can be a one network, a
-comma separated list of networks, or it can be repeated for each network.</p>
+<p>It also provides the list of networks that are acceptable to use in communicating with that peer.
+The available networks are typically internal LANs or internet access. These is the
+<em>AllowedIPs</em> variable. It can be one network, a
+comma separated list of networks, and it can be repeated.</p>
 <p>Each pair of peers may also share a secret known as a <em>pre-shared-key</em> or PSK.
 Wireguard’s author, Jason Donenfeld, opines that using this provides an additional
 security layer facilitating post-quantum resistance. <em>wg-tool</em> automatically generates
@@ -228,8 +227,8 @@ separates the packets like this, it is known as split tunnelling or split routin
 <section id="a-note-about-shared-networks">
 <h3>A Note About Shared Networks<a class="headerlink" href="#a-note-about-shared-networks" title="Link to this heading">¶</a></h3>
 <p>Wireguard denotes networks available to each peer using <em>AllowedIPs</em>.
-That variable tells waireguard to permit packets to from the those networks.
-Wireguard uses that to create appropriate routes which it all work.
+That variable tells wireguard to permit packets to from the those networks.</p>
+<p>Wireguard uses that to create appropriate routes which all work.
 This means that if a gateway, for example, offers LAN access to it’s clients
 then every client has its <em>AllowedIPs</em> with that LAN network listed.</p>
 <p><em>wg-tool</em> generates those <em>AllowedIPs</em> that wireguard needs.
@@ -241,7 +240,8 @@ Instead, the tool updates all peers with access to that network.</p>
 <p>For example, if the Office A gateway offers LAN-A access
 to clients, then <em>wg-tool</em> simply has the gateway designate LAN-A
 available to other peers. When it generates the wireguard configs,
-each peer will have access permitted via it’s <em>AllowedIPs</em>.</p>
+each peer that asks for access to that network will have access
+permitted via it’s <em>AllowedIPs</em>.</p>
 <p><em>wg-tool</em> expects each peer to list those networks it offers to
 other peers using the <em>nets_offerered</em> variable. Of course, this is entirely
 optional, and only needs to be used by peers that wish to share one or more networks.
@@ -250,8 +250,10 @@ This applies to both gateways and clients.</p>
 that it will pass traffic to and from the internet on behalf of
 it’s clients. Clients, in turn, request such access using
 the <em>internet_wanted</em> flag.</p>
-<p>Based on all that information, <em>wg-tool</em> can generates
-the appropriate <em>AllowedIPs</em> for every peer.</p>
+<p>Similarly, peers may request access to one or more networks
+by setting <em>nets_wanted</em>.</p>
+<p>Based on all that information, <em>wg-tool</em> generates
+the appropriate <em>AllowedIPs</em> in the wireguard configs.</p>
 </section>
 <section id="peer-to-peer">
 <h3>Peer to Peer<a class="headerlink" href="#peer-to-peer" title="Link to this heading">¶</a></h3>

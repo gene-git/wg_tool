@@ -154,6 +154,7 @@ Again, a file is created which you can edit and merge. In this example the file 
    Endpoint_alt = ""
    dns = [ "dns.example.com", ]
    dns_search = []
+   dns_lookup_ipv6 = false
    dns_linux = false
    use_vpn_dns = true
    active = true
@@ -255,17 +256,34 @@ we quote from the wireguard documentation.
    Data-wg/vpn-test/user-1/desktop.conf
    Data-wg/vpn-test/user-1/Alt/desktop.conf
 
-* dns / use_vpn_dns / dns_linux/ dns_search 
+* dns / use_vpn_dns / dns_lookup_ipv6 / dns_linux / dns_search 
 
-  Dns servers, list of hosts or IPs, can be provided in 3 places:
+  DNS servers are set using *dns* variable and search domains using *dns_search*.
+  DNS servers list may contain hostanmes or IP addresses (IPv4 or IPv6). They can
+  be set in:
 
-  * vpn info : DNS variable
-  * gateways : DNS variable.
-  * client's own DNS variable.
+  * vpn info : *dns* variable
+  * gateways : *dns* variable.
+  * client's own *dns* variable.
 
   Dns servers are listed in order:
 
     current profile -> gateways -> vpn info
+
+  DNS servers given has hostnames use DNS query to find their associated IP
+  address(es) which are written the the wireguard configs.
+
+  The reason is that Wireguard overloads it's *DNS* variable for both servers
+  and search domains. Any item that is a valid IP is treated as DNS server
+  and any that are not are used for DNS search domains.
+
+  When *wg-tool* does a DNS query to find the IP address(es) for
+  a hostname it uses all IPv4 addresses returned from the query.
+
+  If the *dns_lookup_ipv6* is *true* then it attemps to lookup any IPv6
+  addresses in addition. By default dns_lookup_ipv6 is *false*.
+  While turning this on is benign on an IPV4 only machine, it can
+  add delay in dns resolution due to IPv6 failure followed by IPv4 success.
 
   Client profiles may toggle the flag *use_vpn_dns = false*, in which case
   they do not use dns servers provided by gateways or vpn info.
@@ -295,7 +313,6 @@ we quote from the wireguard documentation.
   set as arguments and written to the resulting wireguard config *postup / postdown*
   variable.
   
-
   The DNS servers and domain search list are specified in vpn info and
   may be modified with *wg-tool --edit <vpn-name>*.
 
