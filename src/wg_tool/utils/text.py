@@ -5,6 +5,7 @@ Text tool(s)
 """
 from typing import Generator
 
+
 def csv_string_to_list(txt: str) -> list[str]:
     """
     wg uses 2 ways to have list of items.
@@ -51,4 +52,3 @@ def _yield_chunk(items: list[str], num: int
     """
     for i in range(0, len(items), num):
         yield items[i:i + num]
-    return

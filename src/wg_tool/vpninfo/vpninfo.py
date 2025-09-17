@@ -78,6 +78,7 @@ class VpnInfo:
         self.dns_script: str = '/etc/wireguard/scripts/wg-peer-updn'
         self.dns: list[str] = []
         self.dns_search: list[str] = []
+        self.dns_lookup_ipv6: bool = False
 
         #
         # Below are all internal only (not editable)
@@ -267,6 +268,7 @@ class VpnInfo:
         # data['allowed_ips'] = self.allowed_ips
         data['dns'] = self.dns
         data['dns_search'] = self.dns_search
+        data['dns_lookup_ipv6'] = self.dns_lookup_ipv6
         data['peer_to_peer'] = self.peer_to_peer
 
         netlist: list[str] = self.networks.get_net_strs()
@@ -314,6 +316,7 @@ class VpnInfo:
         data['tag'] = self.tag
         data['dns'] = self.dns
         data['dns_search'] = self.dns_search
+        data['dns_lookup_ipv6'] = self.dns_lookup_ipv6
         data['networks'] = []
         data['peer_to_peer'] = self.peer_to_peer
         # data['psks'] = self.psks.to_dict()
@@ -506,6 +509,12 @@ def _from_dict(vpninfo: VpnInfo,
         if set(dns_search) != set(vpninfo.dns_search):
             Msg.plainverb(f' updating dns_search: {dns_search}\n', level=2)
         vpninfo.dns_search = dns_search
+
+    dns_lookup_ipv6 = data.get('dns_lookup_ipv6')
+    if isinstance(dns_lookup_ipv6, bool):
+        if dns_lookup_ipv6 != vpninfo.dns_lookup_ipv6:
+            Msg.plainverb(f' updating dns_lookup_ipv6: {dns_lookup_ipv6}\n',
+                          level=2)
 
     dns = data.get('dns_gateways')
     if dns and isinstance(dns, list):

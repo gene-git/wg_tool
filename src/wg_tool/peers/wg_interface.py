@@ -169,9 +169,9 @@ def _dns_data(vpninfo: VpnInfo, prof: ProfileBase
 
     #
     # Wireguard requires IP for dns server and non-IP for search domain.
-    # Convert any non-IP servers to ips
+    # DNS query any non-IP hosynames to IP addresses.
     #
-    dns_list = dns_to_wg_dns(dns_list, [])
+    dns_list = dns_to_wg_dns(dns_list, vpninfo.dns_lookup_ipv6)
 
     clean = []
     for item in dns_search_list:
