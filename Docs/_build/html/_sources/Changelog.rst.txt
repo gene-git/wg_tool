@@ -7,12 +7,21 @@ Tags
 
 .. code-block:: text
 
-	1.1.1 (2022-10-26) -> 8.0.0 (2025-09-17)
-	211 commits.
+	1.1.1 (2022-10-26) -> 8.1.0 (2025-09-17)
+	214 commits.
 
 Commits
 =======
 
+
+* 2025-09-17  : **8.1.0**
+
+.. code-block:: text
+
+              - Fix bug checking working directory when not in the work dir
+                Fix typo in gateway report which made handshake be dropped.
+              - update Docs/wg_tool.pdf Docs/Changelogs
+              - update Docs/wg_tool.pdf Docs/Changelogs
 
 * 2025-09-17  : **8.0.0**
 
