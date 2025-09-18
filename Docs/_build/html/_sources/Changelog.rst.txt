@@ -7,12 +7,24 @@ Tags
 
 .. code-block:: text
 
-	1.1.1 (2022-10-26) -> 8.1.0 (2025-09-17)
-	214 commits.
+	1.1.1 (2022-10-26) -> 8.2.0 (2025-09-18)
+	216 commits.
 
 Commits
 =======
 
+
+* 2025-09-18  : **8.2.0**
+
+.. code-block:: text
+
+              - Command line option completion optionally available
+                  If desired, then python-argcomplete package should be installed.
+ 2025-09-17
+
+.. code-block:: text
+
+              - update Docs Changelogs
 
 * 2025-09-17  : **8.1.0**
 

@@ -9,7 +9,7 @@ Working Examples
 ================
 
 Working examples often provide a good learning path. Here we offer three
-such examaples, each offering a step by step
+such examples, each offering a step by step
 illustration how to achieve each goal. 
 
 In each case, we lay out the goal and then walk through using 
@@ -52,7 +52,7 @@ a summary using:
 
 .. code-block:: bash
 
-   wg-tool --list
+   wg-tool -lv
 
 Where to Run The Gateway
 ------------------------
