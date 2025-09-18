@@ -1,5 +1,6 @@
 # SPDX-25License-Identifier: GPL-2.0-or-later
 # SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# PYTHON_ARGCOMPLETE_OK
 """
 Options - command line options for WgTool
 """
@@ -14,6 +15,7 @@ from utils import Msg
 from utils import csv_string_to_list
 
 from .options_save import (read_saved_options, write_saved_options)
+from .completion import completion_init
 
 type _Opt = tuple[str | tuple[str, ...], dict[str, Any]]
 
@@ -372,6 +374,8 @@ def parse_args(work_dir: str, data_dir: str) -> dict[str, Any]:
     #
     option_dict: dict[str, Any] = {}
     saved_option_dict: dict[str, Any] = {}
+
+    completion_init(par2)
     args = par2.parse_args(rest_args, namespace=wkd_args)
 
     #

@@ -100,6 +100,12 @@ Key features
 New / Interesting
 =================
 
+** 8.2.0**
+
+* Command line option completion optionally available. 
+
+  See :ref:`Completion` section in the manual for details how to use this.
+
 **Major Version 8.0.0**
 
 * Re-write pretty much from scratch. New design and fresh start.
@@ -244,40 +250,43 @@ A Note About Shared Networks
 
 Wireguard denotes networks available to each peer using *AllowedIPs*.
 That variable tells wireguard to permit packets to from the those networks.
+The networks one peer is sharing with another obviously require that the
+other peer be willing to share the same network traffic when communicating
+with one another.
 
-Wireguard uses that to create appropriate routes which all work.
-This means that if a gateway, for example, offers LAN access to it's clients
-then every client has its *AllowedIPs* with that LAN network listed.
+Wireguard uses *AllowedIPs* to create appropriate routes to network traffic.
+For example, if a gateway offers LAN access to it's clients
+then clients of that gateway wishing to use that LAN must have 
+their *AllowedIPs* include that LAN network.
 
 *wg-tool* generates those *AllowedIPs* that wireguard needs. 
 We designed it to minimize user input and to keep those inputs
 aligned with physical reality. 
 
-If some gateway offers access to an internal network, 
-there should be no need to edit every peer to add that network. 
-Instead, the tool updates all peers with access to that network.
-
 For example, if the Office A gateway offers LAN-A access 
-to clients, then *wg-tool* simply has the gateway designate LAN-A 
+to clients, then *wg-tool* has the gateway designate LAN-A 
 available to other peers. When it generates the wireguard configs,
-each peer that asks for access to that network will have access 
+each peer that requests access to that network will have access 
 permitted via it's *AllowedIPs*.
 
 *wg-tool* expects each peer to list those networks it offers to 
-other peers using the *nets_offerered* variable. Of course, this is entirely
-optional, and only needs to be used by peers that wish to share one or more networks.
+other peers using the *nets_offerered* variable. 
+
+Of course, this is optional, and is only needed 
+with peers that wish to share one or more networks.
 This applies to both gateways and clients.
+
+Similarly, peers may request access to one or more networks
+by using *nets_wanted*. 
 
 In addition, gateways may set the *internet_offered* flag to indicate
 that it will pass traffic to and from the internet on behalf of
 it's clients. Clients, in turn, request such access using 
 the *internet_wanted* flag.
 
-Similarly, peers may request access to one or more networks
-by setting *nets_wanted*. 
-
-Based on all that information, *wg-tool* generates
+Based on that information, *wg-tool* generates
 the appropriate *AllowedIPs* in the wireguard configs.
+
 
 Peer to Peer
 ------------

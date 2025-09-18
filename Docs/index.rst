@@ -13,6 +13,7 @@ wg_tool Documentation
    Examples
    Sections/Editing
    Sections/Options
+   Sections/Completion
    Sections/Reports
    Sections/Key-rollover
    Sections/Helper-scripts
