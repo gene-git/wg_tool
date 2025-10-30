@@ -146,10 +146,13 @@ As we did for *wg-A*, add an Endpoint for *wg-B*.
 
 .. code-block:: none
 
-   Endpoint = "vpn_B.example.net:51820"]
-   internet_offered = true
-   post_up = ['/usr/bin/nft -f /etc/wireguard/scripts/postup.nft']
-   post_down = ['/usr/bin/nft flush ruleset']
+   Endpoint:
+   - vpn_B.example.net:51820
+   internet_offered: true
+   post_up:
+   - /usr/bin/nft -f /etc/wireguard/scripts/postup.nft
+   post_down:
+   - /usr/bin/nft flush ruleset
 
 As before merge the changes back:
 

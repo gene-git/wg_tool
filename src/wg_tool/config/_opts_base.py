@@ -88,6 +88,23 @@ class OptsBase:
         self.migrate: bool = True
 
         #
+        # IP Groups
+        # A new peer with group membership <group-name>
+        #   --new --ip-groups <comma-sep list of names> <vpn>.<account>.<profile>
+        # ident can only use ip_group to add one group membership at a time.
+        # We could make this a list ?
+        #
+        # New vpn with ip-group
+        #   --new --add-ip-group <group-name> subnet1,subnet2 --ident <vpn>
+        #
+        #
+        self.add_ip_group_name: str = ''
+        self.add_ip_group_subnets: list[str] = []
+        self.ip_group: str = ''
+
+        self.allow_ip_groups: list[str] = []
+
+        #
         # Command line address - can for 1 vpn on command line.
         # peer_names:
         # list of ID string "names" given on command line.

@@ -6,50 +6,13 @@ toml helper functions
 """
 from typing import (Any)
 import os
-from copy import deepcopy
 import tomllib as toml
 import tomli_w
 
 from .read_write import (open_file, write_path_atomic)
 from .msg import Msg
 
-
-def _dict_none_to_empty(dic: dict[str, Any]) -> dict[str, Any]:
-    """
-    Replaces None values with empty string ''
-    returns copy of dictionary
-    """
-    clean: dict[str, Any] = {}
-    if not dic:
-        return clean
-
-    clean = deepcopy(dic)
-    for (key, val) in clean.items():
-        if val is None:
-            clean[key] = ''
-        elif isinstance(val, dict):
-            clean[key] = _dict_none_to_empty(val)
-    return clean
-
-
-def _dict_remove_none(dic: dict[str, Any]) -> dict[str, Any]:
-    """
-    Rmoves keys with None values
-    returns copy of dictionary
-    """
-    clean: dict[str, Any] = {}
-    if not dic:
-        return clean
-
-    for (key, val) in dic.items():
-        if val is not None:
-            if isinstance(val, dict):
-                new_val = _dict_remove_none(val)
-                if new_val:
-                    clean[key] = new_val
-            else:
-                clean[key] = val
-    return clean
+from .file_tidy import dict_remove_none
 
 
 def dict_to_toml_string(dic: dict[str, Any], drop_empty: bool = False) -> str:
@@ -59,7 +22,7 @@ def dict_to_toml_string(dic: dict[str, Any], drop_empty: bool = False) -> str:
     """
     clean_dict = dic
     if drop_empty:
-        clean_dict = _dict_remove_none(dic)
+        clean_dict = dict_remove_none(dic)
     txt = tomli_w.dumps(clean_dict)
     return txt
 

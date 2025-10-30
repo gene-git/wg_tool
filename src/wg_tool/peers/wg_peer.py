@@ -5,11 +5,13 @@ Write wireguard all config files for one vpn
 """
 # pylint: disable=too-many-instance-attributes
 # pylint: disable=too-few-public-methods
+# pylint: disable=too-many-locals
 from py_cidr import Cidr
 
 from utils import Msg
 from utils import list_string_to_csv_sublists
 from net import internet_networks
+from vpninfo import VpnInfo
 
 from .profile_base import ProfileBase
 
@@ -26,6 +28,7 @@ class WgPeerData:
         self.nets_common: list[str]
         self.peer_to_peer: bool
         self.vpn_nets: list[str]
+        self.vpninfo: VpnInfo
 
     def data(self) -> str:
         """
@@ -166,6 +169,7 @@ def _peer_data_client(wg_peer: WgPeerData) -> str:
     psk = wg_peer.psk
     peer_to_peer = wg_peer.peer_to_peer
     vpn_nets = wg_peer.vpn_nets
+    vpninfo = wg_peer.vpninfo
 
     #
     # This client PSK is shared with gateway
@@ -178,18 +182,31 @@ def _peer_data_client(wg_peer: WgPeerData) -> str:
 
     #
     # Allowed ips
+    # - disable peer-to-peer when allow-ip-groups is being used
+    #   otherwise any peer would have access
+    # - disable internet_wanted for same reason
     #
     allowed: list[str] = []
-    if peer_to_peer:
+    if peer_to_peer and not my_prof.allow_ip_groups:
         allowed = vpn_nets
     else:
         allowed = prof.Address.copy()
 
-    if my_prof.internet_wanted:
+    if my_prof.internet_wanted and not my_prof.allow_ip_groups:
         allowed += internet
 
     if wg_peer.nets_common:
         allowed += wg_peer.nets_common
+
+    if my_prof.allow_ip_groups:
+        group_subnets = vpninfo.get_group_subnets()
+        for name in my_prof.allow_ip_groups:
+            subnets = group_subnets.get(name)
+            if not subnets:
+                Msg.err(f'Failed to find subnets for group {name}\n')
+                continue
+            allowed += subnets
+
     #
     # compact if asked (keep pre-compact as comment)
     #

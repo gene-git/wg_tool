@@ -32,60 +32,68 @@ class Msg:
         print(ctxt, end='')
 
     @staticmethod
-    def plain(txt: str):
+    def msg(txt: str, fg: str = '', level: int = 0):
+        """
+        Message with foreground color support.
+        """
+        if level > Msg.verb:
+            return
+
+        if fg:
+            esc = '\033['
+            set_fg = '38;5;'
+            set_off = '0'
+            ctxt = f'{esc}{set_fg}{fg}m{txt}{esc}{set_off}m'
+            print(ctxt, end='')
+        else:
+            print(txt, end='')
+
+    @staticmethod
+    def plain(txt: str, level: int = 0):
         """ print normal message (no color)"""
-        print(txt, end='')
+        Msg.msg(txt, level=level)
 
     @staticmethod
-    def hdr(txt: str):
+    def hdr(txt: str, level: int = 0):
         """ print header (cyan)"""
-        color = 51
-        Msg._msg_with_color(color, txt)
+        Msg.msg(txt, fg='51', level=level)
 
     @staticmethod
-    def warn(txt: str):
+    def warn(txt: str, level: int = 0):
         """ print warning (yellow) """
-        color = 11
-        Msg._msg_with_color(color, txt)
+        Msg.msg(txt, fg='11', level=level)
 
     @staticmethod
-    def err(txt: str):
+    def err(txt: str, level: int = 0):
         """ print error (red) """
-        color = 196
-        Msg._msg_with_color(color, txt)
+        Msg.msg(txt, fg='196', level=level)
 
     @staticmethod
-    def info(txt):
+    def info(txt, level: int = 0):
         """ print info (green) """
-        color = 10
-        Msg._msg_with_color(color, txt)
+        Msg.msg(txt, fg='10', level=level)
 
     @staticmethod
     def plainverb(txt: str, level: int = 1):
         """ print normal message (no color)"""
-        if Msg.verb >= level:
-            Msg.plain(txt)
+        Msg.plain(txt, level=level)
 
     @staticmethod
     def hdrverb(txt: str, level: int = 1):
         """ print normal message (no color)"""
-        if Msg.verb >= level:
-            Msg.hdr(txt)
+        Msg.hdr(txt, level=level)
 
     @staticmethod
     def warnverb(txt: str, level: int = 1):
         """ print normal message (no color)"""
-        if Msg.verb >= level:
-            Msg.warn(txt)
+        Msg.warn(txt, level=level)
 
     @staticmethod
     def errverb(txt: str, level: int = 1):
         """ print normal message (no color)"""
-        if Msg.verb >= level:
-            Msg.err(txt)
+        Msg.err(txt, level=level)
 
     @staticmethod
     def infoverb(txt: str, level: int = 1):
         """ print normal message (no color)"""
-        if Msg.verb >= level:
-            Msg.info(txt)
+        Msg.info(txt, level=level)

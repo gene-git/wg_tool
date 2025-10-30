@@ -6,6 +6,7 @@ Write dictionary to file in our standard toml format with header
 from typing import (Any)
 
 from utils import dict_to_toml_string
+from utils import dict_to_yaml_string
 from utils import Msg
 
 from .mod_time import mod_time_now
@@ -16,9 +17,10 @@ from .write_db_file import write_db_file
 def write_dict(title: str,
                data_dict: dict[str, Any],
                fpath: str,
-               footer: str = '') -> tuple[bool, bool]:
+               footer: str = '',
+               toml: bool = False) -> tuple[bool, bool]:
     """
-    Write dictionary to file in toml format.
+    Write dictionary to file in yaml format unless toml=True.
     Add comment header to top of file
     File has permision set to u=rw,g=rw
 
@@ -35,7 +37,11 @@ def write_dict(title: str,
     now = mod_time_now()
 
     data = f'#\n#\t{title}\n#\t{now}\n#\n'
-    data_s = dict_to_toml_string(data_dict)
+    if toml:
+        data_s = dict_to_toml_string(data_dict)
+    else:
+        data_s = dict_to_yaml_string(data_dict)
+
     data += data_s
     if footer:
         data += footer

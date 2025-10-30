@@ -10,6 +10,7 @@ from vpn import Vpn
 
 from .vpns_base import VpnsBase
 from .modify_save import save_vpninfo_edit
+from .add_ip_group import add_vpn_ip_group
 
 
 def modify_new(vpns: VpnsBase) -> bool:
@@ -57,6 +58,10 @@ def modify_new(vpns: VpnsBase) -> bool:
             vpn = Vpn(opts, vpn_name)
             vpns.vpn[vpn_name] = vpn
 
+            if opts.add_ip_group_name:
+                if not add_vpn_ip_group(vpns):
+                    return False
+
             if not save_vpninfo_edit(opts.work_dir, vpn.vpninfo):
                 return False
     #
@@ -77,6 +82,9 @@ def modify_new(vpns: VpnsBase) -> bool:
             prof = vpn.add_acct_prof(ident.acct_name, ident.prof_name)
             if not prof:
                 return False
+    #
+    # New accounts handle ip_group and allow_ip_groups automatically
+    #
     return True
 
 

@@ -52,6 +52,12 @@ class Opts(OptsBase):
         self.modify |= bool(self.nets_offered_add or self.nets_offered_del)
 
         #
+        # add ip group, or put profile(s) into group
+        # may be used with opts.new (for both options)
+        #
+        self.modify |= bool(self.add_ip_group_name or self.ip_group or self.allow_ip_groups)
+
+        #
         # ident_names is list of Identity names given on command line.
         # Command line must be of the form:
         #  vpn or vpn.acct or vpn.acct.prof where prof is a
@@ -107,13 +113,21 @@ def input_validation(opts: OptsBase) -> bool:
     - edit, copy, rename, require --ident
     - new: requires idents.ids
     """
-    need_ident = bool(opts.edit or opts.copy or opts.rename)
+    #
+    # later check if any added ip_group subnet(s) is/are subnet(s) of vpn network
+    #
+    need_ident = bool(opts.edit or opts.copy or opts.rename or opts.add_ip_group_name)
 
     need_ids = bool(opts.new or opts.active or opts.not_active)
     need_ids |= bool(opts.roll_keys)
     need_ids |= bool(opts.hidden or opts.not_hidden)
     need_ids |= bool(opts.nets_wanted_add or opts.nets_wanted_del)
     need_ids |= bool(opts.nets_offered_add or opts.nets_offered_del)
+    need_ids |= bool(opts.ip_group)
+
+    if opts.add_ip_group_name and len(opts.add_ip_group_subnets) < 1:
+        Msg.plain(f'IP grouo {opts.add_ip_group_name} missing subnets\n')
+        return False
 
     num_cl_parms = 0
     cl_parm = ''
@@ -132,7 +146,7 @@ def input_validation(opts: OptsBase) -> bool:
 
     if need_ids:
         if num_cl_parms < 1:
-            Msg.err('Missing command line ID(s) to create\n')
+            Msg.err('Missing command line ID(s)\n')
             return False
 
     # if self.nets_add and self.nets_del:

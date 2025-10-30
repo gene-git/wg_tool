@@ -23,6 +23,8 @@ from .modify_edit import modify_edit
 from .modify_rename import modify_rename
 from .modify_merge import modify_merge
 from .modify_nets import modify_nets
+from .add_ip_group import add_vpn_ip_group
+from .add_ip_group import add_profile_ip_group
 
 
 class Vpns(VpnsBase):
@@ -334,9 +336,30 @@ class Vpns(VpnsBase):
         if mod_state:
             return modify_state(self)
 
+        #
         # New
+        # - handle add-ip-group_name (vpn), ip-group (profile)
+        #   and allow-ip-groups (profile)
+        #
         if opts.new:
             return modify_new(self)
+
+        #
+        # add-ip-group, ip-group, allow-ip-groups for non-new case
+        # existing profile
+        #
+        if opts.add_ip_group_name:
+            # adding ip group for existing vpn
+            if not add_vpn_ip_group(self):
+                return False
+
+        if opts.ip_group or opts.allow_ip_groups:
+            if not add_profile_ip_group(self):
+                return False
+
+        # add-ip-group / ip-group if not opts.new
+        # elif opts.add_ip_group or opts.ip_group
+        #   return modify_ip_group(self)
 
         # nets wanted/offered add/remove
         mod_nets = bool(opts.nets_wanted_add or opts.nets_wanted_del)

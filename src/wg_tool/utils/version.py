@@ -3,8 +3,8 @@
 """
 Project wg_tool
 """
-__version__ = "8.2.0"
-__date__ = "2025-09-18"
+__version__ = "9.0.1"
+__date__ = "2025-10-30"
 __reldev__ = "release"
 
 

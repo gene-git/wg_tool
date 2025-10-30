@@ -19,6 +19,7 @@ For example:
 
 '''
 # pylint disable=invalid-name
+# pylint: disable=too-many-locals
 # pylint: disable=too-many-instance-attributes
 # pylint: disable=too-many-public-methods
 import os
@@ -27,17 +28,19 @@ from typing import Any
 from py_cidr import Cidr
 
 from utils import Msg
-from utils import read_toml_file
-from utils import dict_to_toml_string
+from utils import dict_to_yaml_string
 from utils.debug import pprint
 
 from ids import generate_tag
 from psks import Psks
-from data import (mod_time_now, get_vpninfo_file, write_dict)
+from data import (get_vpninfo_file, write_dict, read_dict)
 from net import NetWorks
 
+from .vpninfo_base import VpnInfoBase
+# from .read_info import read_info_file
 
-class VpnInfo:
+
+class VpnInfo(VpnInfoBase):
     """
     Manage all IP addresses for a VPN network.
 
@@ -45,58 +48,8 @@ class VpnInfo:
     The data is stored on disk (work-dir/data/gateways/<vpn-name>/Vpn.info
     """
     def __init__(self, work_dir: str, vpn_name: str):
-        #
-        # tag is used to ensure merge is for correct vpninfo.
-        self.name: str = vpn_name
-        self.tag: str = ''
-        self.networks: NetWorks = NetWorks()
 
-        #
-        # peer_to_peer
-        # true allows all peers to communicate with
-        # one another. Changes gateway and all peers to have AllowedIPs
-        # if entire vpn net not just point to point.
-        #
-        self.peer_to_peer: bool = False
-
-        #
-        # Create default vpn networks.
-        #  - can be changed before adding peers.
-        #
-        vpn_nets = ['10.77.77.0/24', 'fc00:77:77::/64']
-        for net_str in vpn_nets:
-            self.networks.add_cidr(net_str)
-
-        #
-        # these are now per profile - no longer needed.
-        # NB wireguard overloads dns for both dns and search domain.
-        #    i.e. if DNS is IP its used for dns server,
-        #         if non-IP then search domain
-        # So see non-IP in dns list we lookup the IP
-        # before writing to wireguard config
-        #
-        self.dns_script: str = '/etc/wireguard/scripts/wg-peer-updn'
-        self.dns: list[str] = []
-        self.dns_search: list[str] = []
-        self.dns_lookup_ipv6: bool = False
-
-        #
-        # Below are all internal only (not editable)
-        #
-        self.dns_gateways: list[str] = []
-        self.dns_search_gateways: list[str] = []
-        self.mod_time: str = mod_time_now()
-        self.active: bool = True
-        self.hidden: bool = False
-
-        #
-        # Every pair of peers (one or both a gateway)
-        # has a pre-shared secret key (PSK).
-        #
-        self.psks: Psks = Psks()
-
-        self.okay: bool = True
-        self.changed: bool = False
+        super().__init__(vpn_name)
 
         # if Vpn.info file exists read it in.
         self.read_file(work_dir)
@@ -105,6 +58,12 @@ class VpnInfo:
         if not self.tag:
             self.tag = generate_tag()
             self.changed = True
+
+    def show_list(self):
+        """
+        Brief view of networks
+        """
+        self.networks.show_list()
 
     def rename_vpn(self, vpn_name: str) -> bool:
         """
@@ -205,8 +164,7 @@ class VpnInfo:
 
     def reset_cidrs(self, cidrs: list[str]):
         """
-        Drop all existin networks and replace with cidrs.
-
+        Drop all existing networks and replace with cidrs.
         Only used in migration - never use anywhere else.
         """
         self.networks = NetWorks()
@@ -224,7 +182,7 @@ class VpnInfo:
                 self.okay = False
                 return
 
-    def find_new_address(self) -> list[str]:
+    def find_new_address(self, group: str = '') -> list[str]:
         """
         Returns list of new usable address strings for each of the
         networks in this vpn.
@@ -233,7 +191,7 @@ class VpnInfo:
         if not self.networks:
             return addresses
 
-        addresses = self.networks.find_new_addresses()
+        addresses = self.networks.find_new_addresses(group=group)
         if not self.networks.okay:
             self.okay = False
 
@@ -306,6 +264,14 @@ class VpnInfo:
             return False
         return True
 
+    def get_group_subnets(self) -> dict[str, list[str]]:
+        """
+        Return the groups with their subnets (if any)
+        """
+        group_subnets: dict[str, list[str]] = {}
+        group_subnets = self.networks.get_group_subnets()
+        return group_subnets
+
     def to_dict(self) -> dict[str, Any]:
         """
         What we save in Vpn.info file
@@ -325,11 +291,17 @@ class VpnInfo:
         if netlist:
             data['networks'] = netlist
 
+        group_subnets: dict[str, list[str]]
+        group_subnets = self.networks.get_group_subnets()
+        if group_subnets:
+            data['group_subnets'] = group_subnets
+
         data['dns_gateways'] = self.dns_gateways
         data['dns_search_gateways'] = self.dns_search_gateways
         data['mod_time'] = self.mod_time
         data['active'] = self.active
         data['hidden'] = self.hidden
+
         return data
 
     def from_dict(self,
@@ -354,6 +326,8 @@ class VpnInfo:
             return False
 
         okay = _from_dict(self, data, merging, has_profiles)
+        if okay:
+            self.changed = True
         return okay
 
     def read_file(self, work_dir: str) -> bool:
@@ -362,10 +336,16 @@ class VpnInfo:
         """
         vpn_name = self.name
         info_file = get_vpninfo_file(work_dir, vpn_name)
+
         if not os.path.isfile(info_file):
             return False
 
-        info_dict = read_toml_file(info_file)
+        #
+        # tries yaml first then toml
+        # we always save as yaml
+        #
+        info_dict: dict[str, Any]
+        info_dict = read_dict(info_file)
         if not info_dict:
             Msg.err('VpnInfo: Error reading Vpn.info file\n')
             self.okay = False
@@ -441,7 +421,7 @@ class VpnInfo:
         title = f'# {self.name}\n'
         title += '# vpn info\n'
         title += '# Required: vpn cidr block(s):\n'
-        title += '#   networks = ["10.77.77.0/24", "fc00:77.77::/64"]\n'
+        title += '#   networks = ["10.77.77.0/24", "fc00:77:77::/64"]\n'
         title += '# Required: dns server(s) host(s) and/or ip(s)\n'
         title += '#   dns = ["dns1.example.com", "10.1.1.1"]\n'
         title += '# Do not change the name or tag fields.\n'
@@ -449,9 +429,24 @@ class VpnInfo:
         title += '#\n'
 
         info_str = title
-        info_str += dict_to_toml_string(info_dict, drop_empty=False)
+        info_str += dict_to_yaml_string(info_dict, drop_empty=False, flow_style=False)
 
         return info_str
+
+    def has_ip_group(self, name: str):
+        """
+        Return true if group name exists
+        """
+        return self.networks.has_ip_group(name)
+
+    def add_ip_group(self, group: str, subnets: list[str]) -> bool:
+        """
+        Add a new group and subnet(s)
+        """
+        if not group or not subnets:
+            return False
+        ok = self.networks.add_ip_group(group, subnets)
+        return ok
 
     def pprint(self, recurs: bool = False):
         """ pretty print self """
@@ -495,38 +490,37 @@ def _from_dict(vpninfo: VpnInfo,
 
     tag = data.get('tag')
     if tag and tag != vpninfo.tag:
-        Msg.plainverb(f' updating tag: {tag}\n', level=2)
+        Msg.plain(f' updating tag: {tag}\n', level=2)
         vpninfo.tag = tag
 
     dns = data.get('dns')
     if dns and isinstance(dns, list):
         if set(dns) != set(vpninfo.dns):
-            Msg.plainverb(f' updating dns: {dns}\n', level=2)
+            Msg.plain(f' updating dns: {dns}\n', level=2)
             vpninfo.dns = dns
 
     dns_search = data.get('dns_search')
     if dns and isinstance(dns_search, list):
         if set(dns_search) != set(vpninfo.dns_search):
-            Msg.plainverb(f' updating dns_search: {dns_search}\n', level=2)
+            Msg.plain(f' updating dns_search: {dns_search}\n', level=2)
         vpninfo.dns_search = dns_search
 
     dns_lookup_ipv6 = data.get('dns_lookup_ipv6')
     if isinstance(dns_lookup_ipv6, bool):
         if dns_lookup_ipv6 != vpninfo.dns_lookup_ipv6:
-            Msg.plainverb(f' updating dns_lookup_ipv6: {dns_lookup_ipv6}\n',
-                          level=2)
+            Msg.plain(f' updating dns_lookup_ipv6: {dns_lookup_ipv6}\n', level=2)
 
     dns = data.get('dns_gateways')
     if dns and isinstance(dns, list):
         if set(dns) != set(vpninfo.dns_gateways):
-            Msg.plainverb(f' updating dns_gateways: {dns}\n', level=2)
+            Msg.plain(f' updating dns_gateways: {dns}\n', level=2)
             vpninfo.dns_gateways = dns
 
     dns_search = data.get('dns_search_gateways')
     if dns and isinstance(dns_search, list):
         if set(dns_search) != set(vpninfo.dns_search_gateways):
             txt = f' updating dns_search_gatwways: {dns_search}'
-            Msg.plainverb(f'{txt}\n', level=2)
+            Msg.plain(f'{txt}\n', level=2)
         vpninfo.dns_search_gateways = dns_search
 
     peer_to_peer = data.get('peer_to_peer')
@@ -545,9 +539,18 @@ def _from_dict(vpninfo: VpnInfo,
     if not merging or not has_profiles:
         vpninfo.networks = NetWorks()
 
+    #
+    # NB - if has_profiles, then we should only allow expanding
+    #      network - todo: add check to ensure only expand network
+    #
     if net_strs and isinstance(net_strs, list):
         for net_str in net_strs:
             vpninfo.networks.add_cidr(net_str)
+
+    group_subnets = data.get('group_subnets')
+    if group_subnets and isinstance(group_subnets, dict):
+        for (group, subnets) in group_subnets.items():
+            vpninfo.networks.add_ip_group(group, subnets)
 
     if merging:
         return True

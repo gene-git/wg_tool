@@ -4,6 +4,7 @@
 DB Data module
 """
 from .mod_time import (mod_time_now, mod_time_file)
+from .read_dict import read_dict
 from .write_dict import write_dict
 from .write_db_file import write_db_file
 

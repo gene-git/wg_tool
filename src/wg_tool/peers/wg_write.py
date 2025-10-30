@@ -282,6 +282,7 @@ def _wg_write_peer_gateways(wg_conf: WgConfigBase,
             wg_peer.psk = psk
             wg_peer.peer_to_peer = vpninfo.peer_to_peer
             wg_peer.vpn_nets = vpn_nets
+            wg_peer.vpninfo = vpninfo
 
             data += wg_peer.data()
 

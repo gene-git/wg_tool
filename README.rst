@@ -19,7 +19,7 @@ communicate with one another. Some peers, known as gateways, allow other peers
 to connect to them. Peers that are not gateways are called clients.
 
 A basic vpn has a wireguard gateway and several clients that can use the gateway. 
-The gateway may provide access to internel networks.
+The gateway may provide access to internal networks.
 It may also allow clients to have all their internet traffic flow via the gateway.
 
 Since traffic between the client and the gateway is encrypted, this provides
@@ -61,7 +61,8 @@ On Archlinux it can be installed from the AUR or using the
 PKGBUILD provided in packaging directory.
 
 All git tags are signed with an arch@sapience.com key available via WKD
-or from the `sapience.com <https://www.sapience.com/tech>`_ website. Add the key to your package builder gpg keyring.
+or from the `sapience.com <https://www.sapience.com/tech>`_ website. 
+Add the key to your package builder gpg keyring.
 The key is included in the Arch package and the source= line with *?signed* at the end can be used
 to verify the git tag. You can also manually verify the signature as usual with 
 *git tag -v <tag>*.
@@ -99,6 +100,29 @@ Key features
 
 New / Interesting
 =================
+
+** 9.0.0**
+
+* Add support for *IP Groups*. 
+  
+  This is helpful when managing routes for *groups* of users.
+  By designating some peers as members of an *ip-group*, network routes can now be
+  for specific groups. The IPs for an ip group must be a proper subnet
+  of the VPN network. 
+  
+  An ip group is created using the *--add-ip-group <name> <subnet(s)>* option.
+
+  Note that since an ip group is defined by the IP subnet of the vpn network, a 
+  peer can only be a member of one group since it only has 1 IP.
+  
+  See :ref:`Ip_Groups` and :ref:`Example_4` for a sample use case.
+
+* Switch File Data from TOML to YAML format.
+
+  YAML is more robust than toml [#]_. Existing files are auto converted,
+  the first time version *9.x* is used.
+  *Edit* files now use yaml format as well. Docs updated to reflect this.
+
 
 ** 8.2.0**
 
@@ -219,18 +243,20 @@ We provide more information on these later in the documentation.
 We also provide a sample nftables firewall script which will suffice for 
 many/most typical gateway servers. We also provide a linux client program 
 which is a DNS helper tool, changing DNS resolution while the vpn is running
-and restoring it to it's original state when the vpn is stopped.
+and restoring it to it's original state when the vpn is stopped. For clients
+with all their traffic sent through the vpn this helper ensures
+DNS requests are resolved via the tunnel as well.
 
 Wireguard Config: Peer Section(s)
 ---------------------------------
 
 The second part of any peer config is one or more *Peer* sections. Each of these
 provides the information required to engage with that peer. 
-Each peer section has the public key of of the peer.
+Each peer section has the public key of the peer.
 
 It also provides the list of networks that are acceptable to use in communicating with that peer.
-The available networks are typically internal LANs or internet access. These is the 
-*AllowedIPs* variable. It can be one network, a 
+The available networks are typically internal LANs or internet access. This is the 
+*AllowedIPs* variable. It can be one network or a 
 comma separated list of networks, and it can be repeated.
 
 Each pair of peers may also share a secret known as a *pre-shared-key* or PSK.
@@ -238,7 +264,7 @@ Wireguard's author, Jason Donenfeld, opines that using this provides an addition
 security layer facilitating post-quantum resistance. *wg-tool* automatically generates
 a unique PSK for each pair of peers that communicate with one another.
 
-The peer section also includes the Endpoint, if that peer is a gateway. 
+The peer section may also include an Endpoint if that peer is a gateway. 
 
 A client may send all it's traffic to the the gateway it
 is using or it may choose to send only the internal LAN traffic to the gateway 
@@ -323,7 +349,7 @@ the resulting generated configs (in *Data-wg*) with those that were imported.
 Simple Example
 ==============
 
-Lets do a really little example that illustrates how easy it is
+Lets do a simple little example that illustrates how easy it is
 to generate wireguard configs. The goal here is to:
 
 * Create a vpn called *vpn-test*
@@ -359,3 +385,8 @@ Then merge the change:
 
 All the wireguard configs will be found under the *Data-wg* directory.
 This has the gateway server config along with both users' laptop configs.
+
+.. rubric:: Footnotes
+
+.. [#] For example adding a dictionary in the middle of a group of key=val will 
+       incorrectly append subsequent key=val to the dictionary

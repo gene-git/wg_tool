@@ -9,14 +9,16 @@ echo "creating vpn-test.servers.wg-B:"
 ./wg-tool --new vpn-test.servers.wg-B
 ./wg-tool --edit vpn-test.servers.wg-B
 
-sed -e s'/^Endpoint = .*/Endpoint = "vpn_B.example.com:51820"/' \
-    -e s'/^internet_offered = .*/internet_offered = true/' \
-    -e s'/^internet_wanted =.*/internet_wanted = false/' \
-    -e s'/^post_up = .*/post_up = \["\/usr\/bin\/nft -f \/etc\/wireguard\/scripts\/postup.nft"\]/' \
-    -e s'/^post_down = .*/post_down = \["\/usr\/bin\/nft flush ruleset"\]/' \
-    -i Edits/vpn-test.servers.wg-B.mods
+FILE='Edits/vpn-test.servers.wg-B.mods'
+./do-edits ex2-server $FILE 
+#sed -e s'/^Endpoint = .*/Endpoint = "vpn_B.example.com:51820"/' \
+#    -e s'/^internet_offered = .*/internet_offered = true/' \
+#    -e s'/^internet_wanted =.*/internet_wanted = false/' \
+#    -e s'/^post_up = .*/post_up = \["\/usr\/bin\/nft -f \/etc\/wireguard\/scripts\/postup.nft"\]/' \
+#    -e s'/^post_down = .*/post_down = \["\/usr\/bin\/nft flush ruleset"\]/' \
+#    -i Edits/vpn-test.servers.wg-B.mods
 
-./wg-tool --merge Edits/vpn-test.servers.wg-B.mods
+./wg-tool --merge $FILE
 
 # Add net for users
 #

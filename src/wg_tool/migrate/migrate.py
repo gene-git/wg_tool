@@ -37,7 +37,6 @@ from ids import Identity
 from .server import Server
 from .users import Users
 from .user import User
-# from .migrate_int import migrate_internal
 
 
 def migrate_server(vpn: Vpn) -> tuple[Identity, list[str]]:

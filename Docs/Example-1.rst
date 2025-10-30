@@ -172,15 +172,16 @@ We now create a new vpn named *vpn-test*. For this the ID is simply *vpn-test*:
     wg-tool -new vpn-test
 
 This also invokes the *edit* option and displays the file name.
-This file will be ./Edits/vpn-test-info.mods.
+This file will be ./Edits/vpn-test-info.mods and is in YAML format.
 
 Please edit this file and add any relevant VPN information.
 In our case we really may only need to add a DNS server (or 2), host or IP.
 
 .. code-block:: none
 
-   dns = ['10.10.10.10']
-   peer_to_peer = false
+   dns:
+   - 10.10.10.10
+   peer_to_peer: false
 
 Note that elements in *dns* are dns servers. They can be an IP address
 or a hostname; hostnames will be converted to their IP address
@@ -249,12 +250,15 @@ This means we need to modify a few lines as shown:
 
 .. code-block:: none
 
-   Endpoint = "vpn_A.example.com:51820"
-   internet_offered = true
-   internet_wanted = false
-   nets_offered = ["192.168.1.0/24"]
-   post_up = ['/usr/bin/nft -f /etc/wireguard/scripts/postup.nft']
-   post_down = ['/usr/bin/nft flush ruleset']
+   Endpoint: vpn_A.example.com:51820
+   internet_offered: true
+   internet_wanted: false
+   nets_offered:
+   - 192.168.1.0/24
+   post_up:
+   - /usr/bin/nft -f /etc/wireguard/scripts/postup.nft
+   post_down:
+   - /usr/bin/nft flush ruleset
 
 The *post_up/down* are scripts wireguard runs bringing vpn tunnel up/down.
 The nftables rules allow traffic to be NAT'd to and from the tunnel.

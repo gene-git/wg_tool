@@ -9,10 +9,16 @@ wg-tool server class
 from typing import (Any)
 import os
 
-from utils import (Msg, read_toml_file, state_marker)
+from utils import Msg
+from utils import state_marker
 from utils.debug import pprint
-from data import (mod_time_now, get_file_names, write_dict)
-from data import (get_vpn_dir)
+
+from data import mod_time_now
+from data import get_file_names
+from data import read_dict
+from data import write_dict
+from data import get_vpn_dir
+
 from net import NetWorks
 from config import Opts
 from ids import Identity
@@ -381,7 +387,7 @@ class Acct():
         info_file = os.path.join(acct_dir, 'Acct.info')
 
         if os.path.isfile(info_file):
-            info_dict = read_toml_file(info_file)
+            info_dict = read_dict(info_file)
             for (k, v) in info_dict.items():
                 setattr(self, k, v)
         else:

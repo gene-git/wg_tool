@@ -1,11 +1,11 @@
-# SPDX-25License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0-or-later
 # SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
 # PYTHON_ARGCOMPLETE_OK
 """
 Command line completion
 If argcomplete available
 """
-
+# pylint: disable=unused-argument
 import argparse
 
 

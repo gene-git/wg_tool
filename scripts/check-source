@@ -1,0 +1,51 @@
+#!/usr/bin/bash
+#
+# Source code checks.
+#
+# Run in src dir
+# i.e. cd src/gfw
+# 
+
+apps=(
+    wg-tool.py
+)
+
+modules=(
+    app
+    config
+    crypto
+    data
+    dns_resolver 
+    ids 
+    migrate
+    net 
+    peers 
+    psks
+    rpt
+    utils
+    vpn
+    vpninfo
+    vpns
+    wg_import
+)
+    
+echo "-------------------------------"
+echo "     pylint"
+echo "-------------------------------"
+
+PYTHONPATH=. pylint */*py ${apps[@]}
+
+
+echo "-------------------------------"
+echo "     pycodestyle"
+echo "-------------------------------"
+
+PYTHONPATH=. pycodestyle --max-line-length=110 */*py ${apps[@]}
+
+echo "-------------------------------"
+echo "     mypy"
+echo "-------------------------------"
+
+mypy --check-untyped-defs --follow-untyped-imports ${modules[@]} ${apps[@]}
+
+

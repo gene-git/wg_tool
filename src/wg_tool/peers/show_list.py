@@ -33,7 +33,8 @@ def show_list(prof: ProfileBase, opts: Opts):
     name = prof.ident.prof_name
     is_gw = ' (gateway)' if prof.is_gw else ''
     has_alt = ' [Has Alt]' if prof.alternate_wanted else ''
-    Msg.plain(f'{"":20s} {state_mark} {name:20s} {mod_time}{is_gw}{has_alt}\n')
+    ip_group = f' group: {prof.ip_group}' if prof.ip_group else ''
+    Msg.plain(f'{"":20s} {state_mark} {name:20s} {mod_time}{is_gw}{has_alt} {ip_group}\n')
 
     #
     # nets

@@ -64,6 +64,7 @@ class NetWork:
         self.iptype: str = ''
         self.net_avail: list[IPvxNetwork] = []
 
+        # internal convenience
         self.prefixlen: dict[str, int] = {'ip4': 32, 'ip6': 128}
 
     def expand_net(self, net_str: str) -> bool:
@@ -75,13 +76,25 @@ class NetWork:
         """
         if self.net_in_ip(net_str):
             # cidr is supernet of net
-            new_net = Cidr.cidr_to_net(net_str)
-            if not new_net:
-                Msg.err(f'Error with VPN network address {net_str}')
-                self.okay = False
-                return False
-            self.net_str = net_str
-            self.net = new_net
+            # new_net = Cidr.cidr_to_net(net_str)
+            # if not new_net:
+            #     Msg.err(f'Error with VPN network address {net_str}')
+            #     self.okay = False
+            #     return False
+            #
+            # update network to super net
+            # - unmark broadcast/network address of current net
+            # - Retain existing net_taken
+            # - net_taken = "net" - "net_avail"
+            #
+            self.unmark_address_taken(self.net.network_address)
+            self.unmark_address_taken(self.net.broadcast_address)
+            net_taken = self.get_net_taken()
+            self.net_avail = []
+            self.initialize(net_str)
+            for taken in net_taken:
+                self.mark_address_taken(taken)
+            # self.net = new_net
             return True
 
         return False
@@ -191,11 +204,84 @@ class NetWork:
             else:
                 avail.append(net)
         if changed:
+            avail = Cidr.compact_nets(avail)
             self.net_avail = Cidr.sort_nets(avail)
         else:
             Msg.err(f'Error: IP {address} already used\n')
             return False
         return True
+
+    def get_net_taken(self) -> list[IPvxNetwork]:
+        """
+        Return list of taken subnets
+        """
+        net_taken: list[IPvxNetwork]
+        net_taken = Cidr.nets_exclude(self.net_avail, [self.net])  # type: ignore[arg-type]
+        return net_taken
+
+    def unmark_address_taken(self, address: IPvxNetwork | IPAddress) -> bool:
+        """
+        Free up address. Not strictly needed as net_avail is always
+        generated fresh on load.
+        """
+        if not address:
+            return False
+
+        addr = Cidr.address_to_net(address)
+        if not addr or addr is None:
+            return False
+
+        ip_in_net = addr.subnet_of(self.net)  # type: ignore[arg-type]
+        if not ip_in_net:
+            txt = f'not part of network {self.net_str}'
+            Msg.warn(f'Note: cannot mark {address} taken: {txt}\n')
+            return False
+
+        avail = self.net_avail + [addr]
+        avail = Cidr.compact_nets(avail)
+        if avail != self.net_avail:
+            self.net_avail = Cidr.sort_nets(avail)
+        return True
+
+    def get_nets_taken(self) -> list[IPvxNetwork]:
+        """
+        Return list of ips in use.
+        """
+        nets_taken: list[IPvxNetwork] = [self.net]
+
+        nets_taken = Cidr.nets_exclude(self.net_avail, nets_taken)
+        return nets_taken
+
+    def get_cidrs_taken(self) -> list[str]:
+        """
+        Return list of ips in use.
+        """
+        nets_taken = self.get_nets_taken()
+        cidrs_taken: list[str] = Cidr.nets_to_cidrs(nets_taken)
+        return cidrs_taken
+
+    def net_is_avail(self, net: IPvxNetwork) -> bool:
+        """
+        Return True if net is not taken
+        """
+        if not self.net_avail:
+            return False
+
+        if Cidr.net_is_subnet(net, self.net_avail):
+            return True
+        return False
+
+    def cidr_is_avail(self, cidr: str) -> bool:
+        """
+        Return True if cidr is not taken
+        """
+        if not cidr:
+            return False
+        net = Cidr.cidr_to_net(cidr)
+        if not net:
+            return False
+        is_avail = self.net_is_avail(net)
+        return is_avail
 
     def find_new_address(self, mark_unavail: bool = True
                          ) -> IPvxNetwork | None:

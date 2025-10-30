@@ -1,4 +1,4 @@
-# SPDX-25License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0-or-later
 # SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
 # PYTHON_ARGCOMPLETE_OK
 """
@@ -86,6 +86,9 @@ def _edit_options() -> tuple[str, str, list[_Opt]]:
             --new
             --merge
             --rename
+            --add-ip-group
+            --ip-group
+            --allow-ip-groups
          modify = False  (means not using mods/xxx)
             --roll-keys
             --active
@@ -98,7 +101,7 @@ def _edit_options() -> tuple[str, str, list[_Opt]]:
     """
     opts: list[_Opt] = []
 
-    title = _title_underline('Edit / Modify Options')
+    title = _title_underline('Edit / Modify Peer Options')
     description = 'Add, edit or modify identities.'
 
     txt = 'Edit one item.\n'
@@ -157,7 +160,8 @@ def _edit_options() -> tuple[str, str, list[_Opt]]:
                  {'help': txt}))
 
     txt = 'Create new item (See positional parameters))]\n'
-    txt += 'Each can be one of: vpn, vpn.account or vpn.account.prof'
+    txt += 'Each can be one of: vpn, vpn.account or vpn.account.prof\n'
+    txt += 'A Profile can be put into ip group using --ip-group <name1>[,...]'
     opts.append((('-new', '--new'),
                  {'help': txt, 'action': 'store_true'}))
 
@@ -182,6 +186,29 @@ def _edit_options() -> tuple[str, str, list[_Opt]]:
     opts.append((('-not-hidden', '--not-hidden'),
                  {'action': 'store_true', 'help': txt}))
 
+    #
+    # Add IP Group network
+    # Attach ip group to profile identity
+    #   --add-ip-group create a new group
+    #   --ip-group assign peer profile to this group
+    #   --allow-ip-groups list of groups that are allowed access to this peer
+    #
+    txt = 'Add new IP group name and subnet(s). Requires --ident <vpn-name>\n'
+    txt += 'Every network in vpn needs a group subnet given as comma separated list\n'
+    txt += 'e.g. --add-ip-group 10.77.77.28/30,fc00:77:77::28/126'
+    opts.append((('-add-ip-group', '--add-ip-group'),
+                 {'nargs': 2, 'metavar': ('Name', 'Subnet(s)'),
+                  'default': None, 'help': txt}))
+
+    txt = 'Associate specified profile as member of existing ip group <Name>\n'
+    txt += 'Requires one or more IDs on command line: <vpn>.<account>.<profile>'
+    opts.append((('-ip-group', '--ip-group'),
+                 {'metavar': 'Name', 'help': txt}))
+
+    txt = 'Group(s) that are allowed access to this peer profile\n'
+    txt += 'Group name(s) argument is a comma separated list <group1>[,<group2>..]'
+    opts.append((('-allow-ip-groups', '--allow-ip-groups'),
+                 {'metavar': 'Name', 'help': txt}))
     #
     # Sort options alphabetically
     #   - Sort on first as some may only have one option.
@@ -388,12 +415,25 @@ def parse_args(work_dir: str, data_dir: str) -> dict[str, Any]:
         save_keys = int_keys
         for (key, val) in vars(args).items():
             if val is not None:
-
                 if key in int_keys:
                     option_dict[key] = int(val)
 
                 elif key in cslist_keys:
                     option_dict[key] = csv_string_to_list(val)
+
+                elif key == 'add_ip_group':
+                    name = val[0]
+                    subnet = val[1]
+                    subnets = subnet.split(',')
+                    option_dict['add_ip_group_name'] = name
+                    option_dict['add_ip_group_subnets'] = subnets
+
+                elif key == 'allow_ip_groups':
+                    names = val.split(',')
+                    option_dict[key] = names
+
+                elif key == 'ip_group':
+                    option_dict[key] = val
 
                 else:
                     option_dict[key] = val

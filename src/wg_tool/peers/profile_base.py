@@ -25,6 +25,21 @@ class ProfileBase:
         self.Address: list[str] = []
         self.AddressWg: list[str] = []
 
+        #
+        # ip_group:
+        # - A peer can belong to only 1 ip group, since group is defined
+        # - by the group vpn ip being in ip group subnet and peer can
+        #   have only 1 IP per vpn network.
+        # allow_ip_groups:
+        # - list of groups allowed access to this peer
+        #
+        # It might work to have group per vpn network but it is unclear.
+        # So we take the simple/robust approach and define a group for
+        # every vpn net and any peer can only be member of 1 group.
+        #
+        self.ip_group: str = ''
+        self.allow_ip_groups: list[str] = []
+
         self.PrivateKey: str = ''
         self.PublicKey: str = ''
 

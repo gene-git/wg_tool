@@ -9,11 +9,12 @@ import os
 
 from utils import Msg
 from utils import make_dir_path
-from utils import dict_to_toml_string
-from utils import read_toml_file
 from utils import write_path_atomic
+from utils import dict_to_yaml_string
 
 from data import restrict_file_mode
+from data import read_dict
+# from data import write_dict
 
 
 def write_saved_options(opts: dict[str, Any], fpath: str) -> bool:
@@ -47,7 +48,7 @@ def write_saved_options(opts: dict[str, Any], fpath: str) -> bool:
     #
     # write it out (we dont need history files here)
     #
-    opts_str = dict_to_toml_string(opts_save)
+    opts_str = dict_to_yaml_string(opts_save)
     fmode = restrict_file_mode()
     if not write_path_atomic(opts_str, fpath, fmode):
         Msg.err(f'Error saveing options file: {fpath}\n')
@@ -68,7 +69,7 @@ def read_saved_options(fpath: str) -> dict[str, Any]:
     if not (fpath and os.path.isfile(fpath)):
         return opts_dict
 
-    from_file = read_toml_file(fpath)
+    from_file = read_dict(fpath)
 
     #
     # backward compat: change older option names to current ones.

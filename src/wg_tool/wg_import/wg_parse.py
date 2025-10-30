@@ -6,6 +6,7 @@ Data for a wireguard peer config
 # pylint: disable = invalid-name
 # pylint: disable = too-few-public-methods
 # pylint: disable = too-many-instance-attributes
+# pylint: disable = too-many-branches
 from utils import clean_comment
 from utils import csv_string_to_list
 from crypto import public_from_private_key

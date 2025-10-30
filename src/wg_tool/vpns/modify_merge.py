@@ -9,7 +9,7 @@ import os
 from typing import Any
 
 from utils import Msg
-from utils import read_toml_file
+from data import read_dict
 
 from .vpns_base import VpnsBase
 from .modify_save import get_prof_save_file
@@ -151,7 +151,7 @@ def _read_merge_file(file: str) -> dict[str, Any]:
     """
     Read the file and return as dictionary.
     """
-    data_dict = read_toml_file(file)
+    data_dict = read_dict(file)
     if not data_dict:
         Msg.err(f'Mod Merge - empty or missing merge file: {file}\n')
     return data_dict

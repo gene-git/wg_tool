@@ -11,13 +11,15 @@ import os
 from copy import deepcopy
 
 from utils import Msg
-from utils import read_toml_file
-from utils import dict_to_toml_string
+from utils import dict_to_yaml_string
 
 from config import Opts
 
 from crypto import gen_key_pair
-from data import (write_dict, mod_time_now)
+from data import mod_time_now
+from data import write_dict
+from data import read_dict
+
 from net import NetWorks
 from net import internet_networks
 from ids import Identity
@@ -110,7 +112,7 @@ class Profile(ProfileBase):
             return True
         file = os.path.basename(fpath)
         prof_name_file = file.removesuffix('.prof')
-        prof_dict = read_toml_file(fpath)
+        prof_dict = read_dict(fpath)
 
         # consistency check
         id_dict = prof_dict.get('ident')
@@ -121,7 +123,7 @@ class Profile(ProfileBase):
                 Msg.err(f'Error: profile name mismatch: {txt}\n')
                 return False
         else:
-            Msg.warn('Error - missing id from {fpath}\n')
+            Msg.warn(f'Error - missing id from {fpath}\n')
 
         # save attribs
         self.from_dict(prof_dict)
@@ -401,7 +403,7 @@ class Profile(ProfileBase):
         """
         Load data from file
         """
-        data_dict = read_toml_file(fpath)
+        data_dict = read_dict(fpath)
         if not data_dict:
             return False
         self.from_dict(data_dict)
@@ -559,14 +561,14 @@ def _profile_str_for_edit(prof: Profile) -> str:
     pstr += '#\n\n'
 
     if not edit_dict.get('post_up'):
-        post_up = ['/usr/bin/nft -f /etc/wireguard/scripts/postup.nft']
-        pstr += f'# post_up = {post_up}\n'
+        post_up = '/usr/bin/nft -f /etc/wireguard/scripts/postup.nft'
+        pstr += f'# post_up:\n# - {post_up}\n'
 
     if not edit_dict.get('post_down'):
-        post_down = ['/usr/bin/nft flush ruleset']
-        pstr += f'# post_down = {post_down}\n'
+        post_down = '/usr/bin/nft flush ruleset'
+        pstr += f'# post_down:\n# - {post_down}\n'
     pstr += '\n'
-    pstr += dict_to_toml_string(edit_dict, drop_empty=False)
+    pstr += dict_to_yaml_string(edit_dict, drop_empty=False, flow_style=False)
 
     return pstr
 

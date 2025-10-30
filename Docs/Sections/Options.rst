@@ -131,6 +131,17 @@ Current Help
       -hidden, --hidden     Hidden are not shown unless double verb -vv is used.
       -not-hidden, --not-hidden
                             Mark some IDs not hidden. (See positional parameters)
+      -add-ip-group, --add-ip-group Name Subnet(s)
+                            Add new IP group name and subnet(s). Requires --ident <vpn-name>
+                            Every network in vpn needs a group subnet given as comma separated list
+                            e.g. --add-ip-group 10.77.77.28/30,fc00:77:77::28/126
+      -ip-group, --ip-group Name
+                            Associate specified profile as member of existing ip group <Name>
+                            Requires one or more IDs on command line: <vpn>.<account>.<profile>
+      -allow-ip-groups, --allow-ip-groups Name
+                            Group(s) that are allowed access to this peer profile
+                            Group name(s) argument is a comma separated list <group1>[,<group2>..]
+
 
     :*-----------------*:
     : Reporting Options :

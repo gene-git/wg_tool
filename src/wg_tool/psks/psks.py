@@ -6,12 +6,12 @@ Pre Shared Keys
 import os
 
 from utils import Msg
-from utils import read_toml_file
 from utils.debug import pprint
 from crypto import gen_psk
 
 from data import get_vpnpsk_file
 from data import write_dict
+from data import read_dict
 
 
 class Psks:
@@ -141,7 +141,7 @@ class Psks:
         if not psk_file:
             return True
 
-        psk_dict = read_toml_file(psk_file)
+        psk_dict = read_dict(psk_file)
         if psk_dict and isinstance(psk_dict, dict):
             self.from_dict(psk_dict)
         return True

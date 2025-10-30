@@ -175,12 +175,25 @@ def copy_file_atomic(src: str, dst: str) -> bool:
 
 
 def read_file(targ_dir: str, file: str) -> str:
-    """ read text file """
+    """
+    read text file
+    """
 
     if not targ_dir:
         return ''
 
     fpath = os.path.join(targ_dir, file)
+    return read_file_path(fpath)
+
+
+def read_file_path(fpath: str) -> str:
+    """
+    Read a text file
+    Return as single string
+    """
+    if not fpath:
+        return ''
+
     try:
         fobj = open_file(fpath, 'r')
         if not fobj:

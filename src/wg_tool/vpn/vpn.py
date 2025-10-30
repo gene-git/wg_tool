@@ -380,9 +380,21 @@ class Vpn():
         txt += '  and add an Endpoint'
         Msg.warnverb('txt\n', level=2)
 
+        #
+        # Check for group name and allow_ip_groups
+        #
+        ip_group = self.opts.ip_group
         vpninfo = self.vpninfo
-        new_ips = vpninfo.find_new_address()
+        new_ips = vpninfo.find_new_address(group=ip_group)
         prof = acct.add_prof(prof_name, new_ips)
+        if prof:
+            if ip_group:
+                prof.ip_group = ip_group
+
+            if self.opts.allow_ip_groups:
+                prof.allow_ip_groups = self.opts.allow_ip_groups
+                prof.internet_wanted = False
+
         return prof
 
     def read_accts(self) -> bool:
@@ -469,7 +481,9 @@ class Vpn():
         mod_time = self.vpninfo.mod_time
 
         if not opts.brief:
-            Msg.hdr(f'{state} {self.name:16s} {mod_time}:\n')
+            Msg.info(f'{state} {self.name:16s} {mod_time}:\n')
+
+        vpninfo.show_list()
 
         if not self.accts:
             return
@@ -713,6 +727,13 @@ class Vpn():
             if acct.has_any_profiles():
                 return True
         return False
+
+    def add_ip_group(self, name: str, subnets: list[str]) -> bool:
+        """
+        Add group - must supply a subnet for each network in the vpn
+        """
+        ok = self.vpninfo.add_ip_group(name, subnets)
+        return ok
 
     def pprint(self, recurs: bool = False):
         """

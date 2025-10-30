@@ -8,11 +8,13 @@ echo "Example 3"
 echo "Modifying vpn-test.servers.wg-B gateway -> client:"
 ./wg-tool --edit vpn-test.servers.wg-B
 
-sed -e s'/^Endpoint = .*/Endpoint = ""/' \
-    -e s'/^internet_offered = .*/internet_offered = false/' \
-    -i Edits/vpn-test.servers.wg-B.mods
+FILE='Edits/vpn-test.servers.wg-B.mods'
+./do-edits ex3-server $FILE
+#sed -e s'/^Endpoint = .*/Endpoint = ""/' \
+#    -e s'/^internet_offered = .*/internet_offered = false/' \
+#    -i Edits/vpn-test.servers.wg-B.mods
 
-./wg-tool --merge Edits/vpn-test.servers.wg-B.mods
+./wg-tool --merge $FILE
 
 
 echo "Example 3 done"
