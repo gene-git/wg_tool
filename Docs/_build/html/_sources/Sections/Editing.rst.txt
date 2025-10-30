@@ -9,13 +9,17 @@ Changes are made by using *--edit* option which writes a file. After any changes
 to that file they can be merged back using *--merge* option. 
 
 Files to be edited are written into files in the *Edits* directory. *Edits* is located 
-in the working directory. Files use TOML format.
+in the working directory. Files use YAML format.
 
-TOML, loosely speaking, has *key = value* pairs. Value can be an array
-which is simply comma separated list of items inside square brackets *x = [item1, item2, ... ]*.
-It can also have named sections which are started with [name]. Everythin following
-a named section belongs to that section until a new section is encountered. For additional
-infomation please see TOML documentation https://toml.io/en.
+YAML, loosely speaking, has *key: value* pairs. Values can be an array
+which is provided as newline separated list, each line starting with an hyphen, 
+of items.
+
+There are many sites with YAML format information, including 
+the official documentation https://yaml.org/spec/1.2.2/.
+
+Making changes should be reasonably self explanatory since any files to be edited are
+already in YAML format and typically need only small modifications.
 
 Each peer is identified by it's *ID* which is 3 tuple : *<vpn-name>.<account-name>.<profile-name>*.
 When editing the vpn itself, the *ID* is just the *<vpn-name>*.
@@ -38,7 +42,7 @@ The first step is to make the edit request:
 
 This creates a file under the *Edits* directory and the filename is displayed.
 In this example the file will be *Edits/vpn-test-info.mods*.
-The file is in standard TOML format. 
+The file is in standard YAML format. 
 
 
 You can then edit the contents of the file that contains the following
@@ -46,18 +50,16 @@ items:
 
 .. code-block:: none
 
-   name = "vpn-test"
-   tag = "... do not change this ... "
-   dns = [
-        "dns.exmple.com",
-        "dns.example.net",
-    ]
-    dns_search = []
-    peer_to_peer = false
-    networks = [
-        "10.77.77.0/24",
-        "fc00:77:77::/64",
-    ]
+   name: vpn-test
+   tag: "... do not change this ... "
+   dns:
+   - dns.exmple.com
+   - dns.example.net
+    dns_search: = []
+    peer_to_peer: false
+    networks:
+    - 10.77.77.0/24
+    - fc00:77:77::/64
 
 Never modify the *tag* as it is a unique identifier that determines where to merge any changes.
 
@@ -142,29 +144,28 @@ Again, a file is created which you can edit and merge. In this example the file 
 
 .. code-block:: none
 
-   PersistentKeepalive = 0
-   MTU = ""
-   post_up = []
-   post_down = []
-   nets_offered = []
-   nets_wanted = []
-   internet_offered = false
-   internet_wanted = false
-   Endpoint = ""
-   Endpoint_alt = ""
-   dns = [ "dns.example.com", ]
-   dns_search = []
-   dns_lookup_ipv6 = false
-   dns_linux = false
-   use_vpn_dns = true
-   active = true
-   hidden = false
-
-   # change to tag = xxx
-   # keep id_str ??
-   [ident]
-   tag = "af4f6d5e-ae66-4bd1-afec-a7037cdd1d9e"
-
+    Endpoint: ''
+    Endpoint_alt: ''
+    MTU: ''
+    PersistentKeepalive: 0
+    active: true
+    allow_ip_groups: []
+    alternate_wanted: false
+    dns: []
+    dns_linux: false
+    dns_search: []
+    hidden: false
+    ident:
+      tag: 5f713339-90cc-4495-9393-996051314228
+    internet_offered: false
+    internet_wanted: false
+    ip_group: ''
+    nets_offered: []
+    nets_wanted: []
+    post_down: []
+    post_up: []
+    use_vpn_dns: true
+     
 
 Once again, do not modify the tag. It is a unique identifier used to ensure edits go to
 the correct place.
@@ -211,8 +212,10 @@ we quote from the wireguard documentation.
 
 .. code-block:: none
 
-  post_up = ['/usr/bin/nft -f /etc/wireguard/scripts/postup.nft']
-  post_down = ['/usr/bin/nft flush ruleset']
+  post_up:
+  - /usr/bin/nft -f /etc/wireguard/scripts/postup.nft
+  post_down:
+  - /usr/bin/nft flush ruleset
 
 * nets_offered / nets_wanted
 

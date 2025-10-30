@@ -40,12 +40,14 @@
 Changes are made by using <em>–edit</em> option which writes a file. After any changes
 to that file they can be merged back using <em>–merge</em> option.</p>
 <p>Files to be edited are written into files in the <em>Edits</em> directory. <em>Edits</em> is located
-in the working directory. Files use TOML format.</p>
-<p>TOML, loosely speaking, has <em>key = value</em> pairs. Value can be an array
-which is simply comma separated list of items inside square brackets <em>x = [item1, item2, … ]</em>.
-It can also have named sections which are started with [name]. Everythin following
-a named section belongs to that section until a new section is encountered. For additional
-infomation please see TOML documentation <a class="reference external" href="https://toml.io/en">https://toml.io/en</a>.</p>
+in the working directory. Files use YAML format.</p>
+<p>YAML, loosely speaking, has <em>key: value</em> pairs. Values can be an array
+which is provided as newline separated list, each line starting with an hyphen,
+of items.</p>
+<p>There are many sites with YAML format information, including
+the official documentation <a class="reference external" href="https://yaml.org/spec/1.2.2/">https://yaml.org/spec/1.2.2/</a>.</p>
+<p>Making changes should be reasonably self explanatory since any files to be edited are
+already in YAML format and typically need only small modifications.</p>
 <p>Each peer is identified by it’s <em>ID</em> which is 3 tuple : <em>&lt;vpn-name&gt;.&lt;account-name&gt;.&lt;profile-name&gt;</em>.
 When editing the vpn itself, the <em>ID</em> is just the <em>&lt;vpn-name&gt;</em>.</p>
 <p>Note that in order to rename something, then please see the <em>–rename</em> command line option
@@ -59,21 +61,19 @@ which handles this.</p>
 </div>
 <p>This creates a file under the <em>Edits</em> directory and the filename is displayed.
 In this example the file will be <em>Edits/vpn-test-info.mods</em>.
-The file is in standard TOML format.</p>
+The file is in standard YAML format.</p>
 <p>You can then edit the contents of the file that contains the following
 items:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>name = &quot;vpn-test&quot;
-tag = &quot;... do not change this ... &quot;
-dns = [
-     &quot;dns.exmple.com&quot;,
-     &quot;dns.example.net&quot;,
- ]
- dns_search = []
- peer_to_peer = false
- networks = [
-     &quot;10.77.77.0/24&quot;,
-     &quot;fc00:77:77::/64&quot;,
- ]
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>name: vpn-test
+tag: &quot;... do not change this ... &quot;
+dns:
+- dns.exmple.com
+- dns.example.net
+ dns_search: = []
+ peer_to_peer: false
+ networks:
+ - 10.77.77.0/24
+ - fc00:77:77::/64
 </pre></div>
 </div>
 <p>Never modify the <em>tag</em> as it is a unique identifier that determines where to merge any changes.</p>
@@ -133,28 +133,27 @@ now using the profile ID.</p>
 </div>
 <p>Again, a file is created which you can edit and merge. In this example the file is
 <em>Edits/vpn-test.user-3.laptop.mods</em> which contains, aside from some comments at the top:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>PersistentKeepalive = 0
-MTU = &quot;&quot;
-post_up = []
-post_down = []
-nets_offered = []
-nets_wanted = []
-internet_offered = false
-internet_wanted = false
-Endpoint = &quot;&quot;
-Endpoint_alt = &quot;&quot;
-dns = [ &quot;dns.example.com&quot;, ]
-dns_search = []
-dns_lookup_ipv6 = false
-dns_linux = false
-use_vpn_dns = true
-active = true
-hidden = false
-
-# change to tag = xxx
-# keep id_str ??
-[ident]
-tag = &quot;af4f6d5e-ae66-4bd1-afec-a7037cdd1d9e&quot;
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Endpoint: &#39;&#39;
+Endpoint_alt: &#39;&#39;
+MTU: &#39;&#39;
+PersistentKeepalive: 0
+active: true
+allow_ip_groups: []
+alternate_wanted: false
+dns: []
+dns_linux: false
+dns_search: []
+hidden: false
+ident:
+  tag: 5f713339-90cc-4495-9393-996051314228
+internet_offered: false
+internet_wanted: false
+ip_group: &#39;&#39;
+nets_offered: []
+nets_wanted: []
+post_down: []
+post_up: []
+use_vpn_dns: true
 </pre></div>
 </div>
 <p>Once again, do not modify the tag. It is a unique identifier used to ensure edits go to
@@ -190,8 +189,10 @@ an MTU to override this automatic discovery, this value may be specified explici
 <p>Gateway example:</p>
 </li>
 </ul>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>post_up = [&#39;/usr/bin/nft -f /etc/wireguard/scripts/postup.nft&#39;]
-post_down = [&#39;/usr/bin/nft flush ruleset&#39;]
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>post_up:
+- /usr/bin/nft -f /etc/wireguard/scripts/postup.nft
+post_down:
+- /usr/bin/nft flush ruleset
 </pre></div>
 </div>
 <ul>
@@ -334,6 +335,7 @@ made with the <em>–copy-from</em> options.</p>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="Options.html">Command Line Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Ip-Groups.html">IP Groups</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Completion.html">Command Line Bash Completion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Reports.html">Reports</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Key-rollover.html">Key Rollover</a></li>

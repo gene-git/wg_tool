@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Working Example 4 &#8212; wg_tool 8.2.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=e043c39a" />
+    <script src="_static/documentation_options.js?v=15c97ff8"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="working-example-4">
+<span id="example-4"></span><h1>Working Example 4<a class="headerlink" href="#working-example-4" title="Link to this heading">¶</a></h1>
+<p>This example introduces the usage of IP groups.
+Here we add a new peer, <em>vpn1.customers.abc_corp</em> together
+with an <em>admin</em> ip group. <em>abc_corp</em> will allow access to members of the
+admin group. Sally will get <em>admin</em> membership.</p>
+<p>We will first enlarge the vpn network(s) to make it a little simpler
+to make subnets for admin ip group. We will then create the <em>admin</em> group
+and make sally a member. The last change is to adit <em>abc-corp</em>
+and have it permit <em>admin</em> group access.</p>
+<p>As we did previoously, we will continue to add the the previous examples.
+This example closely follows the section <a class="reference internal" href="Sections/Ip-Groups.html#ip-groups"><span class="std std-ref">IP Groups</span></a>.</p>
+<p>The example script <em>create-example-4</em> runs through the complete example if you
+want to quickly see the end result.</p>
+<section id="expand-the-vpn-networks">
+<h2>Expand the VPN networks<a class="headerlink" href="#expand-the-vpn-networks" title="Link to this heading">¶</a></h2>
+<p>Lets expand the networks a bit:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wg-tool<span class="w"> </span>--edit<span class="w"> </span>vpn-test
+</pre></div>
+</div>
+<p>Now edit the file
+Edit the file as before, (<em>Edits/vpn-test-info.mods</em>).</p>
+<p>Change the network settings as shown here:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>networks:
+- 10.77.76.0/22
+- fc00:77:77::/56
+</pre></div>
+</div>
+<p>Then merge changes back:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>wg-tool --merge Edits/vpn-test-info.mods
+</pre></div>
+</div>
+</section>
+<section id="add-ip-group">
+<h2>Add IP Group<a class="headerlink" href="#add-ip-group" title="Link to this heading">¶</a></h2>
+<p>We now define an <em>admin</em> ip group comprised of subnets of the above vpn networks:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wg-tool<span class="w"> </span>--add-ip-grop<span class="w"> </span>admin<span class="w"> </span><span class="s2">&quot;10.77.79.224/27,fc00:77:77:fe::/64&quot;</span><span class="w"> </span>--ident<span class="w"> </span>vpn-test
+</pre></div>
+</div>
+<p>Since <em>vpn-test</em> uses both IPv4 and IPv6, we provide subnets of both.</p>
+</section>
+<section id="put-user-1-laptop-into-admin-group">
+<h2>Put user-1.laptop into admin Group<a class="headerlink" href="#put-user-1-laptop-into-admin-group" title="Link to this heading">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wg-tool<span class="w"> </span>--ip-group<span class="w"> </span>admin<span class="w"> </span>vpn-test.user-1.laptop
+</pre></div>
+</div>
+</section>
+<section id="add-abc-corp-peer">
+<h2>Add ABC-Corp Peer<a class="headerlink" href="#add-abc-corp-peer" title="Link to this heading">¶</a></h2>
+<p>Here we create a new account <em>customers</em> along with a new peer <em>abc-corp</em> which
+allows access to members of the <em>admin</em> ip group.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wg-tool<span class="w"> </span>--new<span class="w"> </span>vpn-test.customers.abc-corp
+wg-tool<span class="w"> </span>--allow-ip-groups<span class="w"> </span>admin<span class="w"> </span>vpn-test.customers.abc-corp
+</pre></div>
+</div>
+<p>All done. Lets review some of the resulting wireguard configs</p>
+</section>
+<section id="standard-wireguard-configs">
+<span id="example-4-standard"></span><h2>Standard Wireguard Configs<a class="headerlink" href="#standard-wireguard-configs" title="Link to this heading">¶</a></h2>
+<p>Let’s focus on those peers impacted by the <em>admin</em> ip group.
+Namely the peer <em>vpn1.users.sally</em> along with <em>vpn1.customers.abc-corp</em>.</p>
+<p><strong>user-1.laptop</strong></p>
+<p>Only change is here is that the IP Addresses, both IPv4 and IPv6, are drawn fromt the <em>admin</em>
+ip group subnets:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>10.77.79.224/27 and fc00:77:77:fe::/64
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[Interface]          # user-1 laptop
+PrivateKey           = oJHyiAoMTvTkXpXvfkm+LZEFP4jS5UZ7xfRGywjIf20=
+Address              = 10.77.79.226/32, fc00:77:77:fe::2/128
+DNS                  = 10.10.10.10
+
+#
+# Gateways
+#
+
+[Peer]               # servers wg-A (gateway)
+PublicKey            = 4KSBbV3MFNeKv6uA5l1O5TiU/5a3s1w9bmU2waPZVj0=
+PresharedKey         = /64sqfimz+H4Ik+qKkIEqpFSHizdd2KPxQwzlWhGjAU=
+# pre-compacted        0.0.0.0/0, 10.77.77.1/32, 192.168.1.0/24
+# pre-compacted        ::/0, fc00:77:77::1/128
+AllowedIPs           = 0.0.0.0/0, ::/0
+Endpoint             = vpn_A.example.com:51820
+</pre></div>
+</div>
+<p><strong>ABC-corp</strong></p>
+<p>As you can see, the AllowedIPs are for gateway and ips belonging to
+the <em>admin</em> ip group.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[Interface]          # customers abc-corp
+PrivateKey           = mOcDcBoLmtFSt/Vh/eqcJg63OjWbD9i0TTToHRo/u0A=
+Address              = 10.77.76.1/32, fc00:77:77::2/128
+DNS                  = 10.10.10.10
+
+#
+# Gateways
+#
+
+[Peer]               # servers wg-A (gateway)
+PublicKey            = 4KSBbV3MFNeKv6uA5l1O5TiU/5a3s1w9bmU2waPZVj0=
+PresharedKey         = qjGlCniGGMkpyd76Keyx1GTXONdVJTXiyxQrUkfbQBA=
+AllowedIPs           = 10.77.77.1/32, 10.77.79.224/27, fc00:77:77::1/128
+AllowedIPs           = fc00:77:77:fe::/64
+Endpoint             = vpn_A.example.com:51820
+</pre></div>
+</div>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">wg_tool</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="README.html">wg-tool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="README.html#documentation">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="README.html#getting-started">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="License/License.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">Working Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sections/Editing.html">Editing and Making Changes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sections/Options.html">Command Line Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sections/Ip-Groups.html">IP Groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sections/Completion.html">Command Line Bash Completion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sections/Reports.html">Reports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sections/Key-rollover.html">Key Rollover</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sections/Helper-scripts.html">Convenience Scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sections/Migrating.html">Migrating from Earlier Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sections/Import.html">Importing From Standard Wireguard Configs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sections/Directory-structure.html">Directory and File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sections/Appendix.html">Appendix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Contrib/ubuntu.html">Contrib</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2022-2025, Gene C.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/Example-4.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

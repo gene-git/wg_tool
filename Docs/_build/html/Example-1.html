@@ -46,7 +46,7 @@ Client configs come with a QR code carrying the same information.</p>
 <p>These configs are the ones consumed by wireguard itself.</p>
 <section id="network-diagram">
 <h2>Network Diagram<a class="headerlink" href="#network-diagram" title="Link to this heading">¶</a></h2>
-<a class="reference internal image-reference" href="_images/Example-1.png"><img alt="Example 1" class="align-center" src="_images/Example-1.png" style="width: 408.0px; height: 528.0px;" />
+<a class="reference internal image-reference" href="_images/Example-1.png"><img alt="Example 1" class="align-center" height="528" src="_images/Example-1.png" width="408" />
 </a>
 <p>We find it helpful to make a small table with the goals for this vpn.</p>
 <p>The table lists each of the peers and what they want from or offer to other peers.</p>
@@ -60,8 +60,8 @@ access internal networks.</p>
 </section>
 <section id="goals-table">
 <h2>Goals Table<a class="headerlink" href="#goals-table" title="Link to this heading">¶</a></h2>
-<table class="docutils align-default" id="id13">
-<caption><span class="caption-text">Example 1 Goals</span><a class="headerlink" href="#id13" title="Link to this table">¶</a></caption>
+<table class="docutils align-default" id="id14">
+<caption><span class="caption-text">Example 1 Goals</span><a class="headerlink" href="#id14" title="Link to this table">¶</a></caption>
 <thead>
 <tr class="row-odd"><th class="head"></th>
 <th class="head"></th>
@@ -171,11 +171,12 @@ For additional information please see <a class="reference internal" href="Sectio
 </pre></div>
 </div>
 <p>This also invokes the <em>edit</em> option and displays the file name.
-This file will be ./Edits/vpn-test-info.mods.</p>
+This file will be ./Edits/vpn-test-info.mods and is in YAML format.</p>
 <p>Please edit this file and add any relevant VPN information.
 In our case we really may only need to add a DNS server (or 2), host or IP.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>dns = [&#39;10.10.10.10&#39;]
-peer_to_peer = false
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>dns:
+- 10.10.10.10
+peer_to_peer: false
 </pre></div>
 </div>
 <p>Note that elements in <em>dns</em> are dns servers. They can be an IP address
@@ -224,12 +225,15 @@ setting the <em>internet_offered</em> with the network. This
 can be a list of networks, but we are only providing
 access to one.</p>
 <p>This means we need to modify a few lines as shown:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Endpoint = &quot;vpn_A.example.com:51820&quot;
-internet_offered = true
-internet_wanted = false
-nets_offered = [&quot;192.168.1.0/24&quot;]
-post_up = [&#39;/usr/bin/nft -f /etc/wireguard/scripts/postup.nft&#39;]
-post_down = [&#39;/usr/bin/nft flush ruleset&#39;]
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Endpoint: vpn_A.example.com:51820
+internet_offered: true
+internet_wanted: false
+nets_offered:
+- 192.168.1.0/24
+post_up:
+- /usr/bin/nft -f /etc/wireguard/scripts/postup.nft
+post_down:
+- /usr/bin/nft flush ruleset
 </pre></div>
 </div>
 <p>The <em>post_up/down</em> are scripts wireguard runs bringing vpn tunnel up/down.
@@ -509,7 +513,7 @@ Both gateways provide internet access and are visible on the internet.</p>
 creation of the <a class="reference internal" href="Examples.html#example-2-standard"><span class="std std-ref">Standard Wireguard Configs</span></a>.</p>
 <section id="id3">
 <h2>Network Diagram<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h2>
-<a class="reference internal image-reference" href="_images/Example-2.png"><img alt="Example 2" class="align-center" src="_images/Example-2.png" style="width: 408.0px; height: 528.0px;" />
+<a class="reference internal image-reference" href="_images/Example-2.png"><img alt="Example 2" class="align-center" height="528" src="_images/Example-2.png" width="408" />
 </a>
 <p>user-1 and user-2’s laptops can connect to both gateways and
 access both LANs. Their internet traffic will go through the vpn, providing
@@ -525,8 +529,8 @@ the gateways solely for LAN access to both office locations.</p>
 </section>
 <section id="id4">
 <h2>Goals Table<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h2>
-<table class="docutils align-default" id="id14">
-<caption><span class="caption-text">Example 2 Goals</span><a class="headerlink" href="#id14" title="Link to this table">¶</a></caption>
+<table class="docutils align-default" id="id15">
+<caption><span class="caption-text">Example 2 Goals</span><a class="headerlink" href="#id15" title="Link to this table">¶</a></caption>
 <thead>
 <tr class="row-odd"><th class="head"></th>
 <th class="head"></th>
@@ -627,10 +631,13 @@ wg-tool<span class="w"> </span>--edit<span class="w"> </span>vpn-test.servers.wg
 </div>
 <p>Edit the file as displayed, this time it will be <em>Edits/vpn-test.servers.wg-B.mods</em>.</p>
 <p>As we did for <em>wg-A</em>, add an Endpoint for <em>wg-B</em>.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Endpoint = &quot;vpn_B.example.net:51820&quot;]
-internet_offered = true
-post_up = [&#39;/usr/bin/nft -f /etc/wireguard/scripts/postup.nft&#39;]
-post_down = [&#39;/usr/bin/nft flush ruleset&#39;]
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Endpoint:
+- vpn_B.example.net:51820
+internet_offered: true
+post_up:
+- /usr/bin/nft -f /etc/wireguard/scripts/postup.nft
+post_down:
+- /usr/bin/nft flush ruleset
 </pre></div>
 </div>
 <p>As before merge the changes back:</p>
@@ -887,7 +894,7 @@ while <em>wg-A</em> offers its LAN to <em>wg-B</em>.</p>
 want to have access to both LANs.</p>
 <section id="id9">
 <h2>Network Diagram<a class="headerlink" href="#id9" title="Link to this heading">¶</a></h2>
-<a class="reference internal image-reference" href="_images/Example-3.png"><img alt="Example 3" class="align-center" src="_images/Example-3.png" style="width: 408.0px; height: 528.0px;" />
+<a class="reference internal image-reference" href="_images/Example-3.png"><img alt="Example 3" class="align-center" height="528" src="_images/Example-3.png" width="408" />
 </a>
 <p><em>wg-B</em> will be a peer of <em>wg-A</em> and offer access to Office B’s LAN.
 However clients will now access this LAN via <em>wq-A</em>.</p>
@@ -899,8 +906,8 @@ be informed that both Office A LAN and Office B LAN are available from gateway <
 </section>
 <section id="id10">
 <h2>Goals Table<a class="headerlink" href="#id10" title="Link to this heading">¶</a></h2>
-<table class="docutils align-default" id="id15">
-<caption><span class="caption-text">Example 3: vpn-test</span><a class="headerlink" href="#id15" title="Link to this table">¶</a></caption>
+<table class="docutils align-default" id="id16">
+<caption><span class="caption-text">Example 3: vpn-test</span><a class="headerlink" href="#id16" title="Link to this table">¶</a></caption>
 <thead>
 <tr class="row-odd"><th class="head"></th>
 <th class="head"></th>
@@ -1027,7 +1034,7 @@ do that on it’s behalf:</p>
 as a gateway. It isn’t of course, its just another peer at this point.
 However, it still provides access to the <em>192.168.2.0/24</em> network.</p>
 <p>Here’s a terminal screen shot of the output:</p>
-<a class="reference internal image-reference" href="_images/Example-3-list.png"><img alt="Example 3" class="align-center" src="_images/Example-3-list.png" style="width: 858.0px; height: 553.0px;" />
+<a class="reference internal image-reference" href="_images/Example-3-list.png"><img alt="Example 3" class="align-center" height="553" src="_images/Example-3-list.png" width="858" />
 </a>
 <p>As you can see in the verbose list output, <em>wg-B</em> is no longer a gateway. It offers
 access to Office B LAN as a client to <em>wg-A</em>. It also <em>wants</em> access to Office A LAN.</p>
@@ -1049,8 +1056,8 @@ clients. Finally, all the laptop clients now have both LANs listed in each
 <p>If we want to go back with <em>wg-B</em> again being a full gateway, then we just
 edit <em>wg-B</em> and restore it’s Endpoint and, if desired,  allow it to offer
 internet access as well.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Endpoint = &quot;vpn_B.example.net:51820&quot;
-internet_offered = true
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Endpoint: vpn_B.example.net:51820
+internet_offered: true
 </pre></div>
 </div>
 <p>Merge changes back and everything is back to the way it was in <a class="reference internal" href="Examples.html#example-2"><span class="std std-ref">Working Example 2</span></a>.</p>
@@ -1191,6 +1198,113 @@ LAN-B access.</p>
 </div>
 </section>
 </section>
+<section id="working-example-4">
+<span id="example-4"></span><h1>Working Example 4<a class="headerlink" href="#working-example-4" title="Link to this heading">¶</a></h1>
+<p>This example introduces the usage of IP groups.
+Here we add a new peer, <em>vpn1.customers.abc_corp</em> together
+with an <em>admin</em> ip group. <em>abc_corp</em> will allow access to members of the
+admin group. Sally will get <em>admin</em> membership.</p>
+<p>We will first enlarge the vpn network(s) to make it a little simpler
+to make subnets for admin ip group. We will then create the <em>admin</em> group
+and make sally a member. The last change is to adit <em>abc-corp</em>
+and have it permit <em>admin</em> group access.</p>
+<p>As we did previoously, we will continue to add the the previous examples.
+This example closely follows the section <a class="reference internal" href="Sections/Ip-Groups.html#ip-groups"><span class="std std-ref">IP Groups</span></a>.</p>
+<p>The example script <em>create-example-4</em> runs through the complete example if you
+want to quickly see the end result.</p>
+<section id="expand-the-vpn-networks">
+<h2>Expand the VPN networks<a class="headerlink" href="#expand-the-vpn-networks" title="Link to this heading">¶</a></h2>
+<p>Lets expand the networks a bit:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wg-tool<span class="w"> </span>--edit<span class="w"> </span>vpn-test
+</pre></div>
+</div>
+<p>Now edit the file
+Edit the file as before, (<em>Edits/vpn-test-info.mods</em>).</p>
+<p>Change the network settings as shown here:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>networks:
+- 10.77.76.0/22
+- fc00:77:77::/56
+</pre></div>
+</div>
+<p>Then merge changes back:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>wg-tool --merge Edits/vpn-test-info.mods
+</pre></div>
+</div>
+</section>
+<section id="add-ip-group">
+<h2>Add IP Group<a class="headerlink" href="#add-ip-group" title="Link to this heading">¶</a></h2>
+<p>We now define an <em>admin</em> ip group comprised of subnets of the above vpn networks:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wg-tool<span class="w"> </span>--add-ip-grop<span class="w"> </span>admin<span class="w"> </span><span class="s2">&quot;10.77.79.224/27,fc00:77:77:fe::/64&quot;</span><span class="w"> </span>--ident<span class="w"> </span>vpn-test
+</pre></div>
+</div>
+<p>Since <em>vpn-test</em> uses both IPv4 and IPv6, we provide subnets of both.</p>
+</section>
+<section id="put-user-1-laptop-into-admin-group">
+<h2>Put user-1.laptop into admin Group<a class="headerlink" href="#put-user-1-laptop-into-admin-group" title="Link to this heading">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wg-tool<span class="w"> </span>--ip-group<span class="w"> </span>admin<span class="w"> </span>vpn-test.user-1.laptop
+</pre></div>
+</div>
+</section>
+<section id="add-abc-corp-peer">
+<h2>Add ABC-Corp Peer<a class="headerlink" href="#add-abc-corp-peer" title="Link to this heading">¶</a></h2>
+<p>Here we create a new account <em>customers</em> along with a new peer <em>abc-corp</em> which
+allows access to members of the <em>admin</em> ip group.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wg-tool<span class="w"> </span>--new<span class="w"> </span>vpn-test.customers.abc-corp
+wg-tool<span class="w"> </span>--allow-ip-groups<span class="w"> </span>admin<span class="w"> </span>vpn-test.customers.abc-corp
+</pre></div>
+</div>
+<p>All done. Lets review some of the resulting wireguard configs</p>
+</section>
+<section id="example-4-standard">
+<span id="id13"></span><h2>Standard Wireguard Configs<a class="headerlink" href="#example-4-standard" title="Link to this heading">¶</a></h2>
+<p>Let’s focus on those peers impacted by the <em>admin</em> ip group.
+Namely the peer <em>vpn1.users.sally</em> along with <em>vpn1.customers.abc-corp</em>.</p>
+<p><strong>user-1.laptop</strong></p>
+<p>Only change is here is that the IP Addresses, both IPv4 and IPv6, are drawn fromt the <em>admin</em>
+ip group subnets:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>10.77.79.224/27 and fc00:77:77:fe::/64
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[Interface]          # user-1 laptop
+PrivateKey           = oJHyiAoMTvTkXpXvfkm+LZEFP4jS5UZ7xfRGywjIf20=
+Address              = 10.77.79.226/32, fc00:77:77:fe::2/128
+DNS                  = 10.10.10.10
+
+#
+# Gateways
+#
+
+[Peer]               # servers wg-A (gateway)
+PublicKey            = 4KSBbV3MFNeKv6uA5l1O5TiU/5a3s1w9bmU2waPZVj0=
+PresharedKey         = /64sqfimz+H4Ik+qKkIEqpFSHizdd2KPxQwzlWhGjAU=
+# pre-compacted        0.0.0.0/0, 10.77.77.1/32, 192.168.1.0/24
+# pre-compacted        ::/0, fc00:77:77::1/128
+AllowedIPs           = 0.0.0.0/0, ::/0
+Endpoint             = vpn_A.example.com:51820
+</pre></div>
+</div>
+<p><strong>ABC-corp</strong></p>
+<p>As you can see, the AllowedIPs are for gateway and ips belonging to
+the <em>admin</em> ip group.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[Interface]          # customers abc-corp
+PrivateKey           = mOcDcBoLmtFSt/Vh/eqcJg63OjWbD9i0TTToHRo/u0A=
+Address              = 10.77.76.1/32, fc00:77:77::2/128
+DNS                  = 10.10.10.10
+
+#
+# Gateways
+#
+
+[Peer]               # servers wg-A (gateway)
+PublicKey            = 4KSBbV3MFNeKv6uA5l1O5TiU/5a3s1w9bmU2waPZVj0=
+PresharedKey         = qjGlCniGGMkpyd76Keyx1GTXONdVJTXiyxQrUkfbQBA=
+AllowedIPs           = 10.77.77.1/32, 10.77.79.224/27, fc00:77:77::1/128
+AllowedIPs           = fc00:77:77:fe::/64
+Endpoint             = vpn_A.example.com:51820
+</pre></div>
+</div>
+</section>
+</section>
 
 
           </div>
@@ -1226,6 +1340,7 @@ LAN-B access.</p>
 <li class="toctree-l1"><a class="reference internal" href="Examples.html">Working Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Sections/Editing.html">Editing and Making Changes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Sections/Options.html">Command Line Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sections/Ip-Groups.html">IP Groups</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Sections/Completion.html">Command Line Bash Completion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Sections/Reports.html">Reports</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Sections/Key-rollover.html">Key Rollover</a></li>

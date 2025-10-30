@@ -15,7 +15,7 @@
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Command Line Bash Completion" href="Completion.html" />
+    <link rel="next" title="IP Groups" href="Ip-Groups.html" />
     <link rel="prev" title="Editing and Making Changes" href="Editing.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -152,6 +152,17 @@ options:
   -hidden, --hidden     Hidden are not shown unless double verb -vv is used.
   -not-hidden, --not-hidden
                         Mark some IDs not hidden. (See positional parameters)
+  -add-ip-group, --add-ip-group Name Subnet(s)
+                        Add new IP group name and subnet(s). Requires --ident &lt;vpn-name&gt;
+                        Every network in vpn needs a group subnet given as comma separated list
+                        e.g. --add-ip-group 10.77.77.28/30,fc00:77:77::28/126
+  -ip-group, --ip-group Name
+                        Associate specified profile as member of existing ip group &lt;Name&gt;
+                        Requires one or more IDs on command line: &lt;vpn&gt;.&lt;account&gt;.&lt;profile&gt;
+  -allow-ip-groups, --allow-ip-groups Name
+                        Group(s) that are allowed access to this peer profile
+                        Group name(s) argument is a comma separated list &lt;group1&gt;[,&lt;group2&gt;..]
+
 
 :*-----------------*:
 : Reporting Options :
@@ -252,6 +263,7 @@ testing or checking purposes.</p>
 <li class="toctree-l2"><a class="reference internal" href="#compacting-networks">Compacting Networks</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="Ip-Groups.html">IP Groups</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Completion.html">Command Line Bash Completion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Reports.html">Reports</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Key-rollover.html">Key Rollover</a></li>
@@ -268,7 +280,7 @@ testing or checking purposes.</p>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
       <li>Previous: <a href="Editing.html" title="previous chapter">Editing and Making Changes</a></li>
-      <li>Next: <a href="Completion.html" title="next chapter">Command Line Bash Completion</a></li>
+      <li>Next: <a href="Ip-Groups.html" title="next chapter">IP Groups</a></li>
   </ul></li>
 </ul>
 </div>

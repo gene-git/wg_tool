@@ -206,8 +206,8 @@ internet access as well.
 
 .. code-block:: none
 
-   Endpoint = "vpn_B.example.net:51820"
-   internet_offered = true
+   Endpoint: vpn_B.example.net:51820
+   internet_offered: true
 
 Merge changes back and everything is back to the way it was in :ref:`Example_2`.
 
@@ -361,4 +361,7 @@ LAN-B access.
         AllowedIPs           = 10.77.77.1/32, 192.168.1.32/28, 192.168.2.0/24
         AllowedIPs           = fc00:77:77::1/128
         Endpoint             = vpn_A.example.com:51820
+
+
+.. include:: ./Example-4.rst
 

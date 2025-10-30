@@ -1,4 +1,3 @@
-=========
 Changelog
 =========
 
@@ -7,12 +6,39 @@ Tags
 
 .. code-block:: text
 
-	1.1.1 (2022-10-26) -> 8.2.0 (2025-09-18)
-	216 commits.
+	1.1.1 (2022-10-26) -> 9.0.1 (2025-10-30)
+	218 commits.
 
 Commits
 =======
 
+
+* 2025-10-30  : **9.0.1**
+
+.. code-block:: text
+
+              - * Add support for *IP Groups*.
+            
+                  This is helpful when managing routes for *groups* of users.
+                  By designating some peers as members of an *ip-group*, network routes can now be
+                  for specific groups. The IPs for an ip group must be a proper subnet
+                  of the VPN network.
+            
+                  An ip group is created using the *--add-ip-group <name> <subnet(s)>* option.
+            
+                  Note that since an ip group is defined by the IP subnet of the vpn network, a
+                  peer can only be a member of one group since it only has 1 IP.
+            
+                * Switch File Data from TOML to YAML format.
+            
+                  YAML is more robust than toml . Existing files are auto converted,
+                  the first time version *9.x* is used.
+                  *Edit* files now use yaml format as well. Docs updated to reflect this.
+ 2025-09-18   ⋯
+
+.. code-block:: text
+
+              - update Docs Changelogs
 
 * 2025-09-18  : **8.2.0**
 
@@ -20,7 +46,7 @@ Commits
 
               - Command line option completion optionally available
                   If desired, then python-argcomplete package should be installed.
- 2025-09-17
+ 2025-09-17   ⋯
 
 .. code-block:: text
 
@@ -44,7 +70,7 @@ Commits
                   When true, hostnames listed in "dns" lists are now queried for
                   IPv6 as well as IPv4 address(es). These are used in the wireguard configs.
                   Defaults to false.
- 2025-09-16
+ 2025-09-16   ⋯
 
 .. code-block:: text
 
@@ -95,7 +121,7 @@ Commits
             
                 * Document most features including migration, importing, and
                   making modifications.
- 2025-08-19
+ 2025-08-19   ⋯
 
 .. code-block:: text
 
@@ -114,7 +140,7 @@ Commits
 
               - update arch PKGBUILD to 7.5.0
               - Fix bug for --init. Issue #18 Reported by @Crisp-Casper
- 2025-03-08
+ 2025-03-08   ⋯
 
 .. code-block:: text
 
@@ -129,7 +155,7 @@ Commits
                 Update README
                 Add user_keepalive (seconds) to saved options
                 Server config : drop unused mod_time
- 2024-12-31
+ 2024-12-31   ⋯
 
 .. code-block:: text
 
@@ -142,7 +168,7 @@ Commits
               - Git tags are now signed.
                 Add git signing key to Arch Package
                 Bump python vers
- 2024-10-22
+ 2024-10-22   ⋯
 
 .. code-block:: text
 
@@ -153,7 +179,7 @@ Commits
 .. code-block:: text
 
               - Additional input protections in cidr utils
- 2024-10-20
+ 2024-10-20   ⋯
 
 .. code-block:: text
 
@@ -165,7 +191,7 @@ Commits
 
               - Use python 3 ipaddress in place of 3rd party netaddr module.
                 Code reorg and some tidying
- 2024-09-07
+ 2024-09-07   ⋯
 
 .. code-block:: text
 
@@ -183,7 +209,7 @@ Commits
 .. code-block:: text
 
               - tweak RST formatting in readme
- 2024-06-29
+ 2024-06-29   ⋯
 
 .. code-block:: text
 
@@ -194,7 +220,7 @@ Commits
 .. code-block:: text
 
               - bug: -V,--version didnt print anything - fixed
- 2024-06-28
+ 2024-06-28   ⋯
 
 .. code-block:: text
 
@@ -237,7 +263,7 @@ Commits
                   permissions.
                   Previous version this was always done - but it can be slow (esp. over NFS) so
                   now its an option to run if needed.
- 2024-04-30
+ 2024-04-30   ⋯
 
 .. code-block:: text
 
@@ -255,7 +281,7 @@ Commits
 
               - update Docs/Changelog.rst Docs/wg_tool.pdf
               - Take Changelog "hack" out of PKGBUILD ... was a bad idea
- 2024-04-29
+ 2024-04-29   ⋯
 
 .. code-block:: text
 
@@ -294,7 +320,7 @@ Commits
 .. code-block:: text
 
               - Update version.py as our package tooling was updated
- 2024-04-23
+ 2024-04-23   ⋯
 
 .. code-block:: text
 
@@ -306,7 +332,7 @@ Commits
 
               - Adjust for upcoming python changes.
                 Some argparse options have been deprecated in 3.12 and will be removed in 3.14
- 2024-04-17
+ 2024-04-17   ⋯
 
 .. code-block:: text
 
@@ -317,7 +343,7 @@ Commits
 .. code-block:: text
 
               - Package update: "pacman -Qc wg_tool" now shows the Changelog
- 2024-01-19
+ 2024-01-19   ⋯
 
 .. code-block:: text
 
@@ -343,7 +369,7 @@ Commits
 .. code-block:: text
 
               - Add --version option
- 2024-01-17
+ 2024-01-17   ⋯
 
 .. code-block:: text
 
@@ -392,7 +418,7 @@ Commits
                        wg-tool -mod -ips user_name:profile_name
                     or
                        wg-tool -mod -ips -all
- 2024-01-13
+ 2024-01-13   ⋯
 
 .. code-block:: text
 
@@ -403,7 +429,7 @@ Commits
 .. code-block:: text
 
               - Add ubuntu notes provided by Jack Duan (@jduan00 via github #13)
- 2024-01-12
+ 2024-01-12   ⋯
 
 .. code-block:: text
 
@@ -415,7 +441,7 @@ Commits
 
               - update Docs/Changelog.rst Docs/wg_tool.pdf
               - lint picking
- 2024-01-11
+ 2024-01-11   ⋯
 
 .. code-block:: text
 
@@ -428,7 +454,7 @@ Commits
               - Add -upd option to update user/profile endpoint when server config changes.
                   (closes GH issue #11)
                 -mod option can now be used with -all
- 2024-01-07
+ 2024-01-07   ⋯
 
 .. code-block:: text
 
@@ -451,7 +477,7 @@ Commits
 .. code-block:: text
 
               - small readme update
- 2023-12-07
+ 2023-12-07   ⋯
 
 .. code-block:: text
 
@@ -464,7 +490,7 @@ Commits
               - wg-peer-updn now saves additional copy of wg resolv.conf in resolv.conf.wg.
                 Can be used by client when resume causes network restart to overwrites the wg resolv.conf.
                 Used by wg-client package to "fix" dns after sleep/resume.
- 2023-11-23
+ 2023-11-23   ⋯
 
 .. code-block:: text
 
@@ -484,7 +510,7 @@ Commits
               - Change python build from poetry to hatch.
                   It is cleaner and simpler.
                 Switch copyright lines to SPDX format
- 2023-11-12
+ 2023-11-12   ⋯
 
 .. code-block:: text
 
@@ -496,7 +522,7 @@ Commits
 
               - Minor readme rst format change.
                 Add wg_tool.pdf
- 2023-09-30
+ 2023-09-30   ⋯
 
 .. code-block:: text
 
@@ -513,7 +539,7 @@ Commits
 .. code-block:: text
 
               - Improve README
- 2023-09-27
+ 2023-09-27   ⋯
 
 .. code-block:: text
 
@@ -526,7 +552,7 @@ Commits
               - update Docs/Changelog.rst
               - Fix links in readme.
                 Remove doc build dependency on myst-parser since no more mardown
- 2023-09-26
+ 2023-09-26   ⋯
 
 .. code-block:: text
 
@@ -547,7 +573,7 @@ Commits
               - Reorg docs - add Docs/dir with sphinx support
                 update PKGBUILD for optional doc builds
                 Migrate to rst from markdown
- 2023-09-25
+ 2023-09-25   ⋯
 
 .. code-block:: text
 
@@ -558,7 +584,7 @@ Commits
 .. code-block:: text
 
               - README - replace markdown url links with rst link notation
- 2023-08-02
+ 2023-08-02   ⋯
 
 .. code-block:: text
 
@@ -572,7 +598,7 @@ Commits
                 Client IPs are chosen from the server Address list in natural order. If you prefer clients
                 get IPv6 addresses, those should be listed first. Similarly, if IPv4 is preferred, then put that first.
                 Tidy to keep pylint clean
- 2023-07-28
+ 2023-07-28   ⋯
 
 .. code-block:: text
 
@@ -583,7 +609,7 @@ Commits
 .. code-block:: text
 
               - Fix import open_file buglet
- 2023-05-18
+ 2023-05-18   ⋯
 
 .. code-block:: text
 
@@ -601,7 +627,7 @@ Commits
 .. code-block:: text
 
               - PKGBUILD: build wheel back to using python -m build instead of poetry
- 2023-05-17
+ 2023-05-17   ⋯
 
 .. code-block:: text
 
@@ -612,7 +638,7 @@ Commits
 .. code-block:: text
 
               - Simplify Arch PKGBUILD and more closely follow arch guidelines
- 2023-05-08
+ 2023-05-08   ⋯
 
 .. code-block:: text
 
@@ -623,7 +649,7 @@ Commits
 .. code-block:: text
 
               - Add comment to README about linux using wg and ssh and MTU
- 2023-05-02
+ 2023-05-02   ⋯
 
 .. code-block:: text
 
@@ -644,7 +670,7 @@ Commits
               - update CHANGELOG.md
               - Only show user public key for "-rpt" when also using "-det".
                   Since we show user and profile name, the user key is not really needed
- 2023-04-11
+ 2023-04-11   ⋯
 
 .. code-block:: text
 
@@ -657,7 +683,7 @@ Commits
               - postup.nft script add extra line: ct status dnat accept - I saw a martial packat at firewall from vpn which was unexpected
                 minor readme edit
                 update project version
- 2023-01-06
+ 2023-01-06   ⋯
 
 .. code-block:: text
 
@@ -668,7 +694,7 @@ Commits
 .. code-block:: text
 
               - Add SPDX licensing lines
- 2022-12-29
+ 2022-12-29   ⋯
 
 .. code-block:: text
 
@@ -679,7 +705,7 @@ Commits
 .. code-block:: text
 
               - Add reminder in README to allow ip forwarding on wireguard server
- 2022-12-28
+ 2022-12-28   ⋯
 
 .. code-block:: text
 
@@ -690,7 +716,7 @@ Commits
 .. code-block:: text
 
               - Add brief networking note
- 2022-12-26
+ 2022-12-26   ⋯
 
 .. code-block:: text
 
@@ -702,7 +728,7 @@ Commits
 
               - Change default python interpreter location to /usr/bin/python3 (remove env).
                     This is also recommended by e.g. debian packaging guidelines (https://www.debian.org/doc/packaging-manuals/python-policy). While many distros (Arch, Fedora etc.) recommend /usr/bin/python - we keep python3 which will work on those and on debian until debian provides python (and not just python3).
- 2022-12-25
+ 2022-12-25   ⋯
 
 .. code-block:: text
 
@@ -716,7 +742,7 @@ Commits
                 Add packaging/requirements.txt
                 Update build dependencies in PKGBUILD
                 Tweak README
- 2022-12-20
+ 2022-12-20   ⋯
 
 .. code-block:: text
 
@@ -732,7 +758,7 @@ Commits
               - indent fix
               - To help with older pre 3.9 python versions, provide files without match().
                 They are in lib38. Copy to lib38/*.py lib/
- 2022-12-14
+ 2022-12-14   ⋯
 
 .. code-block:: text
 
@@ -745,7 +771,7 @@ Commits
               - update CHANGELOG.md
               - Installer now uses pip install
                 PKGBUILD now uses poetry to build wheel
- 2022-12-08
+ 2022-12-08   ⋯
 
 .. code-block:: text
 
@@ -756,7 +782,7 @@ Commits
 .. code-block:: text
 
               - Server show_rpt was not treating inactive users/profiles properly - fixed
- 2022-12-04
+ 2022-12-04   ⋯
 
 .. code-block:: text
 
@@ -778,7 +804,7 @@ Commits
               - Create postup-alternate.nft
             
                 provides an other example of postup script with useful comments
- 2022-12-03
+ 2022-12-03   ⋯
 
 .. code-block:: text
 
@@ -789,7 +815,7 @@ Commits
 .. code-block:: text
 
               - bug: --list if username(s) given without profile. Now we list all profiles
- 2022-12-01
+ 2022-12-01   ⋯
 
 .. code-block:: text
 
@@ -801,7 +827,7 @@ Commits
               - small typo
             
                 --add-users > --add_users
- 2022-11-30
+ 2022-11-30   ⋯
 
 .. code-block:: text
 
@@ -813,7 +839,7 @@ Commits
 
               - bug fix for --init
                 Thanks to @ycardon - this fixes issue #1 : https://github.com/gene-git/wg_tool/issues/1
- 2022-11-29
+ 2022-11-29   ⋯
 
 .. code-block:: text
 
@@ -847,7 +873,7 @@ Commits
 .. code-block:: text
 
               - Improve README
- 2022-11-28
+ 2022-11-28   ⋯
 
 .. code-block:: text
 
@@ -876,7 +902,7 @@ Commits
                      - --mod_users : modify existing user profile (with --dns_search and --dns_linux)
                      - --dns_search : adds support for dns search domain list
                      - --dns_linux : adds support for managing resolv.conf instead of relying on qg-quick/resolconf
- 2022-11-24
+ 2022-11-24   ⋯
 
 .. code-block:: text
 
@@ -889,7 +915,7 @@ Commits
                - - improve error msg
                  - Check conf before using it - added when auto updating older configs using mtime of config
                  - minor tweak to bash variable check in install script
- 2022-11-11
+ 2022-11-11   ⋯
 
 .. code-block:: text
 
@@ -901,7 +927,7 @@ Commits
 
               - list users report now sorts by user name
                 Add support for tracking config modification date-time. mod_time displayed in list user report
- 2022-11-08
+ 2022-11-08   ⋯
 
 .. code-block:: text
 
@@ -912,7 +938,7 @@ Commits
 .. code-block:: text
 
               - Improve handling of booelan False vs None in pre-file-write dictionary cleaner
- 2022-11-07
+ 2022-11-07   ⋯
 
 .. code-block:: text
 
@@ -923,7 +949,7 @@ Commits
 .. code-block:: text
 
               - tweak readme
- 2022-11-04
+ 2022-11-04   ⋯
 
 .. code-block:: text
 
@@ -942,7 +968,7 @@ Commits
 
               - change installer to use bash array for app list (even tho we onlly have 1 here)
                 tweak readme
- 2022-10-31
+ 2022-10-31   ⋯
 
 .. code-block:: text
 
@@ -960,7 +986,7 @@ Commits
 .. code-block:: text
 
               - Add support for python 3.11 tomllib
- 2022-10-30
+ 2022-10-30   ⋯
 
 .. code-block:: text
 
@@ -986,7 +1012,7 @@ Commits
 
               - Add --details
                 Modifes -l, -rpt and -rrpt to provide detailed information in addition to the summary.
- 2022-10-29
+ 2022-10-29   ⋯
 
 .. code-block:: text
 
@@ -1019,13 +1045,13 @@ Commits
 
               - Add new option --work_dir
                 Refactor and tidy code up some
- 2022-10-28
+ 2022-10-28   ⋯
 
 .. code-block:: text
 
               - upd changelog
               - tweak readme
- 2022-10-27
+ 2022-10-27   ⋯
 
 .. code-block:: text
 
@@ -1046,7 +1072,7 @@ Commits
               - duh - turn off debugger .. sorry
               - markdown newline fix
               - word smith readme
- 2022-10-26
+ 2022-10-26   ⋯
 
 .. code-block:: text
 

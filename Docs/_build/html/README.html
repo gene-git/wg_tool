@@ -48,7 +48,7 @@ and faster than many legacy types of vpns.</p>
 communicate with one another. Some peers, known as gateways, allow other peers
 to connect to them. Peers that are not gateways are called clients.</p>
 <p>A basic vpn has a wireguard gateway and several clients that can use the gateway.
-The gateway may provide access to internel networks.
+The gateway may provide access to internal networks.
 It may also allow clients to have all their internet traffic flow via the gateway.</p>
 <p>Since traffic between the client and the gateway is encrypted, this provides
 privacy and security. Wireguard crypto mechanisms include pre-shared keys
@@ -80,7 +80,8 @@ Solving a long standing, if minor, <em>annoyance</em>.</p>
 <p>On Archlinux it can be installed from the AUR or using the
 PKGBUILD provided in packaging directory.</p>
 <p>All git tags are signed with an <a class="reference external" href="mailto:arch&#37;&#52;&#48;sapience&#46;com">arch<span>&#64;</span>sapience<span>&#46;</span>com</a> key available via WKD
-or from the <a class="reference external" href="https://www.sapience.com/tech">sapience.com</a> website. Add the key to your package builder gpg keyring.
+or from the <a class="reference external" href="https://www.sapience.com/tech">sapience.com</a> website.
+Add the key to your package builder gpg keyring.
 The key is included in the Arch package and the source= line with <em>?signed</em> at the end can be used
 to verify the git tag. You can also manually verify the signature as usual with
 <em>git tag -v &lt;tag&gt;</em>.</p>
@@ -115,6 +116,24 @@ restarted with new config.</p>
 </section>
 <section id="new-interesting">
 <h2>New / Interesting<a class="headerlink" href="#new-interesting" title="Link to this heading">¶</a></h2>
+<p>** 9.0.0**</p>
+<ul>
+<li><p>Add support for <em>IP Groups</em>.</p>
+<p>This is helpful when managing routes for <em>groups</em> of users.
+By designating some peers as members of an <em>ip-group</em>, network routes can now be
+for specific groups. The IPs for an ip group must be a proper subnet
+of the VPN network.</p>
+<p>An ip group is created using the <em>–add-ip-group &lt;name&gt; &lt;subnet(s)&gt;</em> option.</p>
+<p>Note that since an ip group is defined by the IP subnet of the vpn network, a
+peer can only be a member of one group since it only has 1 IP.</p>
+<p>See <a class="reference internal" href="Sections/Ip-Groups.html#ip-groups"><span class="std std-ref">IP Groups</span></a> and <a class="reference internal" href="Examples.html#example-4"><span class="std std-ref">Working Example 4</span></a> for a sample use case.</p>
+</li>
+<li><p>Switch File Data from TOML to YAML format.</p>
+<p>YAML is more robust than toml <a class="footnote-reference brackets" href="#id3" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. Existing files are auto converted,
+the first time version <em>9.x</em> is used.
+<em>Edit</em> files now use yaml format as well. Docs updated to reflect this.</p>
+</li>
+</ul>
 <p>** 8.2.0**</p>
 <ul>
 <li><p>Command line option completion optionally available.</p>
@@ -209,22 +228,24 @@ We provide more information on these later in the documentation.</p>
 <p>We also provide a sample nftables firewall script which will suffice for
 many/most typical gateway servers. We also provide a linux client program
 which is a DNS helper tool, changing DNS resolution while the vpn is running
-and restoring it to it’s original state when the vpn is stopped.</p>
+and restoring it to it’s original state when the vpn is stopped. For clients
+with all their traffic sent through the vpn this helper ensures
+DNS requests are resolved via the tunnel as well.</p>
 </section>
 <section id="wireguard-config-peer-section-s">
 <h3>Wireguard Config: Peer Section(s)<a class="headerlink" href="#wireguard-config-peer-section-s" title="Link to this heading">¶</a></h3>
 <p>The second part of any peer config is one or more <em>Peer</em> sections. Each of these
 provides the information required to engage with that peer.
-Each peer section has the public key of of the peer.</p>
+Each peer section has the public key of the peer.</p>
 <p>It also provides the list of networks that are acceptable to use in communicating with that peer.
-The available networks are typically internal LANs or internet access. These is the
-<em>AllowedIPs</em> variable. It can be one network, a
+The available networks are typically internal LANs or internet access. This is the
+<em>AllowedIPs</em> variable. It can be one network or a
 comma separated list of networks, and it can be repeated.</p>
 <p>Each pair of peers may also share a secret known as a <em>pre-shared-key</em> or PSK.
 Wireguard’s author, Jason Donenfeld, opines that using this provides an additional
 security layer facilitating post-quantum resistance. <em>wg-tool</em> automatically generates
 a unique PSK for each pair of peers that communicate with one another.</p>
-<p>The peer section also includes the Endpoint, if that peer is a gateway.</p>
+<p>The peer section may also include an Endpoint if that peer is a gateway.</p>
 <p>A client may send all it’s traffic to the the gateway it
 is using or it may choose to send only the internal LAN traffic to the gateway
 and direcly connect to the internet for the remaining traffic. When the client
@@ -288,8 +309,8 @@ Once imported then <em>wg-tool</em> can be used to manage things going forward.<
 the resulting generated configs (in <em>Data-wg</em>) with those that were imported.</p>
 </section>
 <section id="simple-example">
-<span id="id1"></span><h2>Simple Example<a class="headerlink" href="#simple-example" title="Link to this heading">¶</a></h2>
-<p>Lets do a really little example that illustrates how easy it is
+<span id="id2"></span><h2>Simple Example<a class="headerlink" href="#simple-example" title="Link to this heading">¶</a></h2>
+<p>Lets do a simple little example that illustrates how easy it is
 to generate wireguard configs. The goal here is to:</p>
 <ul class="simple">
 <li><p>Create a vpn called <em>vpn-test</em></p></li>
@@ -318,6 +339,14 @@ wg-tool<span class="w"> </span>-new<span class="w"> </span>vpn-test.alice.laptop
 </div>
 <p>All the wireguard configs will be found under the <em>Data-wg</em> directory.
 This has the gateway server config along with both users’ laptop configs.</p>
+<p class="rubric">Footnotes</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id3" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>For example adding a dictionary in the middle of a group of key=val will
+incorrectly append subsequent key=val to the dictionary</p>
+</aside>
+</aside>
 </section>
 </section>
 
@@ -378,6 +407,7 @@ This has the gateway server config along with both users’ laptop configs.</p>
 <li class="toctree-l1"><a class="reference internal" href="Examples.html">Working Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Sections/Editing.html">Editing and Making Changes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Sections/Options.html">Command Line Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sections/Ip-Groups.html">IP Groups</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Sections/Completion.html">Command Line Bash Completion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Sections/Reports.html">Reports</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Sections/Key-rollover.html">Key Rollover</a></li>
