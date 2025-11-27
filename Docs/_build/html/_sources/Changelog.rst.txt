@@ -6,12 +6,23 @@ Tags
 
 .. code-block:: text
 
-	1.1.1 (2022-10-26) -> 9.0.1 (2025-10-30)
-	218 commits.
+	1.1.1 (2022-10-26) -> 9.1.0 (2025-11-27)
+	220 commits.
 
 Commits
 =======
 
+
+* 2025-11-27  : **9.1.0**
+
+.. code-block:: text
+
+              - Bug fix for issue #19: key roll fails, as reported by @hubbleshare
+ 2025-10-30   ⋯
+
+.. code-block:: text
+
+              - update Docs Changelogs
 
 * 2025-10-30  : **9.0.1**
 
