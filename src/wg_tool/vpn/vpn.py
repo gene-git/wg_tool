@@ -227,7 +227,7 @@ class Vpn():
         acct_idents: dict[str, Identities] = {}
         for ident in vpn_idents.ids:
             acct_name = ident.acct_name
-            if not acct_idents[acct_name]:
+            if not acct_idents.get(acct_name):
                 acct_idents[acct_name] = Identities()
 
             acct_idents[acct_name].ids.append(ident)
