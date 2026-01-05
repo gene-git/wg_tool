@@ -36,9 +36,10 @@ Build and install
     $ git clone https://github.com/gene-git/wg_tool
     $ cd wg_tool
 
-    $ sudo pip install hatchling
+    $ sudo pip install uv
+    $ sudo pip install uv-build
 
-    $ /usr/bin/python -m build --wheel --no-isolation
+    $ /usr/bin/uv build --wheel --no-build-isolation
 
     $ sudo ./scripts/do-install /
 

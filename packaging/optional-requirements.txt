@@ -1,9 +1,0 @@
-# 
-# optional-requirements.txt
-# To build docs sphinx required
-# For pdf latex is required as well - distro vary how latex is packages
-# adjust to ensure pdflatex is included
-# 
-sphinx
-texlive-latexextra
-

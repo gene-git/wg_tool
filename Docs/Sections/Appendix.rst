@@ -46,7 +46,7 @@ When running as non-root then set root_dest to a user writable directory.
 .. code:: bash
 
     rm -f dist/*
-    /usr/bin/python -m build --wheel --no-isolation
+    /usr/bin/uv build --wheel --no-build-isolation
     root_dest="/"
     ./scripts/do-install $root_dest
 
@@ -65,10 +65,8 @@ Dependencies
 **Building Package**:
 
   * git
-  * hatch (aka python-hatch)
-  * wheel (aka python-wheel)
-  * build (aka python-build)
-  * installer (aka python-installer)
+  * uv
+  * uv-build (aka python-uv-build)
   * sphinx
   * myst-parser
   * texlive-latexextra  (texlive tools, this is archlinux package)
@@ -91,7 +89,7 @@ License
 Created by Gene C. and licensed under the terms of the GPL-2.0-or-later license.
 
  * SPDX-License-Identifier: MIT
- * SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+ * SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 
 .. _Github: https://github.com/gene-git/wg_tool
 .. _Archlinux AUR: https://aur.archlinux.org/packages/wg_tool
