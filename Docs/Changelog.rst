@@ -6,12 +6,19 @@ Tags
 
 .. code-block:: text
 
-	1.1.1 (2022-10-26) -> 9.2.2 (2026-01-05)
-	223 commits.
+	1.1.1 (2022-10-26) -> 9.2.3 (2026-01-05)
+	225 commits.
 
 Commits
 =======
 
+
+* 2026-01-05  : **9.2.3**
+
+.. code-block:: text
+
+              - Docs - update manual build instructions for uv (including ubuntu)
+              - update Docs Changelogs
 
 * 2026-01-05  : **9.2.2**
 
