@@ -103,7 +103,7 @@ Key features
 New / Interesting
 =================
 
-**9.2.0**
+**9.2.2**
 
 * Code Reorg
 * Switch packaging from hatch to uv
