@@ -16,7 +16,7 @@ latex_engine = 'xelatex'
 project = "wg_tool"
 copyright = '2022-%Y, Gene C'
 author = 'Gene C'
-release = "9.2.1"
+release = "9.2.2"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -26,7 +26,7 @@ extensions = [
 ]
 
 templates_path = ['_templates']
-exclude_patterns = ['_build', 'Thumbs.db', 'Changelog.rst', 'Misc/*.py']
+exclude_patterns = ['_build', 'Thumbs.db', 'Changelog.rst', 'Misc/*.rst']
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output

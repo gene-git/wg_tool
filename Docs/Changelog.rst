@@ -6,12 +6,29 @@ Tags
 
 .. code-block:: text
 
-	1.1.1 (2022-10-26) -> 9.1.0 (2025-11-27)
-	220 commits.
+	1.1.1 (2022-10-26) -> 9.2.1 (2026-01-05)
+	222 commits.
 
 Commits
 =======
 
+
+* 2026-01-05  : **9.2.1**
+
+.. code-block:: text
+
+              - **9.2.1**
+            
+                * Code Reorg
+                * Switch packaging from hatch to uv
+                * Testing to confirm all working correctly on python 3.14.2
+                  * 3.14 argparse introdiced color - it can be turned of with env PYTHON_COLORS=0.
+                    The colors are not currently adjustable - is improved in python 3.15.
+ 2025-11-27   ⋯
+
+.. code-block:: text
+
+              - update Docs Changelogs
 
 * 2025-11-27  : **9.1.0**
 

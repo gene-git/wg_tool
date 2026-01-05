@@ -1,9 +1,20 @@
 -------------------------------------------------------
  Changelog    : wg_tool
- Tags         : 8.1.0 ➙ 9.1.0
-              : 2025-09-17 ➙ 2025-11-27
+ Tags         : 8.0.0 ➙ 9.2.1
+              : 2025-09-17 ➙ 2026-01-05
               : 6 tags. See Docs for full changelog
 -------------------------------------------------------
+
+ 2026-01-05   : 9.2.1
+              - **9.2.1**
+            
+                * Code Reorg
+                * Switch packaging from hatch to uv
+                * Testing to confirm all working correctly on python 3.14.2
+                  * 3.14 argparse introdiced color - it can be turned of with env PYTHON_COLORS=0.
+                    The colors are not currently adjustable - is improved in python 3.15.
+ 2025-11-27   ⋯
+              - update Docs Changelogs
 
  2025-11-27   : 9.1.0
               - Bug fix for issue #19: key roll fails, as reported by @hubbleshare
@@ -41,4 +52,16 @@
               - Fix bug checking working directory when not in the work dir
                 Fix typo in gateway report which made handshake be dropped.
               - update Docs/wg_tool.pdf Docs/Changelogs
+              - update Docs/wg_tool.pdf Docs/Changelogs
+
+ 2025-09-17   : 8.0.0
+              - Release 8.0.0
+                New vpn info variable: dns_lookup_ipv6
+                  When true, hostnames listed in "dns" lists are now queried for
+                  IPv6 as well as IPv4 address(es). These are used in the wireguard configs.
+                  Defaults to false.
+ 2025-09-16   ⋯
+              - fix couple typos
+              - Add html link in Docs pointing to pre-build html docs.
+                Remove old license file
               - update Docs/wg_tool.pdf Docs/Changelogs

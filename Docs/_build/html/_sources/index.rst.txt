@@ -24,9 +24,3 @@ wg_tool Documentation
    Sections/Appendix
    Contrib/ubuntu
 
-.. unused
-   # Changelog
-   # Contributing
-   # Code-of-conduct
-   # :maxdepth: 2
-   # :caption: Contents:

@@ -2,7 +2,7 @@
 License
 =======
 
-wg_tool software is used to administer Wireguard VPNs.
+wg_tool software used to administer Wireguard VPNs.
 
 Copyright © 2022-present  Gene C <arch@sapience.com>
 
