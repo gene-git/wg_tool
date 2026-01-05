@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 Tool to check if 2 files are the same.
 
@@ -16,7 +16,7 @@ written and return true if they match
 
 """
 import os
-from crypto import message_digest
+from wg_tool.crypto import message_digest
 
 from .read_write import open_file
 from .comments import clean_comments

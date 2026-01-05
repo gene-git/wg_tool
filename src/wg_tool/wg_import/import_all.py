@@ -1,10 +1,10 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 Import wg configs
 """
-from utils import Msg
-from vpn import Vpn
+from wg_tool.utils import Msg
+from wg_tool.vpn import Vpn
 
 from .filenames import files_to_import
 from .gw_infos import GwInfos

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 Profile
 """
@@ -10,19 +10,19 @@ from typing import (Any, Self)
 import os
 from copy import deepcopy
 
-from utils import Msg
-from utils import dict_to_yaml_string
+from wg_tool.utils import Msg
+from wg_tool.utils import dict_to_yaml_string
 
-from config import Opts
+from wg_tool.config import Opts
 
-from crypto import gen_key_pair
-from data import mod_time_now
-from data import write_dict
-from data import read_dict
+from wg_tool.crypto import gen_key_pair
+from wg_tool.data import mod_time_now
+from wg_tool.data import write_dict
+from wg_tool.data import read_dict
 
-from net import NetWorks
-from net import internet_networks
-from ids import Identity
+from wg_tool.net import NetWorks
+from wg_tool.net import internet_networks
+from wg_tool.ids import Identity
 
 from .profile_base import ProfileBase
 from .wg_address import set_wireguard_address

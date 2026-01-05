@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 '''
 Each VPN shares same network space - IPv4 and IPv6.
 
@@ -27,14 +27,14 @@ from typing import Any
 
 from py_cidr import Cidr
 
-from utils import Msg
-from utils import dict_to_yaml_string
-from utils.debug import pprint
+from wg_tool.utils import Msg
+from wg_tool.utils import dict_to_yaml_string
+from wg_tool.utils.debug import pprint
 
-from ids import generate_tag
-from psks import Psks
-from data import (get_vpninfo_file, write_dict, read_dict)
-from net import NetWorks
+from wg_tool.ids import generate_tag
+from wg_tool.psks import Psks
+from wg_tool.data import (get_vpninfo_file, write_dict, read_dict)
+from wg_tool.net import NetWorks
 
 from .vpninfo_base import VpnInfoBase
 # from .read_info import read_info_file
@@ -486,6 +486,7 @@ def _from_dict(vpninfo: VpnInfo,
     Load from saved Vpn.info file
     """
     # pylint: disable=too-many-branches
+    # pylint: disable=too-many-statements
     Msg.infoverb('Vpninfo: load from dictionary\n', level=2)
 
     tag = data.get('tag')

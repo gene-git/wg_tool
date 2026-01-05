@@ -2,8 +2,7 @@
 #
 # Source code checks.
 #
-# Run in src dir
-# i.e. cd src/gfw
+# Run in top level
 # 
 
 apps=(
@@ -29,23 +28,11 @@ modules=(
     wg_import
 )
     
-echo "-------------------------------"
-echo "     pylint"
-echo "-------------------------------"
+cd src
+mod='wg_tool'
+PYTHONPATH=. pylint $mod/*.py $mod/*/*.py
+PYTHONPATH=. pycodestyle --max-line-length=110 $mod/*.py $mod/*/*.py
 
-PYTHONPATH=. pylint */*py ${apps[@]}
-
-
-echo "-------------------------------"
-echo "     pycodestyle"
-echo "-------------------------------"
-
-PYTHONPATH=. pycodestyle --max-line-length=110 */*py ${apps[@]}
-
-echo "-------------------------------"
-echo "     mypy"
-echo "-------------------------------"
-
-mypy --check-untyped-defs --follow-untyped-imports ${modules[@]} ${apps[@]}
+mypy --check-untyped-defs --follow-untyped-imports $mod
 
 

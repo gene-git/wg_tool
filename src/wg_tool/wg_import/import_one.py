@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 Import one wireguard config file
 """
@@ -9,13 +9,13 @@ Import one wireguard config file
 # pylint: disable=too-many-branches
 # pylint: disable=too-many-statements
 # pylint: disable=too-many-nested-blocks
-from utils import Msg
-from vpn import Vpn
-from peers import Acct
-from peers import Profile
-from data import mod_time_now
-from net import internet_networks
-from net import cidr_in_cidrs
+from wg_tool.utils import Msg
+from wg_tool.vpn import Vpn
+from wg_tool.peers import Acct
+from wg_tool.peers import Profile
+from wg_tool.data import mod_time_now
+from wg_tool.net import internet_networks
+from wg_tool.net import cidr_in_cidrs
 
 from .wg_conf_base import WgConfBase
 from .gw_info import GwInfo

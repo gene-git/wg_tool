@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 save/restore some command line options
   - support function for WgtOptBase
@@ -7,13 +7,13 @@ save/restore some command line options
 from typing import (Any)
 import os
 
-from utils import Msg
-from utils import make_dir_path
-from utils import write_path_atomic
-from utils import dict_to_yaml_string
+from wg_tool.utils import Msg
+from wg_tool.utils import make_dir_path
+from wg_tool.utils import write_path_atomic
+from wg_tool.utils import dict_to_yaml_string
 
-from data import restrict_file_mode
-from data import read_dict
+from wg_tool.data import restrict_file_mode
+from wg_tool.data import read_dict
 # from data import write_dict
 
 

@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 # PYTHON_ARGCOMPLETE_OK
 
 """
@@ -11,7 +11,7 @@ wg-tool
   See --help for options and README for details.
 """
 # pylint: disable=invalid-name
-from app import Tool
+from wg_tool.app import Tool
 
 
 def main():

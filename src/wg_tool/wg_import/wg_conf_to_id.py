@@ -1,12 +1,12 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 Determine the ID string from wg config pathname
 """
 import os
 from pathlib import Path
 
-from utils import Msg
+from wg_tool.utils import Msg
 
 
 def wg_conf_file_to_id(file: str) -> str:

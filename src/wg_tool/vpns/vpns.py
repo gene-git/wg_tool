@@ -1,19 +1,19 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 Handles 1 "vpn".
 """
 # pylint: disable=too-many-return-statements
-from config import Opts
-from utils import Msg
-from utils import state_marker
-from data import get_vpn_names
-from rpt import GwReport
-from rpt import AcctProfile
-from vpn import Vpn
-from ids import Identity
-from ids import Identities
-from wg_import import import_all_wg_configs
+from wg_tool.config import Opts
+from wg_tool.utils import Msg
+from wg_tool.utils import state_marker
+from wg_tool.data import get_vpn_names
+from wg_tool.rpt import GwReport
+from wg_tool.rpt import AcctProfile
+from wg_tool.vpn import Vpn
+from wg_tool.ids import Identity
+from wg_tool.ids import Identities
+from wg_tool.wg_import import import_all_wg_configs
 
 from .vpns_base import VpnsBase
 from .modify_state import modify_state

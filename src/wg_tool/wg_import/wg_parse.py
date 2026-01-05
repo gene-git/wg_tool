@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 Data for a wireguard peer config
 """
@@ -7,10 +7,10 @@ Data for a wireguard peer config
 # pylint: disable = too-few-public-methods
 # pylint: disable = too-many-instance-attributes
 # pylint: disable = too-many-branches
-from utils import clean_comment
-from utils import csv_string_to_list
-from crypto import public_from_private_key
-from net import wq_addresses_to_addresses
+from wg_tool.utils import clean_comment
+from wg_tool.utils import csv_string_to_list
+from wg_tool.crypto import public_from_private_key
+from wg_tool.net import wq_addresses_to_addresses
 
 from .wg_conf_base import WgConfBase
 from .wg_conf_base import WgConfPeer

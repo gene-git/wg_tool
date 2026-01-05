@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 wg-tool server class
 """
@@ -9,20 +9,20 @@ wg-tool server class
 from typing import (Any)
 import os
 
-from utils import Msg
-from utils import state_marker
-from utils.debug import pprint
+from wg_tool.utils import Msg
+from wg_tool.utils import state_marker
+from wg_tool.utils.debug import pprint
 
-from data import mod_time_now
-from data import get_file_names
-from data import read_dict
-from data import write_dict
-from data import get_vpn_dir
+from wg_tool.data import mod_time_now
+from wg_tool.data import get_file_names
+from wg_tool.data import read_dict
+from wg_tool.data import write_dict
+from wg_tool.data import get_vpn_dir
 
-from net import NetWorks
-from config import Opts
-from ids import Identity
-from ids import Identities
+from wg_tool.net import NetWorks
+from wg_tool.config import Opts
+from wg_tool.ids import Identity
+from wg_tool.ids import Identities
 
 from .profile import Profile
 

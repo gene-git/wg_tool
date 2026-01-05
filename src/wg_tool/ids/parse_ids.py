@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 Map command line input list of:
     vpn.acct.prof
@@ -17,7 +17,7 @@ Map command line input list of:
     e.g. If one has vpn only they must all have vpn only etc.
 """
 # pylint: disable=too-many-locals
-from utils import Msg
+from wg_tool.utils import Msg
 from .identity import Identity
 
 

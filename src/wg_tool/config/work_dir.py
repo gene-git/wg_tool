@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 When user doesn't specify a work dir we find it
 by looking wlong each of the directoris in  "paths".
@@ -7,7 +7,7 @@ by looking wlong each of the directoris in  "paths".
 """
 import os
 
-from utils import Msg
+from wg_tool.utils import Msg
 
 
 def have_permission_rwx(adir: str) -> bool:

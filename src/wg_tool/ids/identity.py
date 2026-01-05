@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2025-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2025-present Gene C <arch@sapience.com>
 """
 Unique Id Manager
 Currently we are only using the hash part.
@@ -8,9 +8,9 @@ Name space by conbstruction is unique
 """
 import uuid
 
-from utils import Msg
-from utils.debug import pprint
-from data.constants import DB_DIR
+from wg_tool.utils import Msg
+from wg_tool.utils.debug import pprint
+from wg_tool.data.constants import DB_DIR
 
 
 class Identity:

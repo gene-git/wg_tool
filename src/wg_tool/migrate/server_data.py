@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 Legacy version < v 8.x
 server data class
@@ -7,8 +7,8 @@ server data class
 # pylint: disable=invalid-name, too-many-instance-attributes
 # pylint: disable=duplicate-code
 
-from utils import (Msg, read_toml_file)
-from utils import (csv_string_to_list)
+from wg_tool.utils import (Msg, read_toml_file)
+from wg_tool.utils import (csv_string_to_list)
 
 
 class ServerData:

@@ -1,13 +1,13 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 Profile: data
 """
 # pylint: disable=too-many-instance-attributes
 # pylint: disable=too-few-public-methods, invalid-name
-from data import mod_time_now
-from ids import Identity
-from utils.debug import pprint
+from wg_tool.data import mod_time_now
+from wg_tool.ids import Identity
+from wg_tool.utils.debug import pprint
 
 
 class ProfileBase:

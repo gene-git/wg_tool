@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 wg-tool primary class
 
@@ -11,12 +11,12 @@ which connect to a gateway (which listens on a known ip/port)
 # pylint: disable=too-many-return-statements, too-many-branches
 import os
 
-from config import Opts
-from utils import Msg
-from utils import dir_list
+from wg_tool.config import Opts
+from wg_tool.utils import Msg
+from wg_tool.utils import dir_list
 
-from data import get_top_dir
-from migrate import migrate_data
+from wg_tool.data import get_top_dir
+from wg_tool.migrate import migrate_data
 
 
 def do_data_migration(opts: Opts) -> tuple[bool, bool]:

@@ -4,6 +4,8 @@
 wg-tool
 *******
 
+Software used to administer Wireguard VPNs. Simplifies server and client management.
+
 Overview
 ========
 
@@ -101,7 +103,15 @@ Key features
 New / Interesting
 =================
 
-** 9.0.0**
+**9.2.0**
+
+* Code Reorg
+* Switch packaging from hatch to uv
+* Testing to confirm all working correctly on python 3.14.2
+  * 3.14 argparse introdiced color - it can be turned of with env PYTHON_COLORS=0.
+    The colors are not currently adjustable - is improved in python 3.15.
+
+**9.0.0**
 
 * Add support for *IP Groups*. 
   

@@ -1,11 +1,11 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 Create a new vpn/acct/profile
 """
 # pylint: disable=too-many-return-statements
-from utils import Msg
-from ids import Identity
+from wg_tool.utils import Msg
+from wg_tool.ids import Identity
 
 from .vpns_base import VpnsBase
 

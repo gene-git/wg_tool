@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 Create a new vpn/acct/profile
 """
@@ -8,8 +8,8 @@ Create a new vpn/acct/profile
 import os
 from typing import Any
 
-from utils import Msg
-from data import read_dict
+from wg_tool.utils import Msg
+from wg_tool.data import read_dict
 
 from .vpns_base import VpnsBase
 from .modify_save import get_prof_save_file

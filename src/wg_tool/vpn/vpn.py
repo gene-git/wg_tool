@@ -1,32 +1,32 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 Gateways
 """
 # pylint: disable=too-many-public-methods
 
-from utils import (Msg, state_marker)
-from utils.debug import pprint
+from wg_tool.utils import (Msg, state_marker)
+from wg_tool.utils.debug import pprint
 
-from config import Opts
+from wg_tool.config import Opts
 
-from data import (get_acct_names)
-from data import rename_acct_dir
-from data import unlink_profile
+from wg_tool.data import (get_acct_names)
+from wg_tool.data import rename_acct_dir
+from wg_tool.data import unlink_profile
 
-from peers import Acct
-from peers import WgConfig
-from peers import Profile
+from wg_tool.peers import Acct
+from wg_tool.peers import WgConfig
+from wg_tool.peers import Profile
 
-from rpt import PeerReport
-from rpt import AcctProfile
+from wg_tool.rpt import PeerReport
+from wg_tool.rpt import AcctProfile
 
-from ids import Identity
-from ids import Identities
+from wg_tool.ids import Identity
+from wg_tool.ids import Identities
 
-from net import NetsShared
+from wg_tool.net import NetsShared
 
-from vpninfo import VpnInfo
+from wg_tool.vpninfo import VpnInfo
 
 
 class Vpn():

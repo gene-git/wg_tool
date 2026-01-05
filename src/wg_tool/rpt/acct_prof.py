@@ -1,11 +1,11 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 One peer:profile
 """
 # pylint: disable=too-few-public-methods
-from peers import Acct
-from peers import Profile
+from wg_tool.peers import Acct
+from wg_tool.peers import Profile
 
 
 class AcctProfile:

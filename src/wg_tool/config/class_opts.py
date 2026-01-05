@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 Opts  - command line options for WgTool
 """
@@ -9,8 +9,8 @@ Opts  - command line options for WgTool
 import os
 import sys
 
-from utils import (Msg, version)
-from data import get_top_dir
+from wg_tool.utils import (Msg, version)
+from wg_tool.data import get_top_dir
 
 from ._opts_base import OptsBase
 from .options import parse_args

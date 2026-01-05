@@ -1,11 +1,11 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 Convert dns / dns_search list to wireguard DNS format
 """
 from py_cidr import Cidr
 
-from dns_resolver import Dns
+from wg_tool.dns_resolver import Dns
 
 
 def dns_to_wg_dns(hosts: list[str], include_ipv6: bool) -> list[str]:

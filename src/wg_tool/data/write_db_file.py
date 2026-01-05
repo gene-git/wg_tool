@@ -1,19 +1,19 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 File writer that keeps history
 """
 import os
 # import stat
 
-from crypto import message_digest
+from wg_tool.crypto import message_digest
 
-from utils import Msg
-from utils import open_file
-from utils import make_dir_path
-from utils import file_symlink
-from utils import write_path_atomic
-from utils import clean_comments
+from wg_tool.utils import Msg
+from wg_tool.utils import open_file
+from wg_tool.utils import make_dir_path
+from wg_tool.utils import file_symlink
+from wg_tool.utils import write_path_atomic
+from wg_tool.utils import clean_comments
 
 from .paths import get_db_name
 from .mod_time import mod_time_now

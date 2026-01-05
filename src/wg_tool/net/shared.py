@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 Shared networks
 """
@@ -7,7 +7,7 @@ import itertools
 from py_cidr import Cidr
 from py_cidr import IPvxNetwork
 
-from utils import Msg
+from wg_tool.utils import Msg
 
 
 class NetShared:

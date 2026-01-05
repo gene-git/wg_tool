@@ -1,14 +1,14 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 Wireguard uses these configs
 """
 # pylint: disable=too-few-public-methods
 # pylint: disable=too-many-instance-attributes
 
-from config import Opts
-from vpninfo import VpnInfo
-from net import NetsShared
+from wg_tool.config import Opts
+from wg_tool.vpninfo import VpnInfo
+from wg_tool.net import NetsShared
 
 from .acct import Acct
 

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 Migrate legacy to new format
 
@@ -19,20 +19,20 @@ import uuid
 
 from py_cidr import Cidr
 
-from utils import Msg
-from data import mod_time_now
-from config import Opts
+from wg_tool.utils import Msg
+from wg_tool.data import mod_time_now
+from wg_tool.config import Opts
 
-from vpns import Vpns
-from vpn import Vpn
-from vpninfo import VpnInfo
-from net import internet_networks
-from net import cidr_in_cidrs
+from wg_tool.vpns import Vpns
+from wg_tool.vpn import Vpn
+from wg_tool.vpninfo import VpnInfo
+from wg_tool.net import internet_networks
+from wg_tool.net import cidr_in_cidrs
 
-from peers import Acct
-from peers import Profile
+from wg_tool.peers import Acct
+from wg_tool.peers import Profile
 
-from ids import Identity
+from wg_tool.ids import Identity
 
 from .server import Server
 from .users import Users

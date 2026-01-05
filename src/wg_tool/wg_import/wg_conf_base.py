@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 Data for a wireguard peer config
 """
@@ -7,8 +7,8 @@ Data for a wireguard peer config
 # pylint: disable = too-few-public-methods
 # pylint: disable = too-many-instance-attributes
 
-from ids import Identity
-from utils.debug import pprint
+from wg_tool.ids import Identity
+from wg_tool.utils.debug import pprint
 
 
 class WgConfPeer:

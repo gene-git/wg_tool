@@ -1,13 +1,13 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 Write dictionary to file in our standard toml format with header
 """
 from typing import (Any)
 
-from utils import dict_to_toml_string
-from utils import dict_to_yaml_string
-from utils import Msg
+from wg_tool.utils import dict_to_toml_string
+from wg_tool.utils import dict_to_yaml_string
+from wg_tool.utils import Msg
 
 from .mod_time import mod_time_now
 from .write_db_file import write_db_file

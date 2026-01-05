@@ -1,11 +1,10 @@
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["uv_build>=0.9.21,<=1.0.0"]
+build-backend = "uv_build"
 
 [project]
 name = "wg_tool"
-dynamic = ["version"]
-description = "Wireguard configuration tool that simplifies all aspects of VPN setups"
+description = "Wireguard tool that simplifies all aspects of VPN configuration"
 authors = [{ name = "Gene C", email = "arch@sapience.com" }]
 license = "GPL-2.0-or-later"
 readme = "README.rst"
@@ -14,40 +13,32 @@ classifiers = [
     "Development Status :: 4 - Beta",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
 ]
+requires-python = ">=3.13"
+version = "9.2.1"
 dependencies = []
-
-[tool.hatch.build.targets.wheel]
-packages = ["src/wg_tool"]
-include = [
-    "src/wg_tool",
-]
-
 
 [project.urls]
 Documentation = "https://github.com/gene-git/wg_tool/Docs"
 Issues = "https://github.com/gene-git/wg_tool/issues"
 Source = "https://github.com/gene-git/wg_tool"
 
-[tool.hatch.version]
-path = "src/wg_tool/utils/version.py"
-
-[tool.hatch.envs.default]
-# dependencies = [
-#    "coverage[toml]>=6.5",
-#    "pytest",
-# ]
-
-[[tool.hatch.envs.all.matrix]]
-python = ["3.13", "3.14", "3.15"]
-
-[tool.hatch.envs.lint]
-detached = true
-dependencies = [
-  #"black>=23.1.0",
-  #"mypy>=1.0.0",
-  #"ruff>=0.0.243",
+[tool.uv.build-backend]
+module-name = 'wg_tool'
+module-root = "src"
+source-include = [
+    '/wg_tool',
+    '/wg_tool/py.typed',
 ]
+source-exclude = [
+    ".pytest_cache",
+    "__pycache__",
+    ".mypy_cache",
+]
+
+
 
 [tool.mypy]
 check_untyped_defs = true

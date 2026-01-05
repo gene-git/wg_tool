@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 User IP tool
  - ip and cidr: string(s)
@@ -9,8 +9,8 @@ import ipaddress
 
 from py_cidr import (Cidr, IPAddress, IPvxNetwork)
 
-from utils import Msg
-from utils.debug import pprint
+from wg_tool.utils import Msg
+from wg_tool.utils.debug import pprint
 
 
 class NetWork:

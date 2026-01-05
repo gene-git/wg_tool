@@ -1,11 +1,11 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 Peer directory rename
 """
 import os
 
-from utils import Msg
+from wg_tool.utils import Msg
 
 from .paths import get_vpn_dir
 from .paths import get_wg_vpn_dir

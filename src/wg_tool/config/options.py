@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 # PYTHON_ARGCOMPLETE_OK
 """
 Options - command line options for WgTool
@@ -11,8 +11,8 @@ from typing import (Any)
 import os
 import argparse
 
-from utils import Msg
-from utils import csv_string_to_list
+from wg_tool.utils import Msg
+from wg_tool.utils import csv_string_to_list
 
 from .options_save import (read_saved_options, write_saved_options)
 from .completion import completion_init

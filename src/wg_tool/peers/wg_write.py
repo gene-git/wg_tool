@@ -1,20 +1,20 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 Write wireguard all config files for one vpn
 """
 # pylint: disable=too-many-locals
 import os
 
-from data import mod_time_now
-from data import get_wg_vpn_dir
-from data import write_db_file
-from data import restrict_file_mode
+from wg_tool.data import mod_time_now
+from wg_tool.data import get_wg_vpn_dir
+from wg_tool.data import write_db_file
+from wg_tool.data import restrict_file_mode
 
-from utils import Msg
-from utils import text_to_qr_file
-from utils import make_dir_path
-from utils import os_unlink
+from wg_tool.utils import Msg
+from wg_tool.utils import text_to_qr_file
+from wg_tool.utils import make_dir_path
+from wg_tool.utils import os_unlink
 
 from .profile_base import ProfileBase
 

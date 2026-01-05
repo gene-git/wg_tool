@@ -1,13 +1,13 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 Create a new vpn/acct/profile
 """
 # pylint: disable=too-many-locals, too-many-branches, too-many-statements
 from py_cidr import Cidr
 
-from utils import Msg
-from net import internet_networks
+from wg_tool.utils import Msg
+from wg_tool.net import internet_networks
 
 from .vpns_base import VpnsBase
 from .modify_ids_to_idents import ids_to_prof_idents

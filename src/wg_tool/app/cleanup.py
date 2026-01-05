@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 cleaner
 """
@@ -7,12 +7,12 @@ cleaner
 import os
 from pathlib import Path
 
-from utils import dir_list
-from utils import Msg
+from wg_tool.utils import dir_list
+from wg_tool.utils import Msg
 
-from data import get_top_dir
-from data import get_top_wg_dir
-from data import get_db_name
+from wg_tool.data import get_top_dir
+from wg_tool.data import get_top_wg_dir
+from wg_tool.data import get_db_name
 
 
 def cleanup(wgtool):

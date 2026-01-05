@@ -1,13 +1,13 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 Data for a wireguard peer config
 """
 # pylint disable = invalid-name
 # pylint: disable = too-few-public-methods
 # pylint disable = too-many-instance-attributes
-from utils.debug import pprint
-from vpn import Vpn
+from wg_tool.utils.debug import pprint
+from wg_tool.vpn import Vpn
 
 from .gw_info import GwInfo
 from .wg_conf_base import WgDns

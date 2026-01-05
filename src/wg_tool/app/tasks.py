@@ -1,14 +1,14 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 Do all tasks
 """
 
-from utils import Msg
-from utils import set_restrictive_file_perms
-from data import get_top_dir
-from data import get_top_wg_dir
-from vpns import Vpns
+from wg_tool.utils import Msg
+from wg_tool.utils import set_restrictive_file_perms
+from wg_tool.data import get_top_dir
+from wg_tool.data import get_top_wg_dir
+from wg_tool.vpns import Vpns
 
 from .cleanup import cleanup
 

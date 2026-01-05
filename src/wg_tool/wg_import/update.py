@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 Phase 2:
     Update gateway and psks
@@ -7,9 +7,9 @@ Phase 2:
 # pylint: disable=too-many-branches
 from py_cidr import Cidr
 
-from utils import Msg
-from vpn import Vpn
-from net import internet_networks
+from wg_tool.utils import Msg
+from wg_tool.vpn import Vpn
+from wg_tool.net import internet_networks
 
 from .gw_info import GwInfo
 from .wg_conf_base import WgDns

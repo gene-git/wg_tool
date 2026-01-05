@@ -1,17 +1,17 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 Pre Shared Keys
 """
 import os
 
-from utils import Msg
-from utils.debug import pprint
-from crypto import gen_psk
+from wg_tool.utils import Msg
+from wg_tool.utils.debug import pprint
+from wg_tool.crypto import gen_psk
 
-from data import get_vpnpsk_file
-from data import write_dict
-from data import read_dict
+from wg_tool.data import get_vpnpsk_file
+from wg_tool.data import write_dict
+from wg_tool.data import read_dict
 
 
 class Psks:

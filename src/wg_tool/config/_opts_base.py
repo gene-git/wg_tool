@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 OptsBase
  - configuration and command line options.
@@ -7,10 +7,10 @@ OptsBase
 # pylint: disable=too-many-instance-attributes, too-few-public-methods
 import os
 
-from data import mod_time_now
-from data import get_data_dir
-from utils.debug import pprint
-from ids import Identities
+from wg_tool.data import mod_time_now
+from wg_tool.data import get_data_dir
+from wg_tool.utils.debug import pprint
+from wg_tool.ids import Identities
 
 from .work_dir import (find_work_dir)
 

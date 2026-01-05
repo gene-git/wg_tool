@@ -1,10 +1,10 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 make private, public and preshared keys using wg genkey/pubkey/genpsk
 """
-from utils.msg import (Msg)
-from utils.run_prog_copy import (run_prog)
+from wg_tool.utils.msg import (Msg)
+from wg_tool.utils.run_prog_copy import (run_prog)
 
 
 def gen_key_pair() -> tuple[str, str]:

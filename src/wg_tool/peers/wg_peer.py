@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 Write wireguard all config files for one vpn
 """
@@ -8,10 +8,10 @@ Write wireguard all config files for one vpn
 # pylint: disable=too-many-locals
 from py_cidr import Cidr
 
-from utils import Msg
-from utils import list_string_to_csv_sublists
-from net import internet_networks
-from vpninfo import VpnInfo
+from wg_tool.utils import Msg
+from wg_tool.utils import list_string_to_csv_sublists
+from wg_tool.net import internet_networks
+from wg_tool.vpninfo import VpnInfo
 
 from .profile_base import ProfileBase
 

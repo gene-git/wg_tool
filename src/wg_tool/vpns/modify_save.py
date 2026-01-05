@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 Edits save into file - user modifies and merges file.
 This handles that file.
@@ -11,11 +11,11 @@ This handles that file.
 """
 import os
 
-from utils import Msg
-from utils import write_path_atomic
-from data import get_edit_dir
-from peers import Profile
-from vpninfo import VpnInfo
+from wg_tool.utils import Msg
+from wg_tool.utils import write_path_atomic
+from wg_tool.data import get_edit_dir
+from wg_tool.peers import Profile
+from wg_tool.vpninfo import VpnInfo
 
 
 def get_vpninfo_save_file(work_dir: str, vpn_name: str):

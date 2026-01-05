@@ -1,12 +1,12 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 legacy user profile class
 """
 # pylint: disable=invalid-name, too-many-instance-attributes
 # pylint: disable=duplicate-code, too-few-public-methods
-from data import mod_time_now
-from utils import csv_string_to_list
+from wg_tool.data import mod_time_now
+from wg_tool.utils import csv_string_to_list
 
 
 class UserProfile:

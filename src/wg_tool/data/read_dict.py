@@ -1,13 +1,13 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 Read file (yaml or toml) and return dictionary of content.
 """
 import os
 from typing import Any
 
-from utils import read_toml_file
-from utils import read_yaml_file
+from wg_tool.utils import read_toml_file
+from wg_tool.utils import read_yaml_file
 
 
 def read_dict(fpath: str) -> dict[str, Any]:

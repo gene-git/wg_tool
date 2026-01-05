@@ -1,11 +1,11 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: © 2022-present  Gene C <arch@sapience.com>
+# SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 Set wireguard address
 """
 
-from utils import Msg
-from net import NetWorks
+from wg_tool.utils import Msg
+from wg_tool.net import NetWorks
 
 from .profile_base import ProfileBase
 
