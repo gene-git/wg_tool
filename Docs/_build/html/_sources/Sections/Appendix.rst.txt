@@ -56,10 +56,11 @@ Dependencies
 **Run Time** :
 
   * python (3.13 or later)
-  * wireguard-tools
-  * nftables (for wireguard server postup.nft)
+  * python-cryptography
   * py-cidr 
   * python-qrcode
+  * wireguard-tools
+  * nftables (for wireguard server postup.nft)
   * tomli_w (aka python-tomli_w )
 
 **Building Package**:

@@ -6,12 +6,23 @@ Tags
 
 .. code-block:: text
 
-	1.1.1 (2022-10-26) -> 9.2.3 (2026-01-05)
-	225 commits.
+	1.1.1 (2022-10-26) -> 9.2.4 (2026-01-06)
+	227 commits.
 
 Commits
 =======
 
+
+* 2026-01-06  : **9.2.4**
+
+.. code-block:: text
+
+              - PKGBUILD small change
+ 2026-01-05   ⋯
+
+.. code-block:: text
+
+              - update Docs Changelogs
 
 * 2026-01-05  : **9.2.3**
 
