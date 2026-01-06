@@ -16,7 +16,7 @@ latex_engine = 'xelatex'
 project = "wg_tool"
 copyright = '2022-%Y, Gene C'
 author = 'Gene C'
-release = "9.2.3"
+release = "9.2.4"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
