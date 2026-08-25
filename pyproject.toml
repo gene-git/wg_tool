@@ -1,7 +1,7 @@
 [project]
 name = "wg_tool"
 description = "Wireguard VPN administration tool"
-version = "10.0.0"
+version = "10.0.1"
 authors = [{ name = "Gene C", email = "arch@sapience.com" }]
 license = "GPL-2.0-or-later"
 readme = "README.rst"
