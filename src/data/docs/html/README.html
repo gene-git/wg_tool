@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>1. wg-tool &#8212; wg_tool 10.0.0
+ documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=335988e4"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="4. Recent Changes" href="Changes-recent.html" />
+    <link rel="prev" title="wg-tool Documentation" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="wg-tool">
+<h1><span class="section-number">1. </span>wg-tool<a class="headerlink" href="#wg-tool" title="Link to this heading">¶</a></h1>
+<p>Tool for administration of Wireguard VPNs. Simplifies managing Wireguard VPN gateway(s)
+and clients. VPN peers consists of servers and clients. Multiple servers allows connecting
+multiple locations, such as a remote offfice location.
+Peers may provide access to networks such as local LAN or the internet. wg-tool
+enables restricting network access to groups of peers. This is described in the <em>IP Groups</em>
+section of the manual.</p>
+<p>To keep the data organized well, aach VPN has a set of <em>accounts</em> and each account
+has a suite of peers called <em>profiles</em>.</p>
+<p>For example there might be a <em>gateways</em> account with 1 or more gateway (aka server) profiles.
+Each user might have an account with profiles for each of phone, laptop, tablet etc.</p>
+<p>Accounts or profiles may be marked active or inactive. In inactive account makes
+all it’s peer profiles inactive. An inactive peer is not permitted access to the VPN.</p>
+<section id="overview">
+<h2><span class="section-number">1.1. </span>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
+<p><a class="reference external" href="https://www.wireguard.com">Wireguard</a> is a superb vpn built in to the linux kernel.
+It is robust and super fast.
+While the majority of wireguard servers run on linux, they are found on other
+operating systems as well. Most platforms, from desktops to mobile phones,
+have wireguard clients available. We found wireguard to be very reliable and more robust
+and faster than many legacy types of vpns.</p>
+<p>A wireguard network is a collection of <em>peers</em> able to securely
+communicate with one another. Some peers, known as <em>gateways</em>, allow other peers
+to connect to them. Peers that are not gateways are called <em>clients</em>.</p>
+<p>A basic vpn has one wireguard gateway and several clients that able to use the gateway.
+The gateway may also provide access to internal networks.
+It may also allow clients to have all internet traffic flow through the gateway.</p>
+<p>Since traffic between the client and the gateway is encrypted, this provides
+privacy and security. Wireguard crypto mechanisms also have optional pre-shared keys
+(<code class="docutils literal notranslate"><span class="pre">PSK</span></code>) that provide additional resistance against post quantum attacks.
+For maximum security a <code class="docutils literal notranslate"><span class="pre">PSK</span></code> should be unique to each pair of peers that
+communicate with one another.</p>
+<p><em>wg-tool</em> is a wireguard configuration tool that
+simplifies managing all aspects of wireguard vpn setups.</p>
+<p>It handles multiple gateways (e.g. office locations), sharing
+of internal networks as well as split tunneling (internet via vpn or not).</p>
+<p>It guarantees that all gateway and client configs remain
+consistent with one another. Two peers that communicate with one another use
+encryption and therefore they share key information. By consistent we
+mean that both of those peers always use the same public and pre-shared keys.</p>
+<p>While <em>``PSK``</em> are not mandatory in wireguard, they do enhance security.
+There can be many pairs of <em>peers</em> with each pair sharing a unique <em>``PSK``</em>.
+<em>wg-tool</em> quietly takes care of all of them for you, guaranteeing every pair
+of peers shares a unique <code class="docutils literal notranslate"><span class="pre">PSK</span></code>.</p>
+<p>Wireguard gateway reports (created by running <em>wg show</em>) identify peers by their public key.
+The tool can display these reports using their corresponding user friendly names.
+Solving a long standing, if minor, <em>annoyance</em>.</p>
+<p>We built <em>wg-tool</em> to make our own VPN administration simple and robust.</p>
+<section id="where-to-get-wg-tool">
+<h3><span class="section-number">1.1.1. </span>Where to Get wg-tool<a class="headerlink" href="#where-to-get-wg-tool" title="Link to this heading">¶</a></h3>
+<p>Available at:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/gene-git/wg_tool">Github wg_tool</a></p></li>
+<li><p><a class="reference external" href="https://aur.archlinux.com/packages/wg_tool">AUR wg_tool</a></p></li>
+</ul>
+<p>On Archlinux it can be installed from the AUR or using the
+PKGBUILD provided in packaging directory.</p>
+<p>All git tags are signed with an <a class="reference external" href="mailto:arch&#37;&#52;&#48;sapience&#46;com">arch<span>&#64;</span>sapience<span>&#46;</span>com</a> key available via WKD
+or from the <a class="reference external" href="https://www.sapience.com/tech">sapience.com</a> website.
+Add the key to your package builder gpg keyring.
+The key is included in the Arch package and the source= line with <em>?signed</em> at the end can be used
+to verify the git tag. You can also manually verify the signature as usual with
+<em>git tag -v &lt;tag&gt;</em>.</p>
+<p>For those with linux road warriers, there is a <a class="reference external" href="https://github.com/gene-git/wg-client">wg-client</a>
+companion package.
+This is a linux client command line tool packaged with a graphical
+program that makes it very simple to start and stop a wireguard client for any user.
+It is also available in the <a class="reference external" href="https://aur.archlinux.com/packages/wg-client">AUR wg-client</a>.</p>
+<p>We offer working examples. In each example the goals are explained
+followed by a walk through using <em>wg-tool</em> to achieve those goals.
+The resultant wireguard configs are produced.</p>
+<p>The examples are in <em>src/tests</em>.
+For more information please see <a class="reference internal" href="Examples/Examples.html#examples"><span class="std std-ref">Working Examples</span></a> section.</p>
+<p>Documentation source along with pre-generated PDF and html versions
+are in the <em>Docs</em> directory. All documentation is written using restructured text.</p>
+</section>
+</section>
+<section id="key-features">
+<h2><span class="section-number">1.2. </span>Key Features<a class="headerlink" href="#key-features" title="Link to this heading">¶</a></h2>
+<ul>
+<li><p>Simplifies wireguard administration.</p></li>
+<li><p>Guarantees gateway and peer configs remain synchronized (public/preshared keys).</p></li>
+<li><p>Handles key generation and updates.</p></li>
+<li><p>Each <em>account</em> can have multiple profiles (vpn1.alice.laptop vpn1.alice.phone etc.)</p></li>
+<li><p>Accounts and/or profiles can be marked (in)active.</p></li>
+<li><p>Wireguard’s standard ‘wg show’report has public keys transformed into
+user friendly acccount.profile names.</p>
+<p>This feature solves a long standing wireguard annoyance in a simple way
+by showing names instead of public keys output by <em>wg show</em>.
+Also provides check on server config status being current and if it needs to be
+restarted with new config.</p>
+</li>
+<li><p>Supports importing from existing wireguard config files.</p></li>
+<li><p>Peer provided network access can be restricted using <em>IP groups</em>.</p></li>
+</ul>
+</section>
+</section>
+<section id="documentation">
+<h1><span class="section-number">2. </span>Documentation<a class="headerlink" href="#documentation" title="Link to this heading">¶</a></h1>
+<p>The manual is available in <em>src/data/docs/wg_tool.pdf</em> as well
+an html version - just point a browser at <em>src/data/docs/html</em>.</p>
+<p>The document source is also available to build your own:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>latexpdf<span class="p">;</span><span class="w"> </span>make<span class="w"> </span>latexpdf
+make<span class="w"> </span>html
+</pre></div>
+</div>
+<p>This requires some sphinx packages being available (see <a class="reference internal" href="Sections/Appendix.html#install"><span class="std std-ref">Install</span></a>)</p>
+<p>Command line help is available using <em>wg-tool –help</em> and for more details on
+options see the manual <a class="reference internal" href="Sections/Options.html#options-section"><span class="std std-ref">Command Line Options</span></a>.</p>
+</section>
+<section id="getting-started">
+<h1><span class="section-number">3. </span>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading">¶</a></h1>
+<section id="brief-wireguard-background">
+<h2><span class="section-number">3.1. </span>Brief Wireguard Background<a class="headerlink" href="#brief-wireguard-background" title="Link to this heading">¶</a></h2>
+<p>It may be useful to review the wireguard documentation <a class="reference external" href="https://www.wireguard.com/">https://www.wireguard.com/</a>.
+The key section on <em>Cryptokey Routing</em> describes how peers communicate securely with
+one another. In addition, the man pages for <em>wg-quick</em> and <em>wg</em> offer a lot of useful
+information.</p>
+<p>Here, we simply highlight a few relevant items to set the stage.</p>
+<p>Every entity in wireguard is a <em>peer</em>. And <em>peers</em> interact with each other.
+The way they interact is determined by the config files.</p>
+<p>Some peers allow others to connect to them at a known hostname or IP address
+and on a specific port. The <em>endpoint</em> for this connection is given by
+<em>host:port</em>.  Any such peer that listens on a known <em>endpoint</em> is called a <strong>gateway</strong>.</p>
+<p>Other peers only connect to peer gateways and we refer to these as <strong>clients</strong>.</p>
+<p>Of course gateways may connect with other gateways too. They are still gateways.
+So, a gateway is simply a peer that listens on some IP address and port.</p>
+<section id="wireguard-config-interface-section">
+<h3><span class="section-number">3.1.1. </span>Wireguard Config: Interface Section<a class="headerlink" href="#wireguard-config-interface-section" title="Link to this heading">¶</a></h3>
+<p>This section is about configs used by wireguard itself.</p>
+<p>Each wireguard peer config consists of 2 kinds of components.</p>
+<p>The first part of any peer config is the <em>Interface</em> section.
+This specifes the crypto keys and one or more IP addresses
+used by the vpn tunnel.  It may also have a list of DNS servers.</p>
+<p>It also has <em>PostUp</em> and <em>PostDown</em>. Together, these provide a way to have
+a program run when the vpn is brought up and some other program run
+when the vpn is taken down.</p>
+<p>These are typically used to set up firewall rules (nftables) and are used
+primarily for gateway servers and linux clients.
+We provide more information on these later in the documentation.</p>
+<p>We also provide a sample nftables firewall script which will suffice for
+many/most typical gateway servers. We also provide a linux client program
+which is a DNS helper tool, changing DNS resolution while the vpn is running
+and restoring it to it’s original state when the vpn is stopped. For clients
+with all their traffic sent through the vpn this helper ensures
+DNS requests are resolved via the tunnel as well.</p>
+</section>
+<section id="wireguard-config-peer-section-s">
+<h3><span class="section-number">3.1.2. </span>Wireguard Config: Peer Section(s)<a class="headerlink" href="#wireguard-config-peer-section-s" title="Link to this heading">¶</a></h3>
+<p>The second part of any peer config is one or more <em>Peer</em> sections. Each of these
+provides the information required to engage with that peer.
+Each peer section has the public key of the peer.</p>
+<p>It also provides the list of networks that are acceptable to use in communicating with that peer.
+The available networks are typically internal LANs or internet access. This is the
+<em>AllowedIPs</em> variable. It can be one network or a
+comma separated list of networks, and it can be repeated.</p>
+<p>Each pair of peers may also share a secret known as a <em>pre-shared-key</em> or <code class="docutils literal notranslate"><span class="pre">PSK</span></code>.
+Wireguard’s author, Jason Donenfeld, opines that using this provides an additional
+security layer facilitating post-quantum resistance. <em>wg-tool</em> automatically generates
+a unique <code class="docutils literal notranslate"><span class="pre">PSK</span></code> for each pair of peers that communicate with one another.</p>
+<p>The peer section may also include an Endpoint if that peer is a gateway.</p>
+<p>A client may send all it’s traffic to the the gateway it
+is using or it may choose to send only the internal LAN traffic to the gateway
+and direcly connect to the internet for the remaining traffic. When the client
+separates the packets like this, it is known as split tunnelling or split routing.</p>
+</section>
+<section id="a-note-about-shared-networks">
+<h3><span class="section-number">3.1.3. </span>A Note About Shared Networks<a class="headerlink" href="#a-note-about-shared-networks" title="Link to this heading">¶</a></h3>
+<p>Wireguard denotes networks available to each peer using <em>AllowedIPs</em>.
+That variable tells wireguard to permit packets to from the those networks.
+The networks one peer is sharing with another obviously require that the
+other peer be willing to share the same network traffic when communicating
+with one another.</p>
+<p>Wireguard uses <em>AllowedIPs</em> to create appropriate routes to network traffic.
+For example, if a gateway offers LAN access to it’s clients
+then clients of that gateway wishing to use that LAN must have
+their <em>AllowedIPs</em> include that LAN network.</p>
+<p><em>wg-tool</em> generates those <em>AllowedIPs</em> that wireguard needs.
+We designed it to minimize user input and to keep those inputs
+aligned with physical reality.</p>
+<p>For example, if the Office A gateway offers LAN-A access
+to clients, then <em>wg-tool</em> has the gateway designate LAN-A
+available to other peers. When it generates the wireguard configs,
+each peer that requests access to that network will have access
+permitted via it’s <em>AllowedIPs</em>.</p>
+<p><em>wg-tool</em> expects each peer to list those networks it offers to
+other peers using the <em>nets_offerered</em> variable.</p>
+<p>Of course, this is optional, and is only needed
+with peers that wish to share one or more networks.
+This applies to both gateways and clients.</p>
+<p>Similarly, peers may request access to one or more networks
+by using <em>nets_wanted</em>.</p>
+<p>In addition, gateways may set the <em>internet_offered</em> flag to indicate
+that it will pass traffic to and from the internet on behalf of
+it’s clients. Clients, in turn, request such access using
+the <em>internet_wanted</em> flag.</p>
+<p>Based on that information, <em>wg-tool</em> generates
+the appropriate <em>AllowedIPs</em> in the wireguard configs.</p>
+</section>
+<section id="peer-to-peer">
+<h3><span class="section-number">3.1.4. </span>Peer to Peer<a class="headerlink" href="#peer-to-peer" title="Link to this heading">¶</a></h3>
+<p>By default peers are only permitted to communcicate with gateways. If it
+is desirable to allow peers to communicate with one another then this is easily
+achieved. Please see the <em>peer_to_peer</em> vpn info variable
+in the <a class="reference internal" href="Sections/Editing.html#editing"><span class="std std-ref">Editing and Making Changes</span></a> section for more detail.</p>
+</section>
+</section>
+<section id="migrating-from-earlier-versions">
+<h2><span class="section-number">3.2. </span>Migrating from earlier versions<a class="headerlink" href="#migrating-from-earlier-versions" title="Link to this heading">¶</a></h2>
+<p>Versions prior to the <strong>8.0</strong> can be migrated to the new format with
+<em>wg-tool –migrate</em>.</p>
+<p>The migration leaves all earlier data files, including the output wireguard configs, untouched.
+The current version uses different directories (<em>Data</em> and <em>Date-wg</em>) to guarantee this.</p>
+</section>
+<section id="importing-from-standard-wireguard-configs">
+<h2><span class="section-number">3.3. </span>Importing from standard wireguard configs<a class="headerlink" href="#importing-from-standard-wireguard-configs" title="Link to this heading">¶</a></h2>
+<p>For those with existing wireguard setup,
+<em>wg-tool</em> can import standard wireguard configs.
+Once imported then <em>wg-tool</em> can be used to manage things going forward.</p>
+<p>For more info please see <a class="reference internal" href="Sections/Import.html#wg-import"><span class="std std-ref">Importing From Standard Wireguard Configs</span></a>.</p>
+<p>After all the configs are imported, its helpful to compare
+the resulting generated configs (in <em>Data-wg</em>) with those that were imported.</p>
+</section>
+<section id="simple-example">
+<span id="id1"></span><h2><span class="section-number">3.4. </span>Simple Example<a class="headerlink" href="#simple-example" title="Link to this heading">¶</a></h2>
+<p>Lets do a simple little example that illustrates how easy it is
+to generate wireguard configs. The goal here is to:</p>
+<ul class="simple">
+<li><p>Create a vpn called <em>vpn-test</em></p></li>
+<li><p>Add an account called servers with a gateway called <em>wg-A</em></p></li>
+<li><p>Add an account called <em>alice</em> with a laptop profile.</p></li>
+<li><p>Add an account called <em>bob</em> with a laptop profile.</p></li>
+<li><p>Do this in the current directory.</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wg-tool<span class="w"> </span>-wkd<span class="w"> </span>./
+wg-tool<span class="w"> </span>-new<span class="w"> </span>vpn-test
+wg-tool<span class="w"> </span>-new<span class="w"> </span>vpn-test.servers.wg-A
+wg-tool<span class="w"> </span>-new<span class="w"> </span>vpn-test.alice.laptop<span class="w"> </span>vpn-test.bob.laptop
+</pre></div>
+</div>
+<p>Add the endpoint the gateway server will be available on:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wg-too<span class="w"> </span>--edit<span class="w"> </span>vpn-test.servers.wg-A
+</pre></div>
+</div>
+<p>Edit the file (name will be displayed) and change the Endpoint to something like:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Endpoint = &quot;vpn.example.com:51820&quot;
+</pre></div>
+</div>
+<p>Then merge the change:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wg-tool<span class="w"> </span>--merge<span class="w"> </span>&lt;filename&gt;
+</pre></div>
+</div>
+<p>All the wireguard configs will be found under the <em>Data-wg</em> directory.
+This has the gateway server config along with both users’ laptop configs.</p>
+<p class="rubric">Footnotes</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">wg_tool</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Wireguard Tool Manual:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">1. wg-tool</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">1.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#key-features">1.2. Key Features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#documentation">2. Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#getting-started">3. Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#brief-wireguard-background">3.1. Brief Wireguard Background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#migrating-from-earlier-versions">3.2. Migrating from earlier versions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#importing-from-standard-wireguard-configs">3.3. Importing from standard wireguard configs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#simple-example">3.4. Simple Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Changes-recent.html">4. Recent Changes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/Examples.html">5. Working Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/Example-1.html">6. Working Example 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/Example-2.html">7. Working Example 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/Example-3.html">8. Working Example 3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/Example-4.html">9. Working Example 4</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sections/Editing.html">10. Editing and Making Changes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sections/Options.html">11. Command Line Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sections/Ip-Groups.html">12. IP Groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sections/Completion.html">13. Command Line Bash Completion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sections/Reports.html">14. Reports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sections/Key-rollover.html">15. Key Rollover</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sections/Helper-scripts.html">16. Convenience Scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sections/Migrating.html">17. Migrating from Earlier Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sections/Import.html">18. Importing From Standard Wireguard Configs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sections/Directory-structure.html">19. Directory and File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sections/Appendix.html">20. Appendix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contrib/ubuntu.html">21. Contrib</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">wg-tool Documentation</a></li>
+      <li>Next: <a href="Changes-recent.html" title="next chapter"><span class="section-number">4. </span>Recent Changes</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2022-present, Gene C.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/README.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>15. Key Rollover &#8212; wg_tool 10.0.0
+ documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <script src="../_static/documentation_options.js?v=335988e4"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="16. Convenience Scripts" href="Helper-scripts.html" />
+    <link rel="prev" title="14. Reports" href="Reports.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="key-rollover">
+<h1><span class="section-number">15. </span>Key Rollover<a class="headerlink" href="#key-rollover" title="Link to this heading">¶</a></h1>
+<section id="generating-new-crypto-keys">
+<h2><span class="section-number">15.1. </span>Generating New Crypto Keys<a class="headerlink" href="#generating-new-crypto-keys" title="Link to this heading">¶</a></h2>
+<p>wg-tool makes key rollover particularly simple - at least as far as updating keys
+and regenerating user and/or server configs with the new keys.</p>
+<p>Each peer utilizes one <em>private/public key pair</em>, and the <em>public</em> key is shared
+with all any peers that it communicates with.</p>
+<p>In addition every pair of peers that communicate with one another
+are assigned a unique pre-shared key (or <em>PSK</em>). The <em>PSK</em> strengthens the
+security of the communications between that pair and in particular enhances
+post-quantum resistance.</p>
+<p>When new keys are generated, the peer gets a new <em>private/public</em> key pair.
+In addition any needed <em>PSKs</em> are re-generated.</p>
+<p>As usual, after new keys are made, the corresponding wireguard configs
+are automatically updated. This includes any impacted by a change in <em>PSKs</em>.</p>
+<p>Distribution of the updated configs and QR codes to each user is not addressed by the tool.
+Continue to use existing methods - encyrpted email, in person display of QR code etc.</p>
+<p>Its as simple to update gateway or client keys - just specify those to change on
+command line.</p>
+<p>To roll the server keys run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wg-tool<span class="w"> </span>--roll-keys<span class="w"> </span>&lt;id<span class="w"> </span>or<span class="w"> </span>id<span class="w"> </span>list&gt;
+</pre></div>
+</div>
+<p>Once this has completed, any affected wireguard configs will be updated appropriately.</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">wg_tool</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Wireguard Tool Manual:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../README.html">1. wg-tool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#documentation">2. Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#getting-started">3. Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Changes-recent.html">4. Recent Changes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Examples/Examples.html">5. Working Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Examples/Example-1.html">6. Working Example 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Examples/Example-2.html">7. Working Example 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Examples/Example-3.html">8. Working Example 3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Examples/Example-4.html">9. Working Example 4</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Editing.html">10. Editing and Making Changes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Options.html">11. Command Line Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Ip-Groups.html">12. IP Groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Completion.html">13. Command Line Bash Completion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Reports.html">14. Reports</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">15. Key Rollover</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#generating-new-crypto-keys">15.1. Generating New Crypto Keys</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Helper-scripts.html">16. Convenience Scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Migrating.html">17. Migrating from Earlier Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Import.html">18. Importing From Standard Wireguard Configs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Directory-structure.html">19. Directory and File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Appendix.html">20. Appendix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contrib/ubuntu.html">21. Contrib</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="Reports.html" title="previous chapter"><span class="section-number">14. </span>Reports</a></li>
+      <li>Next: <a href="Helper-scripts.html" title="next chapter"><span class="section-number">16. </span>Convenience Scripts</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2022-present, Gene C.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/Sections/Key-rollover.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
