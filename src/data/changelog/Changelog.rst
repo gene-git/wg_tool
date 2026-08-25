@@ -6,12 +6,19 @@ Tags
 
 .. code-block:: text
 
-	1.1.1 (2022-10-26) -> 10.0.0 (2026-08-25)
-	229 commits.
+	1.1.1 (2022-10-26) -> 10.0.1 (2026-08-25)
+	231 commits.
 
 Commits
 =======
 
+
+* 2026-08-25  : **10.0.1**
+
+.. code-block:: text
+
+              - Fix typo in PKGBUILD using sha256sums not sha512
+              - update docs and Changelogs
 
 * 2026-08-25  : **10.0.0**
 
