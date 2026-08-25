@@ -6,7 +6,7 @@ Write wireguard all config files for one vpn
 # pylint: disable=too-many-instance-attributes
 # pylint: disable=too-few-public-methods
 # pylint: disable=too-many-locals
-from py_cidr import Cidr
+from py_cidr import PyCidr
 
 from wg_tool.utils import Msg
 from wg_tool.utils import list_string_to_csv_sublists
@@ -138,11 +138,12 @@ def _peer_data_gateway(wg_peer: WgPeerData) -> str:
 
     #
     # compact (keep pre-compact as comment)
+    # compact also sorts
     #
     if allowed:
         allowed = list(set(allowed))
-        allowed = Cidr.sort_cidrs(allowed)
-        compact = Cidr.compact(allowed)
+        allowed = PyCidr.sort(allowed)
+        compact = PyCidr.compact(allowed)
         if len(compact) < len(allowed):
             data += _pre_compact_nets_comment(allowed)
         allowed = compact
@@ -212,8 +213,8 @@ def _peer_data_client(wg_peer: WgPeerData) -> str:
     #
     if allowed:
         allowed = list(set(allowed))
-        allowed = Cidr.sort_cidrs(allowed)
-        compact = Cidr.compact(allowed)
+        allowed = PyCidr.sort(allowed)
+        compact = PyCidr.compact(allowed)
         if len(compact) < len(allowed):
             data += _pre_compact_nets_comment(allowed)
         allowed = compact

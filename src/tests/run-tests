@@ -1,0 +1,12 @@
+#!/usr/bin/bash
+#
+# Create and do all examples
+#
+
+# Always start with clean slate
+/usr/bin/rm -rf Data Data-wg Edits 
+
+pkgdir=$(realpath "..")
+export PYTHONPATH="$pkgdir"
+
+/usr/bin/pytest -s -v test-examples.py

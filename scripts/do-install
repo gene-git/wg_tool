@@ -5,29 +5,26 @@
 # installer script for wg_tool
 # e.g. Call from PKGBUILD:  
 #   ./do-install ${pkgdir}
-# gene c (2022)
 #
-dest="$1"
-self="wg_tool"
-mod='wg_tool'
+if (( $# < 1 )) ; then
+    dest="./build/pkg"
+else
+    dest="$1"
+fi
+dest=$(realpath "$dest")
 
-info="README.rst contrib Docs scripts examples packaging"
-infodir="/usr/share/${self}"
+/usr/bin/rm -rf "$dest"
 
-license="Docs/License/License.rst"
-licensedir="/usr/share/licenses/${self}"
+#
+# Meson installer
+#
+/usr/bin/meson install -C build/release --destdir "$dest" > /dev/null
 
-etcwg='/etc/wireguard/'
-scriptdir="/$etcwg/scripts"
-scripts='scripts/wg-peer-updn'
-
-# list apps without the ".py" or leave empty string
-apps=('wg-tool')
-
-# so can make app link in /usr/bin
+#
+# Python 
+#
 sitedir=$(/usr/bin/python3 -c "import site; print(site.getsitepackages()[0])")
 installdir="${dest}${sitedir}"
-app_location="${sitedir}/${mod}/apps"
 
 uv_opts=(
     --python /usr/bin/python
@@ -37,31 +34,7 @@ uv_opts=(
     --compile-bytecode
 )
 
-if [ ! -d "$dest" ] ; then
-    echo 'Missing destination directory'
-    exit 1
-else
-    # shared
-
-    /usr/bin/rsync --mkpath -a ${info} ${dest}${infodir}
-    /usr/bin/rsync --mkpath -a ${license} ${dest}/${licensedir}/
-
-    # keep /etc/wireguard same perms as wireguard-tool
-    mkdir -p ${dest}/${etcwg}
-    chmod 700 ${dest}/${etcwg}
-    /usr/bin/rsync -a ${scripts} ${dest}/${scriptdir}/
-
-    /usr/bin/uv pip install ${uv_opts[@]} --target "$installdir" dist/*.whl
-    /usr/bin/rm -rf "$installdir"/.lock
-
-    # link(s) in /usr/bin/
-    if [ -v apps ] ; then
-        /usr/bin/mkdir -p "${dest}/usr/bin"
-        for app in ${apps[@]}
-        do
-            /usr/bin/ln -sf ${app_location}/${app}.py ${dest}/usr/bin/${app}
-        done
-    fi
-    exit 0
-fi
+# shared
+/usr/bin/uv pip install ${uv_opts[@]} --target "$installdir" dist/*.whl
+/usr/bin/rm -rf "$installdir"/.lock
 

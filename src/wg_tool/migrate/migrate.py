@@ -17,7 +17,7 @@ Migrate legacy to new format
 # pylint: disable=too-many-locals, too-many-statements
 import uuid
 
-from py_cidr import Cidr
+from py_cidr import PyCidr
 
 from wg_tool.utils import Msg
 from wg_tool.data import mod_time_now
@@ -314,15 +314,14 @@ def _usable_ip_addresses(vpninfo: VpnInfo, ips: list[str]) -> list[str]:
     new_ips: list[str] = []
     for addr in ips:
         # get address with prefix  /32 or /128
-        ip = Cidr.ip_to_address(addr)
-        net = Cidr.cidr_to_net(str(ip))
-        cidr = str(net) if ip else ''
+        cidr = PyCidr.clean_cidr(addr)
+
         if cidr and vpninfo.is_address_available(cidr):
             vpninfo.mark_address_taken([cidr])
             new_ips.append(cidr)
         else:
             new_ips += vpninfo.find_new_address()
-            Msg.warn(f' IP unavailable : "{ip}" -> {new_ips}\n')
+            Msg.warn(f' IP unavailable : "{addr}" -> {new_ips}\n')
 
     if new_ips:
         new_ips = list(set(new_ips))

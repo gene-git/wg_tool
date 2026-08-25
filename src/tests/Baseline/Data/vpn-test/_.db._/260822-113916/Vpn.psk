@@ -1,0 +1,9 @@
+#
+#	vpn-test PSKs
+#	260822-113916
+#
+psk: {}
+
+#
+# PSK by peer_name:prof_name pairs
+#

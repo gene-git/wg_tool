@@ -5,7 +5,7 @@
 """
 Net tools
 """
-from py_cidr import Cidr
+from py_cidr import PyCidr
 
 
 def cidr_in_cidrs(cidr: str, cidrs: list[str]) -> bool:
@@ -13,7 +13,7 @@ def cidr_in_cidrs(cidr: str, cidrs: list[str]) -> bool:
     Return True if cidr in list of cidrs.
     "in" means same as or subnet of.
     """
-    if not cidr:
+    if not cidrs:
         return False
 
     if not cidr:
@@ -22,10 +22,7 @@ def cidr_in_cidrs(cidr: str, cidrs: list[str]) -> bool:
     if cidr in cidrs:
         return True
 
-    nets = Cidr.cidrs_to_nets(cidrs)
-    if Cidr.cidr_is_subnet(cidr, nets):
-        return True
-    return False
+    return PyCidr.is_subnet(cidr, cidrs)
 
 
 def internet_networks() -> list[str]:

@@ -1,10 +1,25 @@
 .. SPDX-License-Identifier: GPL-2.0-or-later
 
-*******
+=======
 wg-tool
-*******
+=======
 
-Software used to administer Wireguard VPNs. Simplifies server and client management.
+Tool for administration of Wireguard VPNs. Simplifies managing Wireguard VPN gateway(s) 
+and clients. VPN peers consists of servers and clients. Multiple servers allows connecting
+multiple locations, such as a remote offfice location. 
+Peers may provide access to networks such as local LAN or the internet. wg-tool 
+enables restricting network access to groups of peers. This is described in the *IP Groups*
+section of the manual.
+
+To keep the data organized well, aach VPN has a set of *accounts* and each account 
+has a suite of peers called *profiles*.
+
+For example there might be a *gateways* account with 1 or more gateway (aka server) profiles. 
+Each user might have an account with profiles for each of phone, laptop, tablet etc.
+
+Accounts or profiles may be marked active or inactive. In inactive account makes
+all it's peer profiles inactive. An inactive peer is not permitted access to the VPN.
+
 
 Overview
 ========
@@ -13,21 +28,21 @@ Overview
 It is robust and super fast.
 While the majority of wireguard servers run on linux, they are found on other
 operating systems as well. Most platforms, from desktops to mobile phones, 
-have wireguard clients available. We found wireguard to be more robust
+have wireguard clients available. We found wireguard to be very reliable and more robust
 and faster than many legacy types of vpns.
 
-A wireguard network is a collection of *peers* that are able to securely
-communicate with one another. Some peers, known as gateways, allow other peers
-to connect to them. Peers that are not gateways are called clients.
+A wireguard network is a collection of *peers* able to securely
+communicate with one another. Some peers, known as *gateways*, allow other peers
+to connect to them. Peers that are not gateways are called *clients*.
 
-A basic vpn has a wireguard gateway and several clients that can use the gateway. 
-The gateway may provide access to internal networks.
-It may also allow clients to have all their internet traffic flow via the gateway.
+A basic vpn has one wireguard gateway and several clients that able to use the gateway. 
+The gateway may also provide access to internal networks.
+It may also allow clients to have all internet traffic flow through the gateway.
 
 Since traffic between the client and the gateway is encrypted, this provides
-privacy and security. Wireguard crypto mechanisms include pre-shared keys
-(*PSKs*) that provide additional resistance against post quantum attacks.
-For maximum security a *PSK* should be unique to each pair of peers that
+privacy and security. Wireguard crypto mechanisms also have optional pre-shared keys
+(``PSK``) that provide additional resistance against post quantum attacks.
+For maximum security a ``PSK`` should be unique to each pair of peers that
 communicate with one another.
 
 *wg-tool* is a wireguard configuration tool that 
@@ -41,9 +56,10 @@ consistent with one another. Two peers that communicate with one another use
 encryption and therefore they share key information. By consistent we  
 mean that both of those peers always use the same public and pre-shared keys.
 
-While *PSKs* are not mandatory in wireguard, they do enhance security.
-There can be many pairs of *peers* with each pair sharing a unique *PSK*. 
-*wg-tool* quietly takes care of all of them for you.
+While *``PSK``* are not mandatory in wireguard, they do enhance security.
+There can be many pairs of *peers* with each pair sharing a unique *``PSK``*. 
+*wg-tool* quietly takes care of all of them for you, guaranteeing every pair
+of peers shares a unique ``PSK``.
 
 Wireguard gateway reports (created by running *wg show*) identify peers by their public key.
 The tool can display these reports using their corresponding user friendly names. 
@@ -56,8 +72,8 @@ Where to Get wg-tool
 
 Available at:
 
-* :Github:`wg_tool`
-* :AUR:`wg_tool`
+* `Github wg_tool <https://github.com/gene-git/wg_tool>`_
+* `AUR wg_tool <https://aur.archlinux.com/packages/wg_tool>`_
 
 On Archlinux it can be installed from the AUR or using the 
 PKGBUILD provided in packaging directory.
@@ -69,20 +85,23 @@ The key is included in the Arch package and the source= line with *?signed* at t
 to verify the git tag. You can also manually verify the signature as usual with 
 *git tag -v <tag>*.
 
-For those with linux road warriers, there is a :Github:`wg-client` companion package. 
+For those with linux road warriers, there is a `wg-client <https://github.com/gene-git/wg-client>`_ 
+companion package. 
 This is a linux client command line tool packaged with a graphical 
 program that makes it very simple to start and stop a wireguard client for any user.
+It is also available in the `AUR wg-client <https://aur.archlinux.com/packages/wg-client>`_.
 
-We offer three working examples. In each example the goals are explained
-followed by a walk through using *wg-tool*. The resulting standard wireguard configs 
-are then provided .
+We offer working examples. In each example the goals are explained
+followed by a walk through using *wg-tool* to achieve those goals. 
+The resultant wireguard configs are produced.
 
-See :ref:`Examples` section. 
+The examples are in *src/tests*.
+For more information please see :ref:`Examples` section. 
 
 Documentation source along with pre-generated PDF and html versions 
 are in the *Docs* directory. All documentation is written using restructured text.
 
-Key features
+Key Features
 ============
 
 * Simplifies wireguard administration.
@@ -99,102 +118,14 @@ Key features
   restarted with new config.
 
 * Supports importing from existing wireguard config files.
+* Peer provided network access can be restricted using *IP groups*.
 
-New / Interesting
-=================
-
-**9.2.2**
-
-* Code Reorg
-* Switch packaging from hatch to uv
-* Testing to confirm all working correctly on python 3.14.2
-  * 3.14 argparse introdiced color - it can be turned of with env PYTHON_COLORS=0.
-    The colors are not currently adjustable - is improved in python 3.15.
-
-**9.0.0**
-
-* Add support for *IP Groups*. 
-  
-  This is helpful when managing routes for *groups* of users.
-  By designating some peers as members of an *ip-group*, network routes can now be
-  for specific groups. The IPs for an ip group must be a proper subnet
-  of the VPN network. 
-  
-  An ip group is created using the *--add-ip-group <name> <subnet(s)>* option.
-
-  Note that since an ip group is defined by the IP subnet of the vpn network, a 
-  peer can only be a member of one group since it only has 1 IP.
-  
-  See :ref:`Ip_Groups` and :ref:`Example_4` for a sample use case.
-
-* Switch File Data from TOML to YAML format.
-
-  YAML is more robust than toml [#]_. Existing files are auto converted,
-  the first time version *9.x* is used.
-  *Edit* files now use yaml format as well. Docs updated to reflect this.
-
-
-** 8.2.0**
-
-* Command line option completion optionally available. 
-
-  See :ref:`Completion` section in the manual for details how to use this.
-
-**Major Version 8.0.0**
-
-* Re-write pretty much from scratch. New design and fresh start.
-* Modern coding standards: PEP-8, PEP-257 and PEP-484 style and type annotations
-* Can now manage multiple VPN's
-* Each VPN has a number of *accounts* and each account may have multiple profiles.
-  Some profiles may be gateways (can be connected to) while others are clients
-  (connect to one or more gateways).
-* Support more use cases than earlier versions.
-* Provide walk through :ref:`Examples` for 3 common use cases
-* The enhancements require significant data format changes. 
-
-  To make the upgrade as simple and easy as possble,
-  existing data from earlier versions can be auto migrated to 
-  the new format with the *-migrate* option.
-
-  Please see :ref:`migrating` for more details.
-
-* Network manipulations are now built on the *py-cidr* module.
-  Available at :Github:`py-cidr` and :AUR:`py-cidr AUR`.
-
-* New way to modify profiles. 
-  
-  The *--edit* option creates a text file. The file 
-  uses standard TOML (key = value) format. Simply edit the file and then 
-  use the *--merge* option to incorporate those changes.
-
-  This is simple and clean and makes it easy to modify whatever may be needed
-  in one quick edit and merge.
-
-  There are still many command line options which can be particularly helpful
-  making bulk changes. 
-
-* Improved command line help. 
-  
-  Command line option help is now organized by category:
-
-.. code-block:: text
-
-    migrate, edit/merge, reporting, general and stored options.
-
-See *wg-tool --help* for more info or :ref:`Options-section`.
-
-* Document most features including migration, importing, and
-  making modifications.
-
-*************
+=============
 Documentation
-*************
+=============
 
-PDF and HTML
-============
-
-The complete documentation is available in *Docs/wg_tool.pdf* as well
-an html version - just point a browser at *Docs/html*.
+The manual is available in *src/data/docs/wg_tool.pdf* as well
+an html version - just point a browser at *src/data/docs/html*.
 
 The document source is also available to build your own:
 
@@ -205,9 +136,12 @@ The document source is also available to build your own:
 
 This requires some sphinx packages being available (see :ref:`Install`)
 
-***************
+Command line help is available using *wg-tool --help* and for more details on
+options see the manual :ref:`Options-section`.
+
+===============
 Getting Started
-***************
+===============
 
 Brief Wireguard Background
 ==========================
@@ -269,10 +203,10 @@ The available networks are typically internal LANs or internet access. This is t
 *AllowedIPs* variable. It can be one network or a 
 comma separated list of networks, and it can be repeated.
 
-Each pair of peers may also share a secret known as a *pre-shared-key* or PSK.
+Each pair of peers may also share a secret known as a *pre-shared-key* or ``PSK``.
 Wireguard's author, Jason Donenfeld, opines that using this provides an additional
 security layer facilitating post-quantum resistance. *wg-tool* automatically generates
-a unique PSK for each pair of peers that communicate with one another.
+a unique ``PSK`` for each pair of peers that communicate with one another.
 
 The peer section may also include an Endpoint if that peer is a gateway. 
 
@@ -398,5 +332,3 @@ This has the gateway server config along with both users' laptop configs.
 
 .. rubric:: Footnotes
 
-.. [#] For example adding a dictionary in the middle of a group of key=val will 
-       incorrectly append subsequent key=val to the dictionary

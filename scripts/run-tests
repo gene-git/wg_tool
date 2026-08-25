@@ -1,0 +1,28 @@
+#!/usr/bin/bash
+#
+here=$(/usr/bin/pwd)
+here_base=$(/usr/bin/basename $here)
+src=""
+
+case "$here_base" in
+    src)
+        src="$here"
+        ;;
+    wg_tool)
+        src="$here/src"
+        ;;
+    scripts)
+        src=$(/usr/bin/realpath ../src)
+        ;;
+    tests)
+        src=$(/usr/bin/realpath ../)
+        ;;
+    *)
+        echo "Run from unsupported directory"
+        exit
+esac
+
+tests_dir="$src/tests"
+cd "$tests_dir"
+
+./run-tests

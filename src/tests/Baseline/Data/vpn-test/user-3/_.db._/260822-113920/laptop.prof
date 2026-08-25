@@ -1,0 +1,44 @@
+#
+#	laptop user-3 laptop
+#	260822-113920
+#
+Address:
+- 10.77.77.4/32
+- fc00:77:77::4/128
+AddressWg:
+- 10.77.77.4/24
+- fc00:77:77::4/64
+Endpoint: ''
+Endpoint_alt: ''
+MTU: ''
+PersistentKeepalive: 0
+PrivateKey: 2LsO9zzsnph5OScDBtSN/WE6/lIRpPvzg00D5w9fFmE=
+PublicKey: heNIO1cJ6na0Lnws8H18t9inQEqDeZV5N+taHMabFgE=
+active: true
+allow_ip_groups: []
+alternate_wanted: false
+dns: []
+dns_linux: false
+dns_postdn: ''
+dns_postup: ''
+dns_search: []
+hidden: false
+ident:
+  acct_name: user-3
+  id_str: vpn-test.user-3.laptop
+  prof_name: laptop
+  tag: e015861c-2879-49d1-866b-47f12cc45499
+  vpn_name: vpn-test
+internet_offered: false
+internet_wanted: false
+ip_group: ''
+nets_offered: []
+nets_wanted:
+- 192.168.1.32/28
+- 192.168.2.0/24
+no_psk_tags: []
+post_down: []
+post_up: []
+pre_down: []
+pre_up: []
+use_vpn_dns: true

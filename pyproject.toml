@@ -1,46 +1,33 @@
-[build-system]
-requires = ["uv_build>=0.9.21,<=1.0.0"]
-build-backend = "uv_build"
-
 [project]
 name = "wg_tool"
-description = "Wireguard tool that simplifies all aspects of VPN configuration"
+description = "Wireguard VPN administration tool"
+version = "10.0.0"
 authors = [{ name = "Gene C", email = "arch@sapience.com" }]
 license = "GPL-2.0-or-later"
 readme = "README.rst"
 keywords = []
 classifiers = [
-    "Development Status :: 4 - Beta",
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 3.13",
-    "Programming Language :: Python :: 3.14",
-    "Programming Language :: Python :: 3.15",
+    "Programming Language :: Python :: 3",
+    "Operating System :: POSIX :: Linux",
 ]
-requires-python = ">=3.13"
-version = "9.2.4"
+requires-python = ">=3.14"
 dependencies = []
 
-[project.urls]
-Documentation = "https://github.com/gene-git/wg_tool/Docs"
-Issues = "https://github.com/gene-git/wg_tool/issues"
-Source = "https://github.com/gene-git/wg_tool"
+[build-system]
+requires = ["meson-python", "cython >= 3.0", "meson", "ninja"]
+build-backend = "mesonpy"
 
-[tool.uv.build-backend]
-module-name = 'wg_tool'
-module-root = "src"
-source-include = [
-    '/wg_tool',
-    '/wg_tool/py.typed',
-]
-source-exclude = [
-    ".pytest_cache",
-    "__pycache__",
-    ".mypy_cache",
-]
+[tool.uv]
+package = true
 
-
+[tool.meson-python.args]
+#install = ["--tags=runtime,python-runtime"]
+install = ["--tags=python-runtime"]
 
 [tool.mypy]
 check_untyped_defs = true
-# follow_untyped_imports = true
+follow_untyped_imports = true
+
+[tool.pylint.main]
+
 

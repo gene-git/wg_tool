@@ -11,7 +11,7 @@ wg-tool
   See --help for options and README for details.
 """
 # pylint: disable=invalid-name
-from wg_tool.app import Tool
+from wg_tool.tool import Tool
 
 
 def main():

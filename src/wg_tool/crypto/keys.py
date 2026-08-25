@@ -3,8 +3,8 @@
 """
 make private, public and preshared keys using wg genkey/pubkey/genpsk
 """
+from pyconcurrent import (run_prog)
 from wg_tool.utils.msg import (Msg)
-from wg_tool.utils.run_prog_copy import (run_prog)
 
 
 def gen_key_pair() -> tuple[str, str]:

@@ -1,0 +1,23 @@
+#
+#	vpn-test
+#	260822-113921
+#
+active: true
+dns:
+- 10.10.10.10
+dns_gateways: []
+dns_lookup_ipv6: false
+dns_search: []
+dns_search_gateways: []
+group_subnets:
+  admin:
+  - 10.77.79.224/27
+  - fc00:77:77:fe::/64
+hidden: false
+mod_time: 260822-113916
+name: vpn-test
+networks:
+- 10.77.76.0/22
+- fc00:77:77::/56
+peer_to_peer: false
+tag: 7a69b163-8103-4198-9b45-ba7dbd43b6dd

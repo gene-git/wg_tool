@@ -1,0 +1,30 @@
+#!/usr/bin/bash
+#
+# Script will create examples 2 from the documentation.
+# run after example 1
+#
+set -e -u -o pipefail
+
+echo "-----------"
+echo " Example 2"
+
+echo "creating vpn-test.servers.wg-B:"
+    ./wg-tool --new vpn-test.servers.wg-B
+    ./wg-tool --edit vpn-test.servers.wg-B
+
+    FILE='Edits/vpn-test.servers.wg-B.mods'
+    ./do-edits ex2-server $FILE 
+    ./wg-tool --merge $FILE
+
+echo "Add offered/wanted networks for wg-B and wg-A"
+    ./wg-tool --nets-offered-add "192.168.2.0/24" vpn-test.servers.wg-B
+    ./wg-tool --nets-wanted-add "192.168.1.0/24" vpn-test.servers.wg-B 
+    ./wg-tool --nets-wanted-add "192.168.2.0/24" vpn-test.servers.wg-A
+
+echo "Permission this network to user profiles"
+    ./wg-tool --nets-wanted-add "192.168.2.0/24" vpn-test.user-1 vpn-test.user-2 vpn-test.user-3
+
+echo "Example 2 Done"
+exit 0
+
+

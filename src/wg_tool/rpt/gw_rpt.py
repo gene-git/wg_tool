@@ -7,11 +7,11 @@ Output from 'wg show'
 # pylint: disable=too-many-instance-attributes
 # pylint: disable=too-many-branches
 import sys
+from pyconcurrent import run_prog
 
 from wg_tool.utils import Msg
 from wg_tool.utils import state_marker
 from wg_tool.utils import open_file
-from wg_tool.utils import run_prog
 
 from .acct_prof import AcctProfile
 

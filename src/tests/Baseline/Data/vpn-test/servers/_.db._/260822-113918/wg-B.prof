@@ -1,0 +1,42 @@
+#
+#	wg-B servers wg-B
+#	260822-113918
+#
+Address:
+- 10.77.77.5/32
+- fc00:77:77::5/128
+AddressWg:
+- 10.77.77.5/24
+- fc00:77:77::5/64
+Endpoint: ''
+Endpoint_alt: ''
+MTU: ''
+PersistentKeepalive: 0
+PrivateKey: UGuSqz4jJ4HyIk19Tcnk6G6AGaYK0lFaNNTyOGppt2s=
+PublicKey: so2Vesf4lGbZQVEUJ3UmhjT9sl/L3U49P1cvV6/3vg8=
+active: true
+allow_ip_groups: []
+alternate_wanted: false
+dns: []
+dns_linux: false
+dns_postdn: ''
+dns_postup: ''
+dns_search: []
+hidden: false
+ident:
+  acct_name: servers
+  id_str: vpn-test.servers.wg-B
+  prof_name: wg-B
+  tag: ef2b4ace-3643-487c-912d-b63112f493a0
+  vpn_name: vpn-test
+internet_offered: false
+internet_wanted: true
+ip_group: ''
+nets_offered: []
+nets_wanted: []
+no_psk_tags: []
+post_down: []
+post_up: []
+pre_down: []
+pre_up: []
+use_vpn_dns: true

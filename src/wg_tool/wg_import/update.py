@@ -5,7 +5,7 @@ Phase 2:
     Update gateway and psks
 """
 # pylint: disable=too-many-branches
-from py_cidr import Cidr
+from py_cidr import PyCidr
 
 from wg_tool.utils import Msg
 from wg_tool.vpn import Vpn
@@ -56,7 +56,7 @@ def update_dns(vpn, wg_dns: WgDns) -> bool:
     servers: list[str] = []
     search: list[str] = []
     for host in dns_common:
-        if Cidr.is_valid_cidr(host):
+        if PyCidr.is_valid_cidr(host):
             servers.append(host)
         else:
             search.append(host)
@@ -121,19 +121,21 @@ def update_gateways(vpn, infos: list[GwInfo]) -> bool:
     # If we see any peer with short prefix then
     # some are peer to peer - we support all or none.
     # Its simpler and must be > 1 to be useful anyway.
+    #
     peer_to_peer = False
     for info in infos:
         for cidr in info.vpn_nets:
-            iptype = Cidr.cidr_iptype(cidr)
-            net = Cidr.cidr_to_net(cidr)
-            if not net:
+            iptype = PyCidr.ip_type(cidr)
+            (ip, prefix) = PyCidr.cidr_parts(cidr)
+
+            if not ip:
                 continue
 
-            if iptype == 'ip4' and net.prefixlen < 32:
+            if iptype == 'ip4' and prefix < 32:
                 peer_to_peer = True
                 break
 
-            if iptype == 'ip6' and net.prefixlen < 128:
+            if iptype == 'ip6' and prefix < 128:
                 peer_to_peer = True
                 break
 

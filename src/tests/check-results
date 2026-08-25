@@ -1,0 +1,78 @@
+#!/usr/bin/bash
+#
+# Check output against baseline
+#
+#
+# Save actual diffs to file
+
+diff_out="./out.diff"
+/usr/bin/rm -f "$diff_out"
+touch $diff_out
+
+check_one () {
+    local dir="$1"
+    local item="$2"
+
+    echo "" >> $diff_out
+    echo "---------------- $dir/$item -------------------" >> $diff_out
+
+    /usr/bin/diff -w "$dir/$item" Baseline/"$dir/$item" | \
+        grep -vE '. #|^---|PrivateKey|PublicKey|tag: |mod_time|PresharedKey' >> $diff_out
+    rc="$?"
+    if (( rc == 0 )) ; then
+        echo 0
+    else
+        echo 1
+    fi
+}
+
+items=(
+    servers/Acct.info
+    servers/wg-A.prof
+    servers/wg-A.prof
+    servers/wg-B.prof
+    user-1/laptop.prof
+    user-1/Acct.info
+    user-2/laptop.prof
+    user-2/Acct.info
+    user-3/laptop.prof
+    user-3/Acct.info
+    customers/Acct.info
+    customers/abc-corp.prof
+    )
+
+wg_items=(
+    servers/wg-A.conf
+    servers/wg-A.conf
+    servers/wg-B.conf
+    user-1/laptop.conf
+    user-2/laptop.conf
+    user-3/laptop.conf
+    customers/abc-corp.conf
+    )
+
+num_failed=0
+for item in "${items[@]}"
+do
+    rc=$(check_one "Data/vpn-test" "$item")
+    (( num_failed += rc ))
+done
+
+num_wg_failed=0
+for item in "${wg_items[@]}"
+do
+    rc=$(check_one "Data-wg/vpn-test" "$item")
+    (( num_wg_failed += rc ))
+done
+
+ret=0
+if ((num_failed > 0)) ; then
+    echo "[FAIL] Number of items not matching: $num_failed"
+    ret=1
+fi
+if ((num_wg_failed > 0)) ; then
+    echo "[FAIL] Number of wg items not matching: $num_failed"
+    ret=1
+fi
+
+exit $ret

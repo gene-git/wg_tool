@@ -1,11 +1,13 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 # SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
-Network diviced into subnet groups
-Needed when one or more subnets are treated differently.
+VPN Network divided into subnet groups
+Required when one or more subnets are treated differently.
 e.g. group of administrators.
+All subnets are subnets of the main VPN network.
 """
-import ipaddress
+from py_cidr import PyCidr
+
 from wg_tool.utils import Msg
 from wg_tool.utils.debug import pprint
 
@@ -14,20 +16,26 @@ from .network import NetWork
 
 class NetGroup:
     """
-    A network with subnets. IPs can be drawn from
-    any of the subnets. The primary network (net)
-    has each subnet marked as taken, so that IPs drawn from
-    "net" exclude any IPs associated with the subnets.
+    A network with 1 or more subnets (NetWork).
+    IPs can be drawn from any of the subnets.
+    The primary network (net) has each subnet marked as taken,
+    so that IPs drawn from "net" exclude any IPs associated with the subnets.
 
     IP request with a group name is drawn that group
     subnet, otherwise it is drawn from the named group.
     """
     def __init__(self):
         self.okay: bool = True
+
+        # todo: rename self.net -> self.vpn_net
         self.net: NetWork = NetWork()
         self.initialized: bool = False
 
-        # Group is subnet and a name.
+        #
+        # a group is a named subnet (NetWork)
+        # which is a subnet of the primary vpn network
+        # (self.net/self.vpn_net)
+        #
         self.subnets: dict[str, NetWork] = {}
 
     def show_list(self):
@@ -65,34 +73,51 @@ class NetGroup:
             return False
 
         #
+        # cidr must be subnet of the vpn (super) net
+        #
+        vpn_cidr = self.net.cidr
+        if not PyCidr.is_subnet(cidr, [vpn_cidr]):
+            Msg.err(f'NetGroup {name} {cidr} is not subnet of vpn {vpn_cidr}\n')
+            return False
+
+        #
         # Initialize network
-        # - remove network/broadcast ips (wrt net)
+        # - NetwWork initialize removes ip, network addr and broadcast addr from subnet
+        # - we also need to sync the avail nets in vpn itself and this subnet
+        #   e.g. vpn server IP, network and broadcast addresses must be removed
+        #   if they are part of this subnet.
+        #   e.g. vpn = 10.0.0.0/22 and admin_subnet = 10.0.0.0/24
+        #   then ab initio admin subnet must exclude 10.0.0.0 (but 10.0.0.255 is allowed).
+        #   However by default initialize will remove 10.0.0.0 and 10.0.0.255.
+        #   Which is fine if unnecessary.
+        #   In addition if the vpn has used 10.0.0.50 it too must be removed from admin
+        #   subnet.
         #
         subnet = NetWork()
         if not subnet.initialize(cidr):
             return False
-        vpn_net = self.net.net
-        skips = (
-                ipaddress.ip_network(vpn_net.network_address),
-                ipaddress.ip_network(vpn_net.broadcast_address)
-                )
-        for skip in skips:
-            if subnet.net_is_avail(skip):
-                subnet.mark_address_taken(skip)
 
         #
-        # check that the available ips of subnet
-        # Are available from vpn net
-        # NB - must do this after removing network/broadcast addresses above
-        # - Mark each not available
+        # 'already_taken' list are the vpn ip, network and broadcast addresses
+        # as well any IP already take from this subnet.
         #
-        for net in subnet.net_avail:
-            if not self.net.net_is_avail(net):
-                Msg.err(f'NetGroup: network not available: {name} {cidr}\n')
-                Msg.err(f'  Cannot use {str(net)}\n')
+        already_taken: list[str] = []
+        vpn_taken = self.net.get_cidrs_taken()
+        for taken in vpn_taken:
+            if PyCidr.is_subnet(taken, [cidr]):
+                already_taken.append(taken)
+        #
+        # Remove from subnet
+        #
+        if already_taken:
+            if not subnet.mark_addresses_taken(already_taken):
+                Msg.err(f' Error removing IPs from grop {name} : {cidr}\n')
                 return False
-            if not self.net.mark_address_taken(net):
-                return False
+        #
+        # Mark the entire group subnet as not avail from the vpn's own
+        # avail list.
+        #
+        self.net.avail = PyCidr.exclude_cidrs(self.net.avail, [cidr])
 
         self.subnets[name] = subnet
         return True
@@ -161,7 +186,7 @@ class NetGroup:
 
         addr = net.find_new_address()
         if addr:
-            return str(addr)
+            return addr
         return ''
 
     def expand_net(self, cidr: str) -> bool:

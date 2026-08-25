@@ -3,7 +3,7 @@
 """
 Convert dns / dns_search list to wireguard DNS format
 """
-from py_cidr import Cidr
+from py_cidr import PyCidr
 
 from wg_tool.dns_resolver import Dns
 
@@ -38,7 +38,7 @@ def dns_to_wg_dns(hosts: list[str], include_ipv6: bool) -> list[str]:
 
     wg_dns: list[str] = []
     for host in hosts:
-        if Cidr.is_valid_cidr(host):
+        if PyCidr.is_valid_cidr(host):
             wg_dns.append(host)
             continue
         for rr_type in rr_types:

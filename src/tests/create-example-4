@@ -1,0 +1,31 @@
+#!/usr/bin/bash
+#
+# Script will create examples 2 from the documentation.
+# run after example 1 is created
+#
+set -e -u -o pipefail
+
+echo "-----------"
+echo " Example 4"
+
+echo "Modifying vpn-test to expand the vpn network IP range:"
+    ./wg-tool --edit vpn-test
+
+    FILE='Edits/vpn-test-info.mods'
+    ./do-edits ex4-vpn-net $FILE
+    ./wg-tool --merge $FILE
+
+echo "Adding ip group: admin"
+   ./wg-tool --add-ip-group admin "10.77.79.224/27,fc00:77:77:fe::/64" --ident vpn-test
+
+echo "Add user-1.laptop to admin group"
+    ./wg-tool --ip-group admin vpn-test.user-1.laptop
+    
+echo "Add abc corp and allow ip group admin"
+    ./wg-tool --new vpn-test.customers.abc-corp
+    ./wg-tool --allow-ip-groups admin vpn-test.customers.abc-corp
+    
+echo "Example 3 done"
+
+exit 0
+

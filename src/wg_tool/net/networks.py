@@ -19,10 +19,19 @@ class NetWorks:
     If a group is added, the group is added to the
     network which holds that subnet only
     e.g. if networks are 10.0.0.0/24 and fc00/64 then both get a group
-    If relying on both ipv4 and ipv6 then add group subnet to both.
+    If relying on both ipv4 and ipv6 then add same group name with its won subnet to both.
+    i.e. group name must be available in every network the vpn has.
+    Netgroup = 1 vpn net which may have 1 or more named subnets (aka groups)
+    NetWorks = 1 vpn (NetGroup) which may have more than 1 vpn net (e.g. ipv4 and ipv6).
     """
     def __init__(self):
         self.okay: bool = True
+
+        #
+        # Dict of {cidr: NetGroup, ... }
+        # Where cidr is the vpn network. It may be split into subnets (called groups).
+        # todo: self.nets -> self.net_groups;
+        #
         self.nets: dict[str, NetGroup] = {}
 
     def show_list(self):
@@ -58,7 +67,7 @@ class NetWorks:
 
     def add_ip_group(self, group: str, subnets: list[str]) -> bool:
         """
-        Add group/subet to which network subnet is part of
+        Add group/subnet to which network subnet is part of
 
         Group must provide one subnet for each netowrk in this vpn.
         e.g. if we have 10.77.77.0/24 and fc00:77.77::/64 then
@@ -179,7 +188,7 @@ class NetWorks:
         for (_cidr, netgroup) in self.nets.items():
             net = netgroup.find_new_address(group)
             if net:
-                addresses.append(str(net))
+                addresses.append(net)
             else:
                 self.okay = False
         return addresses

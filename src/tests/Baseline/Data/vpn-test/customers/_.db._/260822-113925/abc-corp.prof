@@ -1,0 +1,43 @@
+#
+#	abc-corp customers abc-corp
+#	260822-113925
+#
+Address:
+- 10.77.76.1/32
+- fc00:77:77::2/128
+AddressWg:
+- 10.77.76.1/22
+- fc00:77:77::2/56
+Endpoint: ''
+Endpoint_alt: ''
+MTU: ''
+PersistentKeepalive: 0
+PrivateKey: sCL0wuieQDlIEhka2UC7GjIQTOOb96DLZuPFTCFMp2o=
+PublicKey: b0zJqxIYNJ21n4/VGRJEUnCRZtd0hIvEi1Tuem9ANgg=
+active: true
+allow_ip_groups:
+- admin
+alternate_wanted: false
+dns: []
+dns_linux: false
+dns_postdn: ''
+dns_postup: ''
+dns_search: []
+hidden: false
+ident:
+  acct_name: customers
+  id_str: vpn-test.customers.abc-corp
+  prof_name: abc-corp
+  tag: 33e498c7-63d2-471d-b295-533198a67126
+  vpn_name: vpn-test
+internet_offered: false
+internet_wanted: false
+ip_group: ''
+nets_offered: []
+nets_wanted: []
+no_psk_tags: []
+post_down: []
+post_up: []
+pre_down: []
+pre_up: []
+use_vpn_dns: true

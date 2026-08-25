@@ -25,7 +25,7 @@ For example:
 import os
 from typing import Any
 
-from py_cidr import Cidr
+from py_cidr import PyCidr
 
 from wg_tool.utils import Msg
 from wg_tool.utils import dict_to_yaml_string
@@ -176,7 +176,7 @@ class VpnInfo(VpnInfoBase):
         """
         self.changed = True
         for cidr in cidrs:
-            cidr = Cidr.fix_cidr_host_bits(cidr)
+            cidr = PyCidr.clean_cidr(cidr)
             if not self.networks.add_cidr(cidr):
                 Msg.err(f'Error initializing vpn {self.name} {cidr}')
                 self.okay = False

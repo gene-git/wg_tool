@@ -2,10 +2,11 @@
 # SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 """
 Shared networks
+- networks (other than the vpn net) offered by peers to other peers
+  wanting access - offered_by nets and wanted_by_nets.
 """
 import itertools
-from py_cidr import Cidr
-from py_cidr import IPvxNetwork
+from py_cidr import PyCidr
 
 from wg_tool.utils import Msg
 
@@ -17,23 +18,25 @@ class NetShared:
     def __init__(self, cidr: str):
         """
         cidr - The network
-        peers - list of profile ident.id_str
+        offered by - list of IDs (profile ident.id_str) offering
+        wanted_by  - list of IDs wanting access to this network.
         """
         self.ok: bool = True
 
         # network info
         self.cidr: str = cidr
 
-        self.net: IPvxNetwork
+        # Are these used - if not lets remove them.
         self.subnet_of: list[str] = []
         self.supernet_of: list[str] = []
 
-        net = Cidr.cidr_to_net(cidr)
-        if net:
-            self.net = net
-        else:
+        if not PyCidr.is_valid_cidr(cidr):
+            Msg.err(f'Invalid network {cidr}\n')
             self.ok = False
 
+        #
+        # list of peers (IDs) offering or wanting this cidr subnet
+        #
         self.wanted_by: list[str] = []
         self.offered_by: list[str] = []
 
@@ -63,11 +66,18 @@ class NetShared:
 
 class NetsShared:
     """
-    List of all shared networks.
+    Collection of all the shared networks.
+    Which peer(s) wants them and which peer(s) offer them.
     """
     def __init__(self):
         self.ok: bool = True
-        self.shared: list[NetShared] = []
+
+        # {cidr: [net1, net2, ...]
+        self.shared_nets: dict[str, NetShared] = {}
+
+        # {peer: [cidr1, cidr2, ... ]}
+        self.offered_by: dict[str, list[str]] = {}
+        self.wanted_by: dict[str, list[str]] = {}
 
         self.nets_by_peers: dict[str, list[str]] = {}
         self.peers_by_nets: dict[str, list[str]] = {}
@@ -80,25 +90,49 @@ class NetsShared:
         Every unique cidr string gets its own instance of NetShared.
         This way we can track if any are sub/super nets of
         others.
+
+        todo: remove this - nothing is using supernet_of/subnet_of in these shared nets
         """
         self._update_subnets()
-        # self._update_nets_by_peers()
-        # self._update_peers_by_nets()
 
     def add_wanted_by(self, peer: str, cidrs: list[str]) -> bool:
         """
-        Adds cidrs and mark each wanted by peer (id_str)
+        Adds cidrs and mark each wanted by the peer (id_str)
         """
+        if not peer or not cidrs:
+            return False
+
+        if peer not in self.wanted_by:
+            self.wanted_by[peer] = list(set(cidrs))
+        else:
+            self.wanted_by[peer] = list(set(self.wanted_by[peer] + cidrs))
+
         for cidr in cidrs:
-            self._add_cidr_wanted_by(peer, cidr)
+            shared_net = self._get_shared_net(cidr)
+            if not shared_net.ok:
+                continue
+            shared_net.add_wanted_by(peer)
+
         return True
 
     def add_offered_by(self, peer: str, cidrs: list[str]) -> bool:
         """
         Adds cidrs and mark each offered by peer (id_str)
         """
+        if not peer or not cidrs:
+            return False
+
+        if peer not in self.offered_by:
+            self.offered_by[peer] = list(set(cidrs))
+        else:
+            self.offered_by[peer] = list(set(self.offered_by[peer] + cidrs))
+
         for cidr in cidrs:
-            self._add_cidr_offered_by(peer, cidr)
+            shared_net = self._get_shared_net(cidr)
+            if not shared_net.ok:
+                continue
+            shared_net.add_offered_by(peer)
+
         return True
 
     def get_common_nets(self, peer1: str, peer2: str) -> list[str]:
@@ -109,190 +143,63 @@ class NetsShared:
         Handles subnets.
         e.g. peer1 has x/22 and peer2 has x/24 then common is
              smaller of the 2, which is /24
+
+        This functionality is provided by PyCidr.cidrs_intersection()
         """
-        nets: list[str] = []
         if not (peer1 and peer2):
-            return nets
+            return []
 
-        #
-        # make set of (unique) pairs of shared net from each peer.
-        # where with shared from each peer.
-        # When shared is same for both peers, add the cidr
-        # and thus skip tuple(x, x) where x is same shared net.
-        # Each pair is tuple(shared_a, shared_b)
-        # Use sort on cidr to ensure (a, b) is treated same as (b, a)
-        # and only included once.
-        #
-        shared_1 = self._shared_wanted_by(peer1)
-        shared_2 = self._shared_offered_by(peer2)
-        nets = _common_nets(shared_1, shared_2)
+        nets: list[str] = []
 
-        shared_1 = self._shared_wanted_by(peer2)
-        shared_2 = self._shared_offered_by(peer1)
-        nets += _common_nets(shared_1, shared_2)
+        if peer1 in self.offered_by and peer2 in self.wanted_by:
+            offered_1 = self.offered_by[peer1]
+            wanted_2 = self.wanted_by[peer2]
+            nets = PyCidr.cidrs_intersection(offered_1, wanted_2)
 
-        nets = list(set(nets))
+        if peer2 in self.offered_by and peer1 in self.wanted_by:
+            offered_2 = self.offered_by[peer2]
+            wanted_1 = self.wanted_by[peer1]
+            nets += PyCidr.cidrs_intersection(offered_2, wanted_1)
+
         return nets
 
-    def _add_cidr_wanted_by(self, peer: str, cidr: str) -> bool:
-        """
-        Adds cidr and wanted_by peer (peer = ident.id_str)
-        """
-        (ok, shared) = self._add_shared_for_cidr(cidr)
-        if not ok:
-            return False
-
-        shared.add_wanted_by(peer)
-        return True
-
-    def _add_cidr_offered_by(self, peer: str, cidr: str) -> bool:
-        """
-        Adds cidr and offered_by peer (peer = ident.id_str)
-        """
-        (ok, shared) = self._add_shared_for_cidr(cidr)
-        if not ok:
-            return False
-
-        shared.add_offered_by(peer)
-        return True
-
-    def _add_shared_for_cidr(self, cidr: str) -> tuple[bool, NetShared]:
+    def _get_shared_net(self, cidr: str) -> NetShared:
         """
         Returns NetShared with 'cidr' - creates it if not found
+        Caller should check shared.ok
         """
-        shared = self._shared_for_cidr(cidr)
-        if not shared:
-            shared = NetShared(cidr)
-            if not shared.ok:
-                Msg.err(f'Invalid net {cidr}\n')
-                return (False, shared)
-            self.shared.append(shared)
-        return (True, shared)
+        if cidr not in self.shared_nets:
+            self.shared_nets[cidr] = NetShared(cidr)
+
+        shared_net = self.shared_nets[cidr]
+        return shared_net
 
     def _update_subnets(self):
         """
         Identify which are subnet of another.
         By subnet_of we exclude the equality case
+        i.e. look at all pairs of shared blocks and determina
+        if either is subnet of the other.
         """
-        for (sh_1, sh_2) in itertools.combinations(self.shared, 2):
-            if sh_1.cidr == sh_2.cidr:
-                # This is an error and should never happen
-                # dont bother repairing this just display error
+        all_cidrs = list(self.shared_nets.keys())
+        if not all_cidrs or len(all_cidrs) < 2:
+            return
+
+        all_cidrs = PyCidr.sort(all_cidrs)
+
+        for (cidr_1, cidr_2) in itertools.combinations(all_cidrs, 2):
+            if cidr_1 == cidr_2:
                 self.ok = False
-                Msg.err(f'Error: Duplicate cidrs: {sh_1.cidr}\n')
+                Msg.err(f'Error: Duplicate shared cidrs: {cidr_1}\n')
                 continue
 
-            if Cidr.net_is_subnet(sh_1.net, sh_2.net):
-                sh_1.subnet_of.append(sh_2.cidr)
-                sh_2.supernet_of.append(sh_1.cidr)
+            shared_net_1 = self.shared_nets[cidr_1]
+            shared_net_2 = self.shared_nets[cidr_2]
 
-            elif Cidr.net_is_subnet(sh_2.net, sh_1.net):
-                sh_2.subnet_of.append(sh_1.cidr)
-                sh_1.supernet_of.append(sh_2.cidr)
+            if PyCidr.is_subnet(cidr_1, [cidr_2]):
+                shared_net_1.subnet_of.append(cidr_2)
+                shared_net_2.supernet_of.append(cidr_1)
 
-    def _shared_for_cidr(self, cidr: str) -> NetShared | None:
-        """
-        Return net shared which owns "net"
-        """
-        if not cidr:
-            return None
-
-        for shared in self.shared:
-            if cidr == shared.cidr:
-                return shared
-        return None
-
-    def _shared_wanted_by(self, peer: str) -> list[NetShared]:
-        """
-        Return list of all NetShared wanted by this peer
-        """
-        shared_all: list[NetShared] = []
-        if not peer:
-            return shared_all
-
-        for shared in self.shared:
-            if peer in shared.wanted_by:
-                shared_all.append(shared)
-        return shared_all
-
-    def _shared_offered_by(self, peer: str) -> list[NetShared]:
-        """
-        Return list of all NetShared offered by this peer
-        """
-        shared_all: list[NetShared] = []
-        if not peer:
-            return shared_all
-
-        for shared in self.shared:
-            if peer in shared.offered_by:
-                shared_all.append(shared)
-        return shared_all
-
-
-def _common_nets(shared_1_all: list[NetShared], shared_2_all: list[NetShared]
-                 ) -> list[str]:
-    """
-    Determine the common nets shared by the 2 lists
-    For nets to be shared they must be wanted by one and offered by the other.
-    """
-    nets: list[str] = []
-    pairs: set[tuple[NetShared, NetShared]] = set()
-
-    if not (shared_1_all and shared_2_all):
-        # should not be possible.
-        return nets
-
-    #
-    # create ordered set of (unique) pairs
-    # with (A, B) with A>B (exclude A==B)
-    #
-    for (sh_1, sh_2) in itertools.product(shared_1_all, shared_2_all):
-        # the same net
-        if sh_1.cidr == sh_2.cidr:
-            nets.append(sh_1.cidr)
-            continue
-
-        # ordered pair (a,b) treated same as (b,a)
-        # - order not important
-        # if sh_1.net <= sh_2.net:
-        if _net_is_less_than_equal(sh_1.net, sh_2.net):
-            pairs.add((sh_2, sh_1))
-        else:
-            pairs.add((sh_1, sh_2))
-
-    # Pull out the common nets from pairs
-    # common means: equal or subnet
-    nets_set: set[str] = set()
-    for (sh_1, sh_2) in pairs:
-        if sh_1.cidr == sh_2.cidr:
-            nets_set.add(sh_1.cidr)
-
-        elif sh_1.cidr_is_sub(sh_2.cidr):
-            nets_set.add(sh_1.cidr)
-
-        elif sh_2.cidr_is_sub(sh_1.cidr):
-            nets_set.add(sh_2.cidr)
-
-    nets += list(nets_set)
-
-    return nets
-
-
-def _net_is_less_than_equal(net1: IPvxNetwork, net2: IPvxNetwork) -> bool:
-    """
-    Return true if net1 < net2
-    Handle mixed ipv4 / ipv6
-    by "defining" ipv4 < ipv6
-    """
-    net1_ip4 = Cidr.is_valid_ip4(net1)
-    net2_ip4 = Cidr.is_valid_ip4(net2)
-
-    ip4 = net1_ip4 and net2_ip4
-    ip6 = not net1_ip4 and not net2_ip4
-
-    if ip4 or ip6:
-        return net1 <= net2         # type: ignore[operator]
-
-    if net1_ip4:
-        return True
-    return False
+            elif PyCidr.is_subnet(cidr_2, [cidr_1]):
+                shared_net_2.subnet_of.append(cidr_1)
+                shared_net_1.supernet_of.append(cidr_2)

@@ -1,0 +1,23 @@
+#
+#	vpn-test PSKs
+#	260822-113919
+#
+psk:
+  ba7fc981-05e6-4c8e-a379-dc0c42299c88+408da4b6-b69f-4d49-b739-fbdb2d4e8333: i7TFpX6FXZE22aM07QjZ6dcRfOuRDHAXuBlMG970GYQ=
+  e015861c-2879-49d1-866b-47f12cc45499+ba7fc981-05e6-4c8e-a379-dc0c42299c88: UpSCLpofcja94qAb3Fsf0HaGjZXvQ44DFSPscB4FaHo=
+  e70746d0-6866-416d-82a8-7b182f29910d+ba7fc981-05e6-4c8e-a379-dc0c42299c88: 6SVSl8Qa8lnnI+WDrBDSN26uQLs38CoIBTay1qxkyw8=
+  ef2b4ace-3643-487c-912d-b63112f493a0+408da4b6-b69f-4d49-b739-fbdb2d4e8333: srgnIGkd3774gjftZYwpkHPrWiCO2BKpYJKkECVSXms=
+  ef2b4ace-3643-487c-912d-b63112f493a0+ba7fc981-05e6-4c8e-a379-dc0c42299c88: gcNzhO231rZVVEA39EzBYL5yCbCPiT/8jqi3il2yuzY=
+  ef2b4ace-3643-487c-912d-b63112f493a0+e015861c-2879-49d1-866b-47f12cc45499: bL9sEIpX56g7T4lUuqvAc6a5PTIJVvzHmqV+77X8ss0=
+  ef2b4ace-3643-487c-912d-b63112f493a0+e70746d0-6866-416d-82a8-7b182f29910d: EcRCUbRu4qPV2eNVNVSRvkJrnC21OAggDXPm9RGnz64=
+
+#
+# PSK by peer_name:prof_name pairs
+#
+# i7TFpX6FXZE22aM07QjZ6dcRfOuRDHAXuBlMG970GYQ=  = servers:wg-A                   x user-2:laptop                 
+# UpSCLpofcja94qAb3Fsf0HaGjZXvQ44DFSPscB4FaHo=  = user-3:laptop                  x servers:wg-A                  
+# 6SVSl8Qa8lnnI+WDrBDSN26uQLs38CoIBTay1qxkyw8=  = user-1:laptop                  x servers:wg-A                  
+# gcNzhO231rZVVEA39EzBYL5yCbCPiT/8jqi3il2yuzY=  = servers:wg-B                   x servers:wg-A                  
+# EcRCUbRu4qPV2eNVNVSRvkJrnC21OAggDXPm9RGnz64=  = servers:wg-B                   x user-1:laptop                 
+# srgnIGkd3774gjftZYwpkHPrWiCO2BKpYJKkECVSXms=  = servers:wg-B                   x user-2:laptop                 
+# bL9sEIpX56g7T4lUuqvAc6a5PTIJVvzHmqV+77X8ss0=  = servers:wg-B                   x user-3:laptop                 

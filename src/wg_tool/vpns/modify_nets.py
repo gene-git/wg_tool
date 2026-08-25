@@ -4,7 +4,7 @@
 Create a new vpn/acct/profile
 """
 # pylint: disable=too-many-locals, too-many-branches, too-many-statements
-from py_cidr import Cidr
+from py_cidr import PyCidr
 
 from wg_tool.utils import Msg
 from wg_tool.net import internet_networks
@@ -207,7 +207,7 @@ def _check_nets_valid(nets: list[str]) -> bool:
     """
 
     for net in nets:
-        if not Cidr.is_valid_cidr(net):
+        if not PyCidr.is_valid_cidr(net):
             Msg.err(f'Error - invalid network: {net}\n')
             return False
     return True

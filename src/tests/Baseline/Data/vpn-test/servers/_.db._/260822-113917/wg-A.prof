@@ -1,0 +1,45 @@
+#
+#	wg-A servers wg-A
+#	260822-113917
+#
+Address:
+- 10.77.77.1/32
+- fc00:77:77::1/128
+AddressWg:
+- 10.77.77.1/24
+- fc00:77:77::1/64
+Endpoint: vpn_A.example.com:51820
+Endpoint_alt: ''
+MTU: ''
+PersistentKeepalive: 0
+PrivateKey: yITS947r8v+1LJJPvJtVruw/Yk6U8LmHH51pqtkUKU8=
+PublicKey: vEa6ZPLrtBt4ZS27UIaCIOJ4WDvIpVNYIcXBFc2RKSA=
+active: true
+allow_ip_groups: []
+alternate_wanted: false
+dns: []
+dns_linux: false
+dns_postdn: ''
+dns_postup: ''
+dns_search: []
+hidden: false
+ident:
+  acct_name: servers
+  id_str: vpn-test.servers.wg-A
+  prof_name: wg-A
+  tag: ba7fc981-05e6-4c8e-a379-dc0c42299c88
+  vpn_name: vpn-test
+internet_offered: true
+internet_wanted: false
+ip_group: ''
+nets_offered:
+- 192.168.1.0/24
+nets_wanted: []
+no_psk_tags: []
+post_down:
+- /usr/bin/nft flush ruleset
+post_up:
+- /usr/bin/nft -f /etc/wireguard/scripts/postup.nft
+pre_down: []
+pre_up: []
+use_vpn_dns: true
