@@ -6,12 +6,44 @@ Tags
 
 .. code-block:: text
 
-	1.1.1 (2022-10-26) -> 10.0.1 (2026-08-25)
-	231 commits.
+	1.1.1 (2022-10-26) -> 10.1.10 (2026-09-02)
+	233 commits.
 
 Commits
 =======
 
+
+* 2026-09-02  : **10.1.10**
+
+.. code-block:: text
+
+              - **10.1.0**
+            
+                * linux client config output now uses tools provided by *wg-client*.
+            
+                  If you are using linux clients please install *wg-client* package.
+                  It is much better than what was provied in earlier version of wg_tool.
+            
+                  wg-client provides resolv-manager along with post-up.sh and post-dn.sh.
+                  These replace the wg-post-updn script which has therefore been dropped.
+            
+                  wg_tool now also produces wireguard-resolv.conf file since the
+                  new post-up.sh / post-dn.sh scripts from wg-client require a resolv.conf file
+                  to use while wireguard is running.
+            
+                  To get the updated configs and the resolv file use:
+            
+                    wg-tool --refresh
+            
+                * Add wg-client to the optional packages in PKGBUILD.
+                * Package management is now done by meson/mesonpy (drop uv and pyproject.toml)
+            
+                * Disable color for --help as it looks bad on dark terminals.
+ 2026-08-25   ⋯
+
+.. code-block:: text
+
+              - update docs and Changelogs
 
 * 2026-08-25  : **10.0.1**
 

@@ -61,14 +61,16 @@ where you can use *wg-quick* to start/stop the wireguard server.
 
 .. _dns-script:
 
-Linux Client DNS Script
------------------------
+Linux Client and DNS Scripts
+----------------------------
 
-This is located in:
+This are provided by the companion *wg-client* package and are
+installed in
 
 .. code-block:: none
 
-   scripts/wg-peer-updn
+   /etc/wg-client/post-up.sh
+   /etc/wg-client/post-down.sh
 
 When using linux as a wireguard client, there are 2 ways to bring up wg.
 
@@ -81,21 +83,28 @@ When using linux as a wireguard client, there are 2 ways to bring up wg.
   PostDown to restire the resolv.conf from saved.
 
 This script implements the second approach and handles both --up and --down
+Create the wireguard resolv.conf file in /etc/wg-client/wireguard-resolv.conf.
 
-  e.g.
-  PostUp = wg-peer-updn -u  -dns 10.0.0.1,10.0.0.2 -dnsrch foo.example.com,example.com
-  PostDown = wg-peer-updn -d
+This file is the standard resolv.conf file::
 
-  In either case to start and stop vpn
+    nameserver 10.0.0.1
+    nameserver 10.0.0.2
+
+Confirm the interface is specified in the wg-client config file 
+in /etc/wg-client/config. It should be one line of the form::
+
+    iface = wg0
+
+The set PostUp and PostDown in /etc/wireguard/wg0.conf (or whatever interface
+is being used)::
+
+  PostUp = /etc/wg-client/post-up.sh
+  PostDown = /etc/wg-client/post-down.sh
+
+In either case to start and stop vpn::
+
     wg-quick up <foo.conf>
     wg-quick down <foo.conf>
-
-
-In practice, for any linux client simply copy the script on the client:
-
-.. code-block:: bash
-
-   cp scripts/wg-peer-updn /etc/wireguard/scripts/wg-peer-updn
 
 and *--edit* the client profile and set the flag:
 

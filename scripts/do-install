@@ -20,21 +20,5 @@ dest=$(realpath "$dest")
 #
 /usr/bin/meson install -C build/release --destdir "$dest" > /dev/null
 
-#
-# Python 
-#
-sitedir=$(/usr/bin/python3 -c "import site; print(site.getsitepackages()[0])")
-installdir="${dest}${sitedir}"
-
-uv_opts=(
-    --python /usr/bin/python
-    --system
-    --no-build-isolation
-    --link-mode=copy
-    --compile-bytecode
-)
-
-# shared
-/usr/bin/uv pip install ${uv_opts[@]} --target "$installdir" dist/*.whl
-/usr/bin/rm -rf "$installdir"/.lock
+exit 0
 

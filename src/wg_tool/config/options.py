@@ -365,7 +365,8 @@ def parse_args(work_dir: str, data_dir: str) -> dict[str, Any]:
     #
     par1 = argparse.ArgumentParser(
             add_help=False,
-            formatter_class=argparse.RawTextHelpFormatter
+            formatter_class=argparse.RawTextHelpFormatter,
+            color=False
             )
 
     txt = f'Set the working directory path ({work_dir})'
@@ -376,7 +377,9 @@ def parse_args(work_dir: str, data_dir: str) -> dict[str, Any]:
             description=desc,
             add_help=True,
             formatter_class=argparse.RawTextHelpFormatter,
-            parents=[par1])
+            parents=[par1],
+            color=False
+            )
 
     wkd_args, rest_args = par1.parse_known_args()
     if wkd_args.work_dir:

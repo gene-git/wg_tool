@@ -301,14 +301,19 @@ we quote from the wireguard documentation.
 
   Use *dns_linux = true* to activate the DNS helper scripts for linux clients.
 
-  These use the dns servers together with any dns search domains as arguments to the
-  helper script which is written to the
-  postup/postdown variables. 
+  These use the dns servers together with any dns search domains to create the
+  resolv.conf to be used while wireguard is up and will be written
+  to a file **wireguard-resolv.conf**. This file should be copied to::
+
+    /etc/wg-client/wireguard-resolv.conf
+
+  where the helper script /etc/wg-client/post-up.sh expects to fine it.
 
   *dns_search* follows the same inclusion logic as dns servers: profile -> gateways -> vpn info.
   Note that *dns_search* is only available for linux clients using the dns helper script.
 
-  The dns script should be installed in */etc/wireguard/scripts/wg-peer-updn*.
+  The dns scripts are part of wg-client and are installed in 
+  */etc/wg-client/*.
 
   Please see :ref:`dns-script` for more details.
 

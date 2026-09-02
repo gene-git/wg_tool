@@ -112,9 +112,21 @@ def _wg_write_config(wg_conf: WgConfigBase,
     # [Interface]
     #   Address here is wireguard IP (host bits with vpn prefix)
     #
-    interface_data = wg_interface_data(acct_info, vpninfo, prof)
+    (interface_data, resolv_conf) = wg_interface_data(acct_info, vpninfo, prof)
     data += interface_data
     data += '\n'
+
+    #
+    # resolv.conf
+    #
+    if resolv_conf and prof.dns_linux:
+        prof_name = prof.ident.prof_name
+        resolv_file = f'{prof_name}-resolv.conf'
+        resolv_path = os.path.join(acct_dir, resolv_file)
+        (ok, changed) = write_db_file(resolv_conf, resolv_path)
+        if changed:
+            id_str = prof.ident.id_str
+            Msg.plain(f'      {id_str} updated resolv_file\n')
 
     #
     # [Peer]

@@ -11,9 +11,28 @@ from .profile_base import ProfileBase
 from .wg_dns import dns_to_wg_dns
 
 
+def _make_resolv_conf(dns_list: list[str], dns_search: list[str]) -> str:
+    """
+    Construct data for DNS resolv.conf for wireguard client.
+    """
+    if not dns_list and not dns_search:
+        return ''
+
+    resolv: str = '#\n# wireguard resolv.conf\n#\n'
+
+    if dns_search:
+        resolv += 'search '
+        resolv += ' '.join(dns_search)
+
+    for host in dns_list:
+        resolv += f'nameserver {host}\n'
+
+    return resolv
+
+
 def wg_interface_data(acct_info: str,
                       vpninfo: VpnInfo,
-                      prof: ProfileBase) -> str:
+                      prof: ProfileBase) -> tuple[str, str]:
     """
     Build WG interface section.
 
@@ -25,8 +44,8 @@ def wg_interface_data(acct_info: str,
             Use it's dns information.
 
     Returns:
-        (str):
-            data_string
+        tuple (str, str):
+            (interface-data, resolv-conf-data)
     """
     data: str = ''
     data += f'{"[Interface]":20s} # {acct_info}\n'
@@ -36,6 +55,8 @@ def wg_interface_data(acct_info: str,
     # Get the appropriate dns info
     #
     (dns_list, dns_search, dns_postup, dns_postdn) = _dns_data(vpninfo, prof)
+
+    resolv_data: str = _make_resolv_conf(dns_list, dns_search)
 
     wg_dns = dns_list + dns_search
 
@@ -58,7 +79,7 @@ def wg_interface_data(acct_info: str,
     if post_updn:
         data += post_updn
 
-    return data
+    return (data, resolv_data)
 
 
 def _interface_data_gateway(acct_info: str, prof: ProfileBase) -> str:
@@ -186,15 +207,18 @@ def _dns_data(vpninfo: VpnInfo, prof: ProfileBase
         #
         # create postup/dn command strings
         #
-        dns_postup = f'{vpninfo.dns_script} --up'
-        dns_postdn = f'{vpninfo.dns_script} --down'
+        dns_postup = f'{vpninfo.dns_script_up}'
+        dns_postdn = f'{vpninfo.dns_script_dn}'
 
-        dns_str = ','.join(dns_list)
-        dns_postup += f' --dns_ips {dns_str}'
+        #
+        # These moved to <prof.name>-resolv.conf file - see wg_write_config()
+        #
+        # dns_str = ','.join(dns_list)
+        # dns_postup += f' --dns_ips {dns_str}'
 
-        if dns_search_list:
-            dns_str = ','.join(dns_search_list)
-            dns_postup += f' --dns_search {dns_str}'
+        # if dns_search_list:
+        #     dns_str = ','.join(dns_search_list)
+        #     dns_postup += f' --dns_search {dns_str}'
 
     return (dns_list, dns_search_list, dns_postup, dns_postdn)
 

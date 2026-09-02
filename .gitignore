@@ -6,4 +6,5 @@ build
 dist
 src/tests/Data
 src/tests/Data-wg
+src/tests/out.diff
 

@@ -74,7 +74,9 @@ class VpnInfoBase:
         # So see non-IP in dns list we lookup the IP
         # before writing to wireguard config
         #
-        self.dns_script: str = '/etc/wireguard/scripts/wg-peer-updn'
+        self.dns_script_up: str = '/etc/wg-client/post-up.sh'
+        self.dns_script_dn: str = '/etc/wg-clent/post-down.sh'
+        self.wg_resolv_file: str = 'wireguard-resolv.con'
         self.dns: list[str] = []
         self.dns_search: list[str] = []
         self.dns_lookup_ipv6: bool = False

@@ -1,23 +1,11 @@
 #!/usr/bin/bash
 #
-#echo "  c-code"
 export PATH="/usr/bin"
+CFLAGS=
+LDFLAGS=
 
 meson setup --reconfigure build/release --buildtype=release --strip 
 /usr/bin/meson compile -C build/release
 
-
-#
-# python
-#
-echo "python module"
-uv_opts=(
-    --python /usr/bin/python
-    --no-build-isolation
-    --link-mode=copy
-    )
-
-/bin/rm -f dist/*
-/usr/bin/uv build "${uv_opts[@]}" --wheel
-/usr/bin/rm -f uv.lock
+exit
 
