@@ -1,5 +1,7 @@
 #!/usr/bin/bash
 #
+set -euo pipefail
+
 export PATH="/usr/bin"
 CFLAGS=
 LDFLAGS=

@@ -5,12 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>8. Working Example 3 &#8212; wg_tool 10.1.0
+    <title>8. Working Example 3 &#8212; wg_tool 10.4.0
  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
-    <script src="../_static/documentation_options.js?v=428cc2bd"></script>
+    <script src="../_static/documentation_options.js?v=2f7da7c1"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -167,7 +167,7 @@ using wg-tool. We are going to make a small edit to <em>wg-B</em> to achieve thi
 <p>Edit the file as before, (<em>Edits/vpn-test.servers.wg-B.mods</em>).
 The only change needed is to set <em>Endpoint</em> to an empty string
 and change <em>internet_offered</em> to false</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Endpoint = &quot;&quot;
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Endpoint = ""
 internet_offered = false
 </pre></div>
 </div>
@@ -177,7 +177,7 @@ internet_offered = false
 </div>
 <p>Since <em>wg-B</em> can no longer provide access to other clients, we let <em>wg-A</em>
 do that on it’s behalf:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wg-tool<span class="w"> </span>--nets-offered-add<span class="w">  </span><span class="s1">&#39;192.168.2.0/24&#39;</span><span class="w"> </span>vpn-test.servers.wg-A
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wg-tool<span class="w"> </span>--nets-offered-add<span class="w">  </span><span class="s1">'192.168.2.0/24'</span><span class="w"> </span>vpn-test.servers.wg-A
 </pre></div>
 </div>
 <p>That should be all that is necessary, <em>wg-tool</em> will do the rest.</p>

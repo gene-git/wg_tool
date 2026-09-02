@@ -5,8 +5,15 @@ import os
 import subprocess
 import pytest
 
+# conftest.py
+import pytest
+
+@pytest.fixture(autouse=True)
+def change_test_dir(request, monkeypatch):
+    monkeypatch.chdir(request.node.fspath.dirname)
 
 @pytest.mark.parametrize("script", [
+        "./clean.sh",
         "./create-example-1",
         "./create-example-2",
         "./create-example-3",
@@ -18,7 +25,6 @@ def test_execute_bash_scripts(script):
     #
     # Run each test script
     #
-    
     result = subprocess.run(
         [script],
         capture_output=True,

@@ -1,9 +1,8 @@
 __pycache__/
 .mypy_cache/
 src/data/docs/_build/
-_build/
+src/data/docs/html/.buildinfo.bak
 build
-dist
 src/tests/Data
 src/tests/Data-wg
 src/tests/out.diff

@@ -9,29 +9,30 @@ SPHINXBUILD   ?= sphinx-build
 SOURCEDIR     = .
 BUILDDIR      = _build
 
-SOURCES = conf.py ../../version.txt \
-	index.rst \
-	README.rst \
-	Changes-recent.rst \
-	Examples/Example-1.rst \
-	Examples/Example-2.rst \
-	Examples/Example-3.rst \
-	Examples/Example-4.rst \
-	Examples/Examples.rst \
-	Sections/Appendix.rst \
-	Sections/Completion.rst \
-	Sections/Directory-structure.rst \
-	Sections/Editing.rst \
-	Sections/Helper-scripts.rst \
-	Sections/Import.rst \
-	Sections/Ip-Groups.rst \
-	Sections/Key-rollover.rst \
-	Sections/Migrating.rst \
-	Sections/Options.rst \
-	Sections/Reports.rst 
+SOURCES = conf.py ../../version.txt Makefile 
+SOURCES += index.rst \
+		   README.rst \
+		   Changes-recent.rst \
+		   Examples/Example-1.rst \
+		   Examples/Example-2.rst \
+		   Examples/Example-3.rst \
+		   Examples/Example-4.rst \
+		   Examples/Examples.rst \
+		   Sections/Appendix.rst \
+		   Sections/Completion.rst \
+		   Sections/Directory-structure.rst \
+		   Sections/Editing.rst \
+		   Sections/Helper-scripts.rst \
+		   Sections/Import.rst \
+		   Sections/Ip-Groups.rst \
+		   Sections/Key-rollover.rst \
+		   Sections/Migrating.rst \
+		   Sections/Options.rst \
+		   Sections/Reports.rst 
 
+.PHONY: help clean html latexpdf
 
-.PHONY: help Makefile clean html latexpdf
+HTML_EXCL   = --exclude _sources/ --exclude .buildinfo  --exclude .doctrees/
 
 html: $(BUILDDIR)/html/index.html
 latexpdf: $(PKG).pdf
@@ -42,7 +43,7 @@ help:
 $(BUILDDIR)/html/index.html: $(SOURCES)
 	@$(SPHINXBUILD) -b html "$(SOURCEDIR)" "$(BUILDDIR)/html" $(SPHINXOPTS) $(O)
 	@$(SPHINXBUILD) -b html "$(SOURCEDIR)" "$(BUILDDIR)/html" $(SPHINXOPTS) $(O)
-	@rsync -av _build/html .
+	@rsync -a $(HTML_EXCL) _build/html .
 	@echo "HTML doc build complete. Path: $@"
 
 $(PKG).pdf: $(SOURCES)
@@ -56,3 +57,4 @@ $(PKG).pdf: $(SOURCES)
 clean:
 	@rm -rf $(BUILDDIR)/*
 	@rm -rf $(PKG).pdf
+	@rm -rf html

@@ -5,12 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>11. Command Line Options &#8212; wg_tool 10.1.0
+    <title>11. Command Line Options &#8212; wg_tool 10.4.0
  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
-    <script src="../_static/documentation_options.js?v=428cc2bd"></script>
+    <script src="../_static/documentation_options.js?v=2f7da7c1"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -115,7 +115,7 @@ options:
   Add, edit or modify identities.
 
   -edit, --edit         Edit one item.
-                        Requires --ident &quot;vpn.account.profile&quot;
+                        Requires --ident "vpn.account.profile"
   -copy, --copy         Copy one identity to another.
                         Requires --ident &lt;from&gt; --to-ident &lt;to&gt;
   -rename, --rename     Rename an identity.
@@ -130,19 +130,19 @@ options:
   -nets-wanted-add, --nets-wanted-add NETS_WANTED_ADD
                         Add wanted network(s) to IDs (See positional parameters)
                         Multiple networks use comma separated list
-                        Special network &quot;internet&quot; is same as internet_wanted = true
+                        Special network "internet" is same as internet_wanted = true
   -nets-wanted-del, --nets-wanted-del NETS_WANTED_DEL
                         Delete wanted network(s) from IDs (See positional parameters)
                         Multiple networks as comma separated list
-                        Special network &quot;internet&quot; is same as internet_wanted = false
+                        Special network "internet" is same as internet_wanted = false
   -nets-offered-add, --nets-offered-add NETS_OFFERED_ADD
                         Add offered network(s) to IDs (See positional parameters)
                         Multiple networks use comma separated list
-                        Special network &quot;internet&quot; is same as internet_offered = true
+                        Special network "internet" is same as internet_offered = true
   -nets-offered-del, --nets-offered-del NETS_OFFERED_DEL
                         Delete offered network(s) from IDs (See positional parameters)
                         Multiple networks as comma separated list
-                        Special network &quot;internet&quot; is same as internet_offered = false
+                        Special network "internet" is same as internet_offered = false
   -new, --new           Create new item (See positional parameters))]
                         Each can be one of: vpn, vpn.account or vpn.account.prof
   -roll, --roll-keys    Generate new keys for IDs (See positional parameters)
@@ -173,13 +173,13 @@ options:
                         profile names may comma separated list
                         e.g.
                           all : -l
-                          all accounts and profiles of &quot;vpn1&quot;: -l vpn1
-                          all profiles of &quot;vpn1.bob&quot;: -l vpn1.bob
-                          2 profiles of &quot;vpn1.bob&quot;: -l vpn1.bob.prof-1,prof-2
+                          all accounts and profiles of "vpn1": -l vpn1
+                          all profiles of "vpn1.bob": -l vpn1.bob
+                          2 profiles of "vpn1.bob": -l vpn1.bob.prof-1,prof-2
   -rpt, --show-rpt RPTFILE
-                        Generate report from &quot;wg show&quot; output (file or &quot;stdin&quot;) (See also --run-show-report)
+                        Generate report from "wg show" output (file or "stdin") (See also --run-show-report)
   -rrpt, --run-show-rpt
-                        Run &quot;wg show&quot; (must be on wireguard server) and generate report. (See also --show-rpt)
+                        Run "wg show" (must be on wireguard server) and generate report. (See also --show-rpt)
   -b, --brief           Simplified outputs. Opposite of -det
 
 :*---------------*:

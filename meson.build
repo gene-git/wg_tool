@@ -23,7 +23,7 @@ d_share = get_option('datadir')
 
 py_mod = import('python')
 py = py_mod.find_installation(pure: false)
-src_root = meson.project_source_root()
+proj_root = meson.project_source_root()
 py_dep = py.dependency(embed: true)
 
 inc_dir = []
@@ -133,4 +133,29 @@ install_data(
   install_dir: d_share / 'licenses/wg_tool'
 )
 
+
+#
+# tests
+#
+pytest = find_program('/usr/bin/pytest', required: false)
+if not pytest.found()
+  warning('pytest not found, tests not available')
+else
+  srcdir = proj_root / 'src'
+  testdir = srcdir / 'tests'
+
+  test_files = [
+    'test-examples.py',
+  ]
+
+  foreach this_test : test_files
+    test(this_test,
+      pytest,
+      args: ['-s', testdir / this_test],
+      env: {'PYTHONPATH': srcdir},
+      suite: ['unit'],
+      timeout: 60,
+    )
+  endforeach
+endif
 
