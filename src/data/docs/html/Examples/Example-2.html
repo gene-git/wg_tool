@@ -5,12 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>7. Working Example 2 &#8212; wg_tool 10.1.0
+    <title>7. Working Example 2 &#8212; wg_tool 10.3.0
  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
-    <script src="../_static/documentation_options.js?v=428cc2bd"></script>
+    <script src="../_static/documentation_options.js?v=a126560f"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -184,14 +184,14 @@ also give it access to the LAN offered by <em>wg-A</em> network.</p>
 <p>I other words, each of the 2 gateways will have access to the LAN provided
 by the other gateway.</p>
 <p>Lets use the command line options to accomplish this.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wg-tool<span class="w"> </span>--nets-offered-add<span class="w"> </span><span class="s2">&quot;192.168.2.0/24&quot;</span><span class="w"> </span>vpn-test.servers.wg-B
-wg-tool<span class="w"> </span>--nets-wanted-add<span class="w"> </span><span class="s2">&quot;192.168.1.0/24&quot;</span><span class="w"> </span>vpn-test.servers.wg-B
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wg-tool<span class="w"> </span>--nets-offered-add<span class="w"> </span><span class="s2">"192.168.2.0/24"</span><span class="w"> </span>vpn-test.servers.wg-B
+wg-tool<span class="w"> </span>--nets-wanted-add<span class="w"> </span><span class="s2">"192.168.1.0/24"</span><span class="w"> </span>vpn-test.servers.wg-B
 
-wg-tool<span class="w"> </span>--nets-wanted-add<span class="w"> </span><span class="s2">&quot;192.168.2.0/24&quot;</span><span class="w"> </span>vpn-test.servers.wg-A
+wg-tool<span class="w"> </span>--nets-wanted-add<span class="w"> </span><span class="s2">"192.168.2.0/24"</span><span class="w"> </span>vpn-test.servers.wg-A
 </pre></div>
 </div>
 <p>Next we add permission to <em>192.168.2.0/24</em> for all 3 user profiles.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wg-tool<span class="w"> </span>--nets-wanted-add<span class="w"> </span><span class="s2">&quot;192.168.2.0/24&quot;</span><span class="w"> </span>vpn-test.user-1<span class="w"> </span>vpn-test.user-2<span class="w"> </span>vpn-test.user-3
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wg-tool<span class="w"> </span>--nets-wanted-add<span class="w"> </span><span class="s2">"192.168.2.0/24"</span><span class="w"> </span>vpn-test.user-1<span class="w"> </span>vpn-test.user-2<span class="w"> </span>vpn-test.user-3
 </pre></div>
 </div>
 <p>Notice that we used <em>&lt;vpn&gt;.&lt;account&gt;</em> for the user IDs. This is a shortcut for every profile
@@ -211,23 +211,23 @@ For example you can use “102.168.2.0/24,192.168.100.0/24” to add 2 networks.
 
     ✓ servers      250915-093519:
                      ✓ wg-A                 250915-093526 (gateway)
-                                     nets_offered : [&#39;192.168.1.0/24&#39;, &#39;internet&#39;]
-                                      nets_wanted : [&#39;192.168.2.0/24&#39;]
+                                     nets_offered : ['192.168.1.0/24', 'internet']
+                                      nets_wanted : ['192.168.2.0/24']
                      ✓ wg-B                 250915-093526 (gateway)
-                                     nets_offered : [&#39;192.168.2.0/24&#39;, &#39;internet&#39;]
-                                      nets_wanted : [&#39;192.168.1.0/24&#39;]
+                                     nets_offered : ['192.168.2.0/24', 'internet']
+                                      nets_wanted : ['192.168.1.0/24']
 
     ✓ user-1       250915-065905:
                      ✓ laptop               250915-093526
-                                      nets_wanted : [&#39;192.168.1.0/24&#39;, &#39;192.168.2.0/24&#39;, &#39;internet&#39;]
+                                      nets_wanted : ['192.168.1.0/24', '192.168.2.0/24', 'internet']
 
     ✓ user-2       250915-065905:
                      ✓ laptop               250915-093526
-                                      nets_wanted : [&#39;192.168.1.0/24&#39;, &#39;192.168.2.0/24&#39;, &#39;internet&#39;]
+                                      nets_wanted : ['192.168.1.0/24', '192.168.2.0/24', 'internet']
 
     ✓ user-3       250915-065905:
                      ✓ laptop               250915-093526
-                                      nets_wanted : [&#39;192.168.1.32/28&#39;, &#39;192.168.2.0/24&#39;]
+                                      nets_wanted : ['192.168.1.32/28', '192.168.2.0/24']
 </pre></div>
 </div>
 <p>This shows both gateways sharing one another’s networks

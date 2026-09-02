@@ -1,9 +1,12 @@
 -------------------------------------------------------
  Changelog    : wg_tool
- Tags         : 9.2.3 ➙ 10.1.10
-              : 2026-01-05 ➙ 2026-09-02
+ Tags         : 10.0.0 ➙ 10.3.0,
+              : 2026-08-25 ➙ 2026-09-02
               : 6 tags. See Docs for full changelog
 -------------------------------------------------------
+
+ 2026-09-02   : 10.3.0,
+              - fix wrong tag
 
  2026-09-02   : 10.1.10
               - **10.1.0**
@@ -51,13 +54,4 @@
                 * Move examples to src/tests and add test runner to confirm the output
                   wireguard configs match a baseline set.
  2026-01-06   ⋯
-              - update Docs Changelogs
-
- 2026-01-06   : 9.2.4
-              - PKGBUILD small change
- 2026-01-05   ⋯
-              - update Docs Changelogs
-
- 2026-01-05   : 9.2.3
-              - Docs - update manual build instructions for uv (including ubuntu)
               - update Docs Changelogs

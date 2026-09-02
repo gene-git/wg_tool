@@ -1,28 +1,8 @@
 #!/usr/bin/bash
 #
-here=$(/usr/bin/pwd)
-here_base=$(/usr/bin/basename $here)
-src=""
+set -euo pipefail
 
-case "$here_base" in
-    src)
-        src="$here"
-        ;;
-    wg_tool)
-        src="$here/src"
-        ;;
-    scripts)
-        src=$(/usr/bin/realpath ../src)
-        ;;
-    tests)
-        src=$(/usr/bin/realpath ../)
-        ;;
-    *)
-        echo "Run from unsupported directory"
-        exit
-esac
+/usr/bin/meson test -C build/release
 
-tests_dir="$src/tests"
-cd "$tests_dir"
+exit 0
 
-./run-tests

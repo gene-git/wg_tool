@@ -3,6 +3,14 @@
 Recent Changes
 ==============
 
+**10.3.0**
+
+* Change Arch package dependencies that have been renamed:
+
+  - pyconcurrent -> python-pyconcurrent
+
+* Add check() to PKGBUILD
+
 **10.1.0**
 
 * linux client config output now uses tools provided by *wg-client*.

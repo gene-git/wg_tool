@@ -5,12 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>6. Working Example 1 &#8212; wg_tool 10.1.0
+    <title>6. Working Example 1 &#8212; wg_tool 10.3.0
  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
-    <script src="../_static/documentation_options.js?v=428cc2bd"></script>
+    <script src="../_static/documentation_options.js?v=a126560f"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -300,8 +300,8 @@ to assign network access for each of the clients.</p>
 <p>We will permission user-1.laptop and user-2.laptop with
 access to <em>192.168.1.0/24</em>.</p>
 <p>And, for fun, we limit user-3.laptop to the subnet <em>19.168.1.32/28</em></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wg-tool<span class="w"> </span>--nets-wanted-add<span class="w"> </span><span class="s2">&quot;192.168.1.0/24&quot;</span><span class="w"> </span>vpn-test.user-1.laptop<span class="w"> </span>vpn-test.user-2.laptop
-wg-tool<span class="w"> </span>--nets-wanted-add<span class="w"> </span><span class="s2">&quot;192.168.1.32/28&quot;</span><span class="w"> </span>vpn-test.user-3.laptop
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wg-tool<span class="w"> </span>--nets-wanted-add<span class="w"> </span><span class="s2">"192.168.1.0/24"</span><span class="w"> </span>vpn-test.user-1.laptop<span class="w"> </span>vpn-test.user-2.laptop
+wg-tool<span class="w"> </span>--nets-wanted-add<span class="w"> </span><span class="s2">"192.168.1.32/28"</span><span class="w"> </span>vpn-test.user-3.laptop
 </pre></div>
 </div>
 <p>We’re done.</p>
@@ -323,19 +323,19 @@ and any <em>hidden</em> items. You can also filter what is shown by
 
      ✓ servers      250914-202654:
                       ✓ wg-A                 250914-202702 (gateway)
-                              nets_offered : [&#39;192.168.1.0/24&#39;, &#39;internet&#39;]
+                              nets_offered : ['192.168.1.0/24', 'internet']
 
      ✓ user-1       250914-202655:
                       ✓ laptop               250914-202702
-                               nets_wanted : [&#39;192.168.1.0/24&#39;, &#39;internet&#39;]
+                               nets_wanted : ['192.168.1.0/24', 'internet']
 
      ✓ user-2       250914-202655:
                       ✓ laptop               250914-202702
-                               nets_wanted : [&#39;192.168.1.0/24&#39;, &#39;internet&#39;]
+                               nets_wanted : ['192.168.1.0/24', 'internet']
 
      ✓ user-3       250914-202655:
                       ✓ laptop               250914-202702
-                               nets_wanted : [&#39;192.168.1.32/28&#39;]
+                               nets_wanted : ['192.168.1.32/28']
 </pre></div>
 </div>
 <p>The date/times are the last modification time.

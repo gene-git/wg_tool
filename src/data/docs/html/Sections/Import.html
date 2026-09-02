@@ -5,12 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>18. Importing From Standard Wireguard Configs &#8212; wg_tool 10.1.0
+    <title>18. Importing From Standard Wireguard Configs &#8212; wg_tool 10.3.0
  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
-    <script src="../_static/documentation_options.js?v=428cc2bd"></script>
+    <script src="../_static/documentation_options.js?v=a126560f"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -78,8 +78,8 @@ incorrectly guessed.</p>
 <p>For example if <em>10.1.2.0/24</em> was incorrecly set to
 peer vpn.serv.A instead of vpn.serv.B then you can correct this
 using:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wg-tool<span class="w"> </span>--net-offered-del<span class="w"> </span><span class="s1">&#39;10.1.2.0/24&#39;</span><span class="w"> </span>vpn.serv.A
-wg-tool<span class="w"> </span>--net-offered-add<span class="w"> </span><span class="s1">&#39;10.1.2.0/24&#39;</span><span class="w"> </span>vpn.serv.B
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wg-tool<span class="w"> </span>--net-offered-del<span class="w"> </span><span class="s1">'10.1.2.0/24'</span><span class="w"> </span>vpn.serv.A
+wg-tool<span class="w"> </span>--net-offered-add<span class="w"> </span><span class="s1">'10.1.2.0/24'</span><span class="w"> </span>vpn.serv.B
 </pre></div>
 </div>
 <p>You can of course use the <em>–edit</em> option to make changes as well.</p>
@@ -104,7 +104,7 @@ Ths is to establish the vpn name, networks and dns hosts.</p>
 in the wireguard configs about to be imported.</p>
 <p>To illustrate we’ll create a new vpn called ‘vpn-imported’ with
 tunnel networks:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>vpn_nets = [&#39;10.77.77.0/24&#39;, &#39;fc00:77.77::/64&#39;]
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>vpn_nets = ['10.77.77.0/24', 'fc00:77.77::/64']
 </pre></div>
 </div>
 <p>This assumes that all configs about to be imported are using a
@@ -116,11 +116,11 @@ wg-tool<span class="w"> </span>--new<span class="w"> </span>vpn2
 </div>
 <p>Now edit the vpn info file, name will be shown (<em>./Edits/vpn2-info.mods</em>)
 and set the desired vpn networks and any DNS servers.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>dns = [&quot;10.10.10.10&quot;]
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>dns = ["10.10.10.10"]
 peer_to_peer = false
 networks = [
-     &quot;10.10.10.0/24&quot;,
-     &quot;fc00:10.10::/64&quot;,
+     "10.10.10.0/24",
+     "fc00:10.10::/64",
 ]
 </pre></div>
 </div>

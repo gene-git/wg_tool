@@ -1,12 +1,11 @@
 #!/usr/bin/bash
 #
-# Create and do all examples
+# Create and run all examples
 #
 
-# Always start with clean slate
-/usr/bin/rm -rf Data Data-wg Edits 
-
-pkgdir=$(realpath "..")
-export PYTHONPATH="$pkgdir"
+testdir="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+if [[ -z "${PYTHONPATH:-}" ]] ; then
+    export PYTHONPATH=$(/usr/bin/realpath "$testdir"/../)
+fi
 
 /usr/bin/pytest -s -v test-examples.py

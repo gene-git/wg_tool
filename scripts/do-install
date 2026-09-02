@@ -6,6 +6,8 @@
 # e.g. Call from PKGBUILD:  
 #   ./do-install ${pkgdir}
 #
+set -euo pipefail
+
 if (( $# < 1 )) ; then
     dest="./build/pkg"
 else
