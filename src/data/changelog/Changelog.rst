@@ -6,14 +6,22 @@ Tags
 
 .. code-block:: text
 
-	1.1.1 (2022-10-26) -> 10.4.0, (2026-09-02)
-	234 commits.
+	1.1.1 (2022-10-26) -> 10.5.0 (2026-09-10)
+	235 commits.
 
 Commits
 =======
 
 
-* 2026-09-02  : **10.4.0,**
+* 2026-09-10  : **10.5.0**
+
+.. code-block:: text
+
+              - **10.5.0**
+            
+                * Add missing checkdepends() to PKGBUILD
+
+* 2026-09-02  : **10.4.0, origin/master**
 
 .. code-block:: text
 
