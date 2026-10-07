@@ -55,50 +55,20 @@ Dependencies
 
 **Run Time** :
 
-  * python (3.13 or later)
+  * python  (3.14+)
   * python-cryptography
   * py-cidr 
   * python-qrcode
   * wireguard-tools
-  * nftables (for wireguard server postup.nft)
-  * tomli_w (aka python-tomli_w )
+  * nftables
+  * tomli_w
 
 **Building Package**:
 
   * git
-  * uv
-  * uv-build (aka python-uv-build)
-  * sphinx
-  * myst-parser
-  * texlive-latexextra  (texlive tools, this is archlinux package)
+  * meson
+  * meson-python
   * rsync
-
-
-Documentation
--------------
-
-The documentation is available in *src/data/docs/wg-tool.pdf* as well
-an html version *src/data/docs/html*.
-
-The source is also available to build your own:
-
-.. code-block:: bash
-
-   ./build-manual.sh
-
-This does need sphinx (see :ref:`Install`)
-
-
-Philosophy
-----------
-
-While we follow PEP-8, PEP-257, PEP-484 and PEP-561, we prefer to allow 
-max line length of 100 rather than 79 in some situations.
-
-We follow the *live at head commit* philosophy as recommended by 
-Google's Abseil team [1]_.  This means we recommend using the
-latest commit on git master branch. 
-
 
 License
 ========
@@ -108,12 +78,6 @@ Created by Gene C. and licensed under the terms of the GPL-2.0-or-later license.
  * SPDX-License-Identifier: MIT
  * SPDX-FileCopyrightText: © 2022-present Gene C <arch@sapience.com>
 
-.. _Github: https://github.com/gene-git/wg_tool
-.. _Archlinux AUR: https://aur.archlinux.org/packages/wg_tool
-.. _wg-client: https://github.com/gene-git/wg-client
 .. _py-cidr: https://github.com/gene-git/py-cidr
 .. _py-cidr AUR: https://aur.archlinux.org/packages/py-cidr
 .. _wireguard: https://www.wireguard.com
-
-.. [1] https://abseil.io/about/philosophy#upgrade-support
-

@@ -1,1 +1,28 @@
-/* This file intentionally left blank. */
+/* 
+ * Pull Inter web fonts from Google Font APIs 
+ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600;700&display=swap');
+
+/* 
+ * Inject them into Sphinx Theme CSS variables 
+ */
+:root {
+    --font-stack: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-stack--monospace: 'Source Code Pro', ui-monospace, monospace;
+}
+
+/* 
+ * Fallback 
+ */
+body, p, ul, ol, li {
+    font-family: var(--font-stack) !important;
+}
+
+/* 
+ * Keeps code blocks crisp and aligned 
+ */
+code, pre, kbd, samp, .highlight pre {
+    font-family: var(--font-stack--monospace) !important;
+    font-size: 0.9em !important;
+}
+

@@ -4,7 +4,7 @@
 import os
 import sys
 
-#
+# -----------------------------------------------------------
 # package version from version.txt file
 #
 def read_version() -> str:
@@ -19,54 +19,62 @@ def read_version() -> str:
         proj_vers = '0.1.0-unknown'
     return proj_vers
 
-#
+# -----------------------------------------------------------
 # Project
 #
 project = "wg_tool"
 copyright = '2022-present, Gene C'
 author = 'Gene C'
+
 release = read_version()
 
 extensions = []
-#html_static_path = ['_static']
-#html_css_files = ['custom.css']
 
+# -----------------------------------------------------------
+# latex
+#
 latex_engine = 'xelatex'
 latex_use_xindy = True
 
 latex_elements = {
     'papersize': 'letterpaper',
-    'pointsize': '10pt',
+    'pointsize': '11pt',
 
-    # Protrusion only to prevent XeLaTeX font expansion crashes
-    'passoptionstopackages': r'\PassOptionsToPackage{protrusion=true}{microtype}',
+    'fvset': r'\fvset{fontsize=\scriptsize}',
+
+    'fontpkg': r'''
+        \usepackage{fontspec}
+
+        \setmainfont{Source Sans 3}[Ligatures=TeX]
+        \setsansfont{Source Sans 3}[Ligatures=TeX]
+        \setmonofont{Source Code Pro}
+    ''',
 
     'preamble': r'''
-    \usepackage{microtype}
-    \usepackage{parskip}
-    \usepackage{fontspec}
+        \usepackage{parskip}
 
-    \usepackage{newunicodechar}
-    \newunicodechar{␣}{\textvisiblespace}
-    \tracinglostchars=0
+        \setlength{\headheight}{14pt}
+        \addtolength{\topmargin}{-2pt}
 
-    % Body Serif (Libertine)
-    \setmainfont{Libertinus Serif}[
-        Ligatures=TeX,
-        Numbers=OldStyle
-    ]
+        \usepackage{enumitem}
+        \setlist[itemize]{
+            noitemsep,
+            topsep=6pt,
+            parsep=0pt,
+            partopsep=0pt,
+            after=\vspace{0pt}
+        }
+        \setlist[enumerate]{
+            noitemsep,
+            topsep=6pt,
+            parsep=0pt,
+            partopsep=0pt,
+            after=\vspace{0pt}
+        }
 
-    % Section Headers (Sans-Serif libertine)
-    \setsansfont{Libertinus Sans}[
-        Ligatures=TeX
-    ]
-
-    % Verbatim/Inline (Monospace libertine)
-    % Explicitly mapping it as the primary system typewriter engine (\ttdefault)
-    \setmonofont{Libertinus Mono}[
-        Scale=0.92,
-        AutoFakeSlant=0.2
-    ]
+        \usepackage{newunicodechar}
+        \newunicodechar{␣}{\textvisiblespace}
+        \tracinglostchars=0
 
     ''',
 }
@@ -80,4 +88,8 @@ latex_documents = [
         'manual'
     ),
 ]
+
+html_theme = 'sphinx_rtd_theme'
+html_static_path = ['_static']
+html_css_files = [ 'custom.css',]
 

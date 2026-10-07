@@ -10,7 +10,6 @@ wg-tool Documentation
     :caption: Wireguard Tool Manual:
 
     README
-    Changes-recent
     Examples/Examples
     Examples/Example-1
     Examples/Example-2

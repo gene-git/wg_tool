@@ -67,6 +67,24 @@ Solving a long standing, if minor, *annoyance*.
 
 We built *wg-tool* to make our own VPN administration simple and robust. 
 
+Documentation
+-------------
+
+The manual provides detailed information and is available in both HTML and PDF formats.
+Both are installed under */usr/share/cidrtools/docs*.
+
+The manual is also available at: `readthedocs <https://wg_tool.readthedocs.io>`_.
+
+Command line help is available using *wg-tool --help* and for more details on
+options see the manual :ref:`Options-section`.
+
+We also include working examples. In each example the goals are explained
+followed by a walk through using *wg-tool* to achieve those goals. 
+The resultant wireguard configs are produced in each exercise.
+
+The examples are in *src/tests*.
+For more information please see :ref:`Examples` section. 
+
 Where to Get wg-tool
 --------------------
 
@@ -80,26 +98,18 @@ PKGBUILD provided in packaging directory.
 
 All git tags are signed with an arch@sapience.com key available via WKD
 or from the `sapience.com <https://www.sapience.com/tech>`_ website. 
+
 Add the key to your package builder gpg keyring.
-The key is included in the Arch package and the source= line with *?signed* at the end can be used
+The key is included in the Arch package and the *source=* line with *?signed* at the end can be used
 to verify the git tag. You can also manually verify the signature as usual with 
 *git tag -v <tag>*.
 
-For those with linux road warriers, there is a `wg-client <https://github.com/gene-git/wg-client>`_ 
-companion package. 
+For those with linux road warriers, there is a companion package
+`wg-client <https://github.com/gene-git/wg-client>`_ that simplifies using wireguard 
+on linux computers.
 This is a linux client command line tool packaged with a graphical 
 program that makes it very simple to start and stop a wireguard client for any user.
 It is also available in the `AUR wg-client <https://aur.archlinux.com/packages/wg-client>`_.
-
-We offer working examples. In each example the goals are explained
-followed by a walk through using *wg-tool* to achieve those goals. 
-The resultant wireguard configs are produced.
-
-The examples are in *src/tests*.
-For more information please see :ref:`Examples` section. 
-
-Documentation source along with pre-generated PDF and html versions 
-are in the *Docs* directory. All documentation is written using restructured text.
 
 Key Features
 ============
@@ -119,25 +129,6 @@ Key Features
 
 * Supports importing from existing wireguard config files.
 * Peer provided network access can be restricted using *IP groups*.
-
-=============
-Documentation
-=============
-
-The manual is available in *src/data/docs/wg_tool.pdf* as well
-an html version - just point a browser at *src/data/docs/html*.
-
-The document source is also available to build your own:
-
-.. code-block:: bash
-
-   make latexpdf; make latexpdf
-   make html
-
-This requires some sphinx packages being available (see :ref:`Install`)
-
-Command line help is available using *wg-tool --help* and for more details on
-options see the manual :ref:`Options-section`.
 
 ===============
 Getting Started
