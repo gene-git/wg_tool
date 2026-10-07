@@ -73,7 +73,7 @@ Documentation
 The manual provides detailed information and is available in both HTML and PDF formats.
 Both are installed under */usr/share/cidrtools/docs*.
 
-The manual is also available at: `readthedocs <https://wg_tool.readthedocs.io>`_.
+The manual is also available at: `readthedocs <https://wg-tool.readthedocs.io>`_.
 
 Command line help is available using *wg-tool --help* and for more details on
 options see the manual :ref:`Options-section`.

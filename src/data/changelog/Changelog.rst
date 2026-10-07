@@ -6,12 +6,20 @@ Tags
 
 .. code-block:: text
 
-	1.1.1 (2022-10-26) -> 10.5.1 (2026-10-07)
-	236 commits.
+	1.1.1 (2022-10-26) -> 10.5.2 (2026-10-07)
+	238 commits.
 
 Commits
 =======
 
+
+* 2026-10-07  : **10.5.2**
+
+.. code-block:: text
+
+              - **10.5.2**
+                * Release changes for readthedocs
+              - fix .readthedocs.yaml file path
 
 * 2026-10-07  : **10.5.1**
 
@@ -20,7 +28,7 @@ Commits
               - **10.5.1**
                 * Documentation - now on readthedocs : https://wg_tool.readthedocs.io
 
-* 2026-09-10  : **10.5.0, origin/master**
+* 2026-09-10  : **10.5.0**
 
 .. code-block:: text
 

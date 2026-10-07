@@ -3,9 +3,13 @@
 Recent Changes
 ==============
 
+**10.5.2**
+
+* Release changes for readthedocs
+
 **10.5.1**
 
-* Documentation - now on readthedocs : https://wg_tool.readthedocs.io
+* Documentation - now on readthedocs : https://wg-tool.readthedocs.io
 
 **10.5.0**
 
